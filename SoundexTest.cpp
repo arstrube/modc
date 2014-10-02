@@ -7,15 +7,14 @@ TEST_GROUP(SoundexEncoding)
 };
 
 TEST(SoundexEncoding, RetainsSoleLetterOfOneLetterWord) {
-   auto encoded = soundex.encode("A");
-
-   STRCMP_EQUAL("A000", encoded.c_str());
+   STRCMP_EQUAL("A000", soundex.encode("A").c_str());
 }
 
 TEST(SoundexEncoding, PadsWithZerosToEnsureThreeDigits) {
-   Soundex soundex;
-
-   auto encoded = soundex.encode("I");
-
-   STRCMP_EQUAL("I000", encoded.c_str());
+   STRCMP_EQUAL("I000", soundex.encode("I").c_str());
 }
+
+TEST(SoundexEncoding, ReplaceConsonantsWithAppropriateDigits) {
+   STRCMP_EQUAL("A100", soundex.encode("Ab").c_str());
+}
+

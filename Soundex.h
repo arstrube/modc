@@ -8,6 +8,7 @@
 ***/
 #ifndef Soundex_h
 #define Soundex_h
+
 #include <string>
 
 class Soundex
