@@ -16,7 +16,8 @@ TEST(SoundexEncoding, PadsWithZerosToEnsureThreeDigits) {
 }
 
 TEST(SoundexEncoding, ReplacesConsonantsWithAppropriateDigits) {
-    STRCMP_EQUAL("A100", soundex.encode("Ab").c_str());
-    STRCMP_EQUAL("A200", soundex.encode("Ac").c_str());
+   STRCMP_EQUAL("A100", soundex.encode("Ab").c_str());
+   STRCMP_EQUAL("A200", soundex.encode("Ac").c_str());
+   STRCMP_EQUAL("A300", soundex.encode("Ad").c_str());
 }
 
