@@ -14,6 +14,9 @@
 class Soundex
 {
 public:
+   static const size_t MaxCodeLength{4};
+   // ...
+
    std::string encode(const std::string& word) const {
       return zeroPad(head(word) + encodedDigits(word));
    }
@@ -29,8 +32,7 @@ private:
    }
 
    std::string zeroPad(const std::string& word) const {
-   // ...
-      auto zerosNeeded = 4 - word.length();
+      auto zerosNeeded = MaxCodeLength - word.length();
       return word + std::string(zerosNeeded, '0');
    }
 };
