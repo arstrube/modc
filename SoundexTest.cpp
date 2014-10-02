@@ -19,5 +19,7 @@ TEST(SoundexEncoding, RetainsSoleLetterOfOneLetterWord)
    Soundex soundex;
 
    auto encoded = soundex.encode("A");
+
+   STRCMP_EQUAL("A", encoded.c_str());
 }
 
