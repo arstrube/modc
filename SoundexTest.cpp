@@ -10,6 +10,7 @@ TEST_GROUP(SoundexEncoding)
 TEST(SoundexEncoding, RetainsSoleLetterOfOneLetterWord)
 {
    Soundex soundex;
-   (void)soundex;  // -Werror=unused-variable
+   
+   auto encoded = soundex.encode("A");
 }
 
