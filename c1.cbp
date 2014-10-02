@@ -23,6 +23,7 @@
 		<Linker>
 			<Add library="CppUTest" />
 			<Add library="CppUTestExt" />
+			<Add directory="e:\cpputest\lib" />
 		</Linker>
 		<ExtraCommands>
 			<Add after="./$(PROJECT_NAME)" />
