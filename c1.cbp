@@ -31,6 +31,7 @@
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="..\CppUTestMain.cpp" />
+		<Unit filename="Soundex.h" />
 		<Unit filename="SoundexTest.cpp" />
 		<Extensions>
 			<code_completion />
