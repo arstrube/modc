@@ -34,3 +34,7 @@ TEST(SoundexEncoding, LimitsLengthToFourCharacters) {
 TEST(SoundexEncoding, IgnoresVowelLikeLetters) {
    STRCMP_EQUAL("B234", soundex.encode("Baeiouhycdl").c_str());
 }
+
+TEST(SoundexEncoding, CombinesDuplicateEncodings) {
+   STRCMP_EQUAL("A123", soundex.encode("Abfcgdt").c_str());
+}
