@@ -30,3 +30,7 @@ TEST(SoundexEncoding, ReplacesMultipleConsonantsWithDigits) {
 TEST(SoundexEncoding, LimitsLengthToFourCharacters) {
    LONGS_EQUAL(4u, soundex.encode("Dcdlb").length());
 }
+
+TEST(SoundexEncoding, IgnoresVowelLikeLetters) {
+   STRCMP_EQUAL("B234", soundex.encode("Baeiouhycdl").c_str());
+}
