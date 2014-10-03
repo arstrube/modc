@@ -23,8 +23,6 @@ TEST(SoundexEncoding, IgnoresNonAlphabetics) {
    STRCMP_EQUAL("A000", soundex.encode("A$").c_str());
 }
 
-IGNORE_TEST(SoundexEncoding, ReplacesMultipleConsonantsWithDigits) {
+TEST(SoundexEncoding, ReplacesMultipleConsonantsWithDigits) {
    STRCMP_EQUAL("A234", soundex.encode("Acdl").c_str());
 }
-
-
