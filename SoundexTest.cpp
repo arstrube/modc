@@ -26,3 +26,7 @@ TEST(SoundexEncoding, IgnoresNonAlphabetics) {
 TEST(SoundexEncoding, ReplacesMultipleConsonantsWithDigits) {
    STRCMP_EQUAL("A234", soundex.encode("Acdl").c_str());
 }
+
+TEST(SoundexEncoding, LimitsLengthToFourCharacters) {
+   LONGS_EQUAL(4u, soundex.encode("Dcdlb").length());
+}
