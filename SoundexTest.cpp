@@ -36,5 +36,8 @@ TEST(SoundexEncoding, IgnoresVowelLikeLetters) {
 }
 
 TEST(SoundexEncoding, CombinesDuplicateEncodings) {
+   STRCMP_EQUAL(soundex.encodedDigit('b').c_str(), soundex.encodedDigit('f').c_str());
+   STRCMP_EQUAL(soundex.encodedDigit('c').c_str(), soundex.encodedDigit('g').c_str());
+   STRCMP_EQUAL(soundex.encodedDigit('d').c_str(), soundex.encodedDigit('t').c_str());
    STRCMP_EQUAL("A123", soundex.encode("Abfcgdt").c_str());
 }
