@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="c1" />
+		<Option title="c2" />
 		<Option pch_mode="2" />
 		<Option compiler="cygwin" />
 		<Build>
