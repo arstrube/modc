@@ -41,3 +41,7 @@ TEST(SoundexEncoding, CombinesDuplicateEncodings) {
    STRCMP_EQUAL(soundex.encodedDigit('d').c_str(), soundex.encodedDigit('t').c_str());
    STRCMP_EQUAL("A123", soundex.encode("Abfcgdt").c_str());
 }
+
+TEST(SoundexEncoding, UpperCasesFirstLetter) {
+   STRNCMP_EQUAL("A", soundex.encode("abcd").c_str(), 1);
+}
