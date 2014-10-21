@@ -29,5 +29,11 @@ TEST(ARetweetCollection, DecreasesSizeAfterRemovingTweet) {
    collection.add(Tweet());
    collection.remove(Tweet());
    LONGS_EQUAL(0, collection.size());
-   CHECK(collection.isEmpty()); // DON'T DO THIS
+}
+
+// AVOID doing this
+TEST(ARetweetCollection, IsEmptyAfterRemovingTweet) {
+   collection.add(Tweet());
+   collection.remove(Tweet());
+   CHECK(collection.isEmpty());
 }
