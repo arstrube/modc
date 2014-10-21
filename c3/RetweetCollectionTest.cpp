@@ -29,7 +29,7 @@ TEST(ARetweetCollection, IsNotEmptyWhenItsSizeIsNonZero) {
 TEST_GROUP(ARetweetCollectionWithOneTweet) {
    RetweetCollection collection;
    void setup() override {
-      collection.add(Tweet());
+      collection.add(Tweet("msg", "@user"));
    }
 };
 
