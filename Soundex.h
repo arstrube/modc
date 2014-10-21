@@ -48,7 +48,6 @@ private:
       if (encoding.empty()) return NotADigit;
       return std::string(1, encoding.back());
    }
-   // ...
 
    bool isComplete (const std::string& encoding) const {
       return encoding.length() == MaxCodeLength - 1; 
@@ -64,11 +63,15 @@ public:
          {'m', "5"}, {'n', "5"},
          {'r', "6"}
       };
-      auto it = encodings.find(letter);
+      auto it = encodings.find(lower(letter));
       return it == encodings.end() ? NotADigit : it->second;
    }
 
 private:
+   char lower(char c) const {
+      return std::tolower(static_cast<unsigned char>(c));
+   }
+
    std::string zeroPad(const std::string& word) const {
       auto zerosNeeded = MaxCodeLength - word.length();
       return word + std::string(zerosNeeded, '0');

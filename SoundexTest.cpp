@@ -48,3 +48,7 @@ TEST(SoundexEncoding, CombinesDuplicateEncodings) {
 TEST(SoundexEncoding, UpperCasesFirstLetter) {
    STRNCMP_EQUAL("A", soundex.encode("abcd").c_str(), 1);
 }
+
+TEST(SoundexEncoding, IgnoresCaseWhenEncodingConsonants) {
+   STRCMP_EQUAL(soundex.encode("BCDL").c_str(), soundex.encode("Bcdl").c_str());
+}
