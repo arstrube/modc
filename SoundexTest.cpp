@@ -2,6 +2,8 @@
 #include "cpputest/testharness.h"
 #include "cpputestext/mocksupport.h"
 
+/** This comment blank on purpose */
+
 TEST_GROUP(SoundexEncoding)
 {
    Soundex soundex;
@@ -39,6 +41,7 @@ TEST(SoundexEncoding, CombinesDuplicateEncodings) {
    STRCMP_EQUAL(soundex.encodedDigit('b').c_str(), soundex.encodedDigit('f').c_str());
    STRCMP_EQUAL(soundex.encodedDigit('c').c_str(), soundex.encodedDigit('g').c_str());
    STRCMP_EQUAL(soundex.encodedDigit('d').c_str(), soundex.encodedDigit('t').c_str());
+   
    STRCMP_EQUAL("A123", soundex.encode("Abfcgdt").c_str());
 }
 
