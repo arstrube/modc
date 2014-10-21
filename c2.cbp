@@ -31,6 +31,9 @@
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="..\CppUTestMain.cpp" />
+		<Unit filename="CharUtil.cpp" />
+		<Unit filename="CharUtil.h" />
+		<Unit filename="CharUtilTest.cpp" />
 		<Unit filename="Soundex.h" />
 		<Unit filename="SoundexTest.cpp" />
 		<Extensions>
