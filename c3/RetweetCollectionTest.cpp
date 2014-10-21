@@ -15,26 +15,6 @@ TEST(ARetweetCollection, HasSizeZeroWhenCreated) {
    LONGS_EQUAL(0, collection.size());
 }
 
-TEST(ARetweetCollection, IsNoLongerEmptyAfterTweetAdded) {
-   collection.add(Tweet());
-   CHECK_FALSE(collection.isEmpty());
-}
-
-TEST(ARetweetCollection, HasSizeOfOneAfterTweetAdded) {
-   collection.add(Tweet());
-   LONGS_EQUAL(1, collection.size());
-}
-
-/** Ignore this test for now because we have no reasonable
- *  implementation for removing a tweet, and we don't want to
- *  "cheat" by returning size_
- */
-IGNORE_TEST(ARetweetCollection, IsEmptyAfterRemovingTweet) {
-   collection.add(Tweet());
-   collection.remove(Tweet());
-   LONGS_EQUAL(0, collection.size());
-}
-
 TEST(ARetweetCollection, IsEmptyWhenItsSizeIsZero) {
    LONGS_EQUAL(0, collection.size());
    CHECK(collection.isEmpty());
@@ -46,12 +26,19 @@ TEST(ARetweetCollection, IsNotEmptyWhenItsSizeIsNonZero) {
    CHECK_FALSE(collection.isEmpty());
 }
 
-TEST(ARetweetCollection, IncrementsSizeWhenTweetAdded) {
-   Tweet first("msg1", "@user");
-   collection.add(first);
-   Tweet second("msg2", "@user");
-   collection.add(second);
-   LONGS_EQUAL(2, collection.size());
+TEST_GROUP(ARetweetCollectionWithOneTweet) {
+   RetweetCollection collection;
+   void setup() override {
+      collection.add(Tweet());
+   }
+};
+
+TEST(ARetweetCollectionWithOneTweet, IsNoLongerEmpty) {
+   CHECK_FALSE(collection.isEmpty());
+}
+
+TEST(ARetweetCollectionWithOneTweet, HasSizeOfOne) {
+   LONGS_EQUAL(1, collection.size());
 }
 
 TEST(ARetweetCollection, IgnoresDuplicateTweetAdded) {
