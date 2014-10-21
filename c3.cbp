@@ -27,7 +27,7 @@
 			<Add directory="e:\cpputest\lib" />
 		</Linker>
 		<ExtraCommands>
-			<Add after="echo ./$(PROJECT_NAME).exe" />
+			<Add after="./$(PROJECT_NAME).exe" />
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
