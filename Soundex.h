@@ -34,9 +34,16 @@ private:
 
    std::string encodedDigits(const std::string& word) const {
       std::string encoding;
+      encodeHead(encoding, word);
+      encodeTail(encoding, word);
+      return encoding;
+   }
 
+   void encodeHead(std::string& encoding, const std::string& word) const {
       encoding += encodedDigit(word.front());
+   }
 
+   void encodeTail(std::string& encoding, const std::string& word) const {
       for (auto letter: tail(word)) {
          if (isComplete(encoding)) break;
 
@@ -44,7 +51,6 @@ private:
          if (digit != NotADigit && digit != lastDigit(encoding))
             encoding += digit;
       }
-      return encoding;
    }
 
    std::string lastDigit(const std::string& encoding) const {
