@@ -14,3 +14,8 @@ TEST(ARetweetCollection, IsEmptyWhenCreated) {
 TEST(ARetweetCollection, HasSizeZeroWhenCreated) {
    LONGS_EQUAL(0, collection.size());
 }
+
+TEST(ARetweetCollection, IsNoLongerEmptyAfterTweetAdded) {
+   collection.add(Tweet());
+   CHECK_FALSE(collection.isEmpty());
+}

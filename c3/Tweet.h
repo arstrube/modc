@@ -6,30 +6,8 @@
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/lotdd for more book information.
 ***/
-#ifndef RetweetCollection_h
-#define RetweetCollection_h
-
-#include "Tweet.h"
-
-class RetweetCollection {
-public:
-   RetweetCollection() 
-      : size_(0) {
-   }
-
-   bool isEmpty() const {
-      return 0 == size();
-   }
-
-   unsigned int size() const {
-      return size_;
-   }
-
-   void add(const Tweet& /* tweet */) {
-      size_ = 1;
-   }
-
-private:
-   unsigned int size_;
+#ifndef Tweet_h
+#define Tweet_h
+class Tweet {
 };
 #endif

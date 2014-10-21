@@ -34,6 +34,8 @@
 		<Unit filename="c3\RetweetCollection.cpp" />
 		<Unit filename="c3\RetweetCollection.h" />
 		<Unit filename="c3\RetweetCollectionTest.cpp" />
+		<Unit filename="c3\Tweet.cpp" />
+		<Unit filename="c3\Tweet.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
