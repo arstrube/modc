@@ -14,7 +14,8 @@
 
 class InvalidUserException: public std::invalid_argument {
 public:
-   InvalidUserException(): invalid_argument("") {}
+   InvalidUserException(const std::string& user) 
+      : std::invalid_argument(user) {}
 };
 
 class Tweet {
@@ -23,9 +24,8 @@ public:
    Tweet(const std::string& message="", 
          const std::string& user=Tweet::NULL_USER) 
       : message_(message)
-	  
       , user_(user) {
-      if (!isValid(user_)) throw InvalidUserException();
+      if (!isValid(user_)) throw InvalidUserException(user_);
    }
 
    bool isValid(const std::string& user) const {

@@ -1,6 +1,9 @@
 #include "cpputest/testharness.h"
 #include "cpputestext/mocksupport.h"
 #include "Tweet.h"
+#include <string>
+
+using namespace std;
 
 TEST_GROUP(ATweet) {};
 
@@ -38,4 +41,24 @@ TEST(ATweet, CanBeCopyConstructed) {
    Tweet a("msgA", "@user");
    Tweet b(a);
    CHECK(a == b);
+}
+
+TEST(ATweet, RequiresUserToStartWithAtSign) {
+   string invalidUser("notStartingWith@");
+   try {
+      Tweet tweet("msg", invalidUser);
+      FAIL("Expected exception but got none.");
+   } 
+   catch (const InvalidUserException& expected) {}
+}
+
+TEST(ATweet, RequiresUserNameToStartWithAtSign) {
+   string invalidUser("notStartingWith@");
+   try {
+      Tweet tweet("msg", invalidUser);
+      FAIL("Expected exception but got none.");
+   } 
+   catch (const InvalidUserException& expected) {
+      STRCMP_EQUAL("notStartingWith@", expected.what());
+   }
 }
