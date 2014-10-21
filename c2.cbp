@@ -7,7 +7,7 @@
 		<Option compiler="cygwin" />
 		<Build>
 			<Target title="Debug">
-				<Option output="$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option output=".\$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
 				<Option object_output="out\Debug\" />
 				<Option type="1" />
 				<Option compiler="cygwin" />
@@ -27,18 +27,18 @@
 			<Add directory="e:\cpputest\lib" />
 		</Linker>
 		<ExtraCommands>
-			<Add after="./$(PROJECT_NAME)" />
+			<Add after="./$(PROJECT_NAME).exe" />
 			<Mode after="always" />
 		</ExtraCommands>
-		<Unit filename="..\CppUTestMain.cpp" />
-		<Unit filename="CharUtil.cpp" />
-		<Unit filename="CharUtil.h" />
-		<Unit filename="CharUtilTest.cpp" />
-		<Unit filename="Soundex.h" />
-		<Unit filename="SoundexTest.cpp" />
-		<Unit filename="StringUtil.cpp" />
-		<Unit filename="StringUtil.h" />
-		<Unit filename="StringUtilTest.cpp" />
+		<Unit filename="CppUTestMain.cpp" />
+		<Unit filename="c2\CharUtil.cpp" />
+		<Unit filename="c2\CharUtil.h" />
+		<Unit filename="c2\CharUtilTest.cpp" />
+		<Unit filename="c2\Soundex.h" />
+		<Unit filename="c2\SoundexTest.cpp" />
+		<Unit filename="c2\StringUtil.cpp" />
+		<Unit filename="c2\StringUtil.h" />
+		<Unit filename="c2\StringUtilTest.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
