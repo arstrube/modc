@@ -41,3 +41,19 @@ TEST(ARetweetCollection, IsNotEmptyWhenItsSizeIsNonZero) {
    CHECK(collection.size() > 0);
    CHECK_FALSE(collection.isEmpty());
 }
+
+TEST(ARetweetCollection, IncrementsSizeWhenTweetAdded) {
+   Tweet first("msg1", "@user");
+   collection.add(first);
+   Tweet second("msg2", "@user");
+   collection.add(second);
+   LONGS_EQUAL(2, collection.size());
+}
+
+TEST(ARetweetCollection, IgnoresDuplicateTweetAdded) {
+   Tweet tweet("msg", "@user");
+   Tweet duplicate(tweet);
+   collection.add(tweet);
+   collection.add(duplicate);
+   LONGS_EQUAL(1, collection.size());
+}

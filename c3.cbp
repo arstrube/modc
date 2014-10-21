@@ -27,7 +27,7 @@
 			<Add directory="e:\cpputest\lib" />
 		</Linker>
 		<ExtraCommands>
-			<Add after="./$(PROJECT_NAME).exe" />
+			<Add after="echo ./$(PROJECT_NAME).exe" />
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
@@ -36,6 +36,7 @@
 		<Unit filename="c3\RetweetCollectionTest.cpp" />
 		<Unit filename="c3\Tweet.cpp" />
 		<Unit filename="c3\Tweet.h" />
+		<Unit filename="c3\TweetTest.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
