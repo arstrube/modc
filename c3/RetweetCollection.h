@@ -26,7 +26,7 @@ public:
    }
 
    unsigned int size() const {
-      return 0;
+      return isEmpty() ? 0 : 1;
    }
 
 private:
