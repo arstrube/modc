@@ -24,3 +24,10 @@ TEST(ARetweetCollection, HasSizeOfOneAfterTweetAdded) {
    collection.add(Tweet());
    LONGS_EQUAL(1, collection.size());
 }
+
+TEST(ARetweetCollection, DecreasesSizeAfterRemovingTweet) {
+   collection.add(Tweet());
+   collection.remove(Tweet());
+   LONGS_EQUAL(0, collection.size());
+   CHECK(collection.isEmpty()); // DON'T DO THIS
+}

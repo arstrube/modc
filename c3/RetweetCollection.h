@@ -29,6 +29,10 @@ public:
       return isEmpty() ? 0 : 1;
    }
 
+   void remove(const Tweet& /* tweet */) {
+      empty_ = true;
+   }
+
 private:
    bool empty_;
 };
