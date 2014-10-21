@@ -14,22 +14,22 @@
 class RetweetCollection {
 public:
    RetweetCollection() 
-      : size_(0) {
+      : empty_(true) {
    }
 
    bool isEmpty() const {
-      return 0 == size();
-   }
-
-   unsigned int size() const {
-      return size_;
+      return empty_;
    }
 
    void add(const Tweet& /* tweet */) {
-      size_ = 1;
+      empty_ = false;
+   }
+
+   unsigned int size() const {
+      return 0;
    }
 
 private:
-   unsigned int size_;
+   bool empty_;
 };
 #endif
