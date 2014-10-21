@@ -10,12 +10,30 @@
 #define Tweet_h
 
 #include <string>
+#include <stdexcept>
+
+class InvalidUserException: public std::invalid_argument {
+public:
+   InvalidUserException(): invalid_argument("") {}
+};
 
 class Tweet {
 public:
-   Tweet(const std::string& message="", const std::string& user="") 
+   static const std::string NULL_USER;
+   Tweet(const std::string& message="", 
+         const std::string& user=Tweet::NULL_USER) 
       : message_(message)
+	  
       , user_(user) {
+      if (!isValid(user_)) throw InvalidUserException();
+   }
+
+   bool isValid(const std::string& user) const {
+      return '@' == user[0];
+   }
+
+   std::string user() const {
+      return user_;
    }
 
    bool operator==(const Tweet& rhs) const {
@@ -37,4 +55,5 @@ private:
    std::string message_;
    std::string user_;
 };
+
 #endif
