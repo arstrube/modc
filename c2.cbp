@@ -36,6 +36,9 @@
 		<Unit filename="CharUtilTest.cpp" />
 		<Unit filename="Soundex.h" />
 		<Unit filename="SoundexTest.cpp" />
+		<Unit filename="StringUtil.cpp" />
+		<Unit filename="StringUtil.h" />
+		<Unit filename="StringUtilTest.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
