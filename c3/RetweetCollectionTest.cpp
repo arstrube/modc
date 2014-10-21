@@ -1,12 +1,16 @@
 #include "cpputest/testharness.h"
 #include "cpputestext/mocksupport.h"
 
-class RetweetCollection {};
+#include "RetweetCollection.h"
 
-TEST_GROUP(ARetweetCollection) {};
+TEST_GROUP(ARetweetCollection) {
+   RetweetCollection collection;
+};
 
 TEST(ARetweetCollection, IsEmptyWhenCreated) {
-   RetweetCollection retweets;
-   (void)retweets;
-   FAIL("To be implemented");
+   CHECK(collection.isEmpty());
+}
+
+TEST(ARetweetCollection, HasSizeZeroWhenCreated) {
+   LONGS_EQUAL(0, collection.size());
 }
