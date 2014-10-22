@@ -26,7 +26,10 @@
 		<Linker>
 			<Add library="CppUTest" />
 			<Add library="CppUTestExt" />
+			<Add library="jsoncpp" />
 			<Add directory="e:\cpputest\lib" />
+			<Add directory="e:\jsoncpp\lib" />
+			<Add directory="e:\libcurl\lib" />
 		</Linker>
 		<ExtraCommands>
 			<Add after="./$(PROJECT_NAME).exe" />
