@@ -5,10 +5,13 @@
  *  Simulate it by using a loop & macros inside TEST()
  */
  
-class Adder {
+class Calculator {
 public:
-   static int sum(int a, int b) {
+   static int add(int a, int b) {
       return a + b;
+   }
+   static int multiply(int a, int b) {
+      return a * b;
    }
 };
 
@@ -18,11 +21,15 @@ struct TestCase {
       : a(anA), b(aB), expected(anExpected) {}
 };
 
-TEST_GROUP(AnAdder) {
+TEST_GROUP(ACalculator) {
 };
 
-TEST(AnAdder, GeneratesASumFromTwoNumbers) {
-   LONGS_EQUAL(2, Adder::sum(1, 1));
+TEST(ACalculator, AddsTwoNumbers) {
+   LONGS_EQUAL(2, Calculator::add(1, 1));
+}
+
+TEST(ACalculator, MultipliesTwoNumbers) {
+   LONGS_EQUAL(6, Calculator::multiply(2, 3));
 }
 
 #define CHECK_TABLE(object, method, table, element) {\
@@ -31,7 +38,7 @@ TEST(AnAdder, GeneratesASumFromTwoNumbers) {
    }\
 }
 
-TestCase table[] = { 
+TestCase addition_table[] = { 
    TestCase( 1, 1, 2), 
    TestCase( 1, 2, 3),
    TestCase( 2, 2, 4),
@@ -39,6 +46,18 @@ TestCase table[] = {
    TestCase(-2,-2,-4)
 };
 
-TEST(AnAdder, GeneratesLotsOfSumsFromTwoNumbers) {
-   CHECK_TABLE(Adder, sum, table, TestCase);
+TestCase multiplication_table[] = { 
+   TestCase( 1, 1, 1), 
+   TestCase( 1, 2, 2),
+   TestCase( 2, 2, 4),
+   TestCase(-2, 2,-4),
+   TestCase(-2,-2, 4)
+};
+
+TEST(ACalculator, AddsTwoNumbersLotsOfTimes) {
+   CHECK_TABLE(Calculator, add, addition_table, TestCase);
+}
+
+TEST(ACalculator, MultipliesTwoNumbersLotsOfTimes) {
+   CHECK_TABLE(Calculator, multiply, multiplication_table, TestCase);
 }
