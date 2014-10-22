@@ -5,6 +5,13 @@
  *  Simulate it by using a loop & macros inside TEST()
  */
  
+class Adder {
+public:
+   static int sum(int a, int b) {
+      return a + b;
+   }
+};
+
 struct SumCase {
    int a, b, expected;
    SumCase(int anA, int aB, int anExpected) 
@@ -12,13 +19,6 @@ struct SumCase {
 };
 
 TEST_GROUP(AnAdder) {
-};
-
-class Adder {
-public:
-   static int sum(int a, int b) {
-      return a + b;
-   }
 };
 
 TEST(AnAdder, GeneratesASumFromTwoNumbers) {
