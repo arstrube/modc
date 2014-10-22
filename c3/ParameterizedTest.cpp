@@ -12,9 +12,9 @@ public:
    }
 };
 
-struct SumCase {
+struct TestCase {
    int a, b, expected;
-   SumCase(int anA, int aB, int anExpected) 
+   TestCase(int anA, int aB, int anExpected) 
       : a(anA), b(aB), expected(anExpected) {}
 };
 
@@ -31,14 +31,14 @@ TEST(AnAdder, GeneratesASumFromTwoNumbers) {
    }\
 }
 
-SumCase sums[] = { 
-   SumCase( 1, 1, 2), 
-   SumCase( 1, 2, 3),
-   SumCase( 2, 2, 4),
-   SumCase(-2, 2, 0),
-   SumCase(-2,-2,-4)
+TestCase table[] = { 
+   TestCase( 1, 1, 2), 
+   TestCase( 1, 2, 3),
+   TestCase( 2, 2, 4),
+   TestCase(-2, 2, 0),
+   TestCase(-2,-2,-4)
 };
 
 TEST(AnAdder, GeneratesLotsOfSumsFromTwoNumbers) {
-   CHECK_TABLE(Adder, sum, sums, SumCase);
+   CHECK_TABLE(Adder, sum, table, TestCase);
 }
