@@ -32,9 +32,11 @@ TEST(AnAdder, GeneratesASumFromTwoNumbers) {
 }
 
 SumCase sums[] = { 
-   SumCase(1, 1, 2), 
-   SumCase(1, 2, 3),
-   SumCase(2, 2, 4)
+   SumCase( 1, 1, 2), 
+   SumCase( 1, 2, 3),
+   SumCase( 2, 2, 4),
+   SumCase(-2, 2, 0),
+   SumCase(-2,-2,-4)
 };
 
 TEST(AnAdder, GeneratesLotsOfSumsFromTwoNumbers) {
