@@ -1,9 +1,8 @@
 #include "cpputest/testharness.h"
 #include "cpputestext/mocksupport.h"
 
-#if 0
-
-/** Not sure how to do this with CppUTest
+/** CppUTest does not directly support this.
+ *  Simulate it by using a loop & macros inside TEST()
  */
  
 struct SumCase {
@@ -12,7 +11,7 @@ struct SumCase {
       : a(anA), b(aB), expected(anExpected) {}
 };
 
-class AnAdder: public TestWithParam<SumCase> {
+TEST_GROUP(AnAdder) {
 };
 
 class Adder {
@@ -23,19 +22,21 @@ public:
 };
 
 TEST(AnAdder, GeneratesASumFromTwoNumbers) {
-   ASSERT_THAT(Adder::sum(1, 1), Eq(2));
+   LONGS_EQUAL(2, Adder::sum(1, 1));
 }
 
-TEST_P(AnAdder, GeneratesLotsOfSumsFromTwoNumbers) {
-   SumCase input = GetParam();
-   ASSERT_THAT(Adder::sum(input.a, input.b), Eq(input.expected));
+#define CHECK_TABLE(object, method, table, element) {\
+   for(auto i=0u; i < sizeof(table) / sizeof(element); i++) {\
+      LONGS_EQUAL(table[i].expected, object::method(table[i].a, table[i].b));\
+   }\
 }
+
 SumCase sums[] = { 
    SumCase(1, 1, 2), 
    SumCase(1, 2, 3),
-   SumCase(2, 2, 4) 
+   SumCase(2, 2, 4)
 };
 
-INSTANTIATE_TEST_CASE_P(BulkTest, AnAdder, ValuesIn(sums));
-
-#endif
+TEST(AnAdder, GeneratesLotsOfSumsFromTwoNumbers) {
+   CHECK_TABLE(Adder, sum, sums, SumCase);
+}
