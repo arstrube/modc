@@ -28,8 +28,16 @@ TEST(ARetweetCollection, IsNotEmptyWhenItsSizeIsNonZero) {
 
 TEST_GROUP(ARetweetCollectionWithOneTweet) {
    RetweetCollection collection;
+   Tweet* tweet;
+   
    void setup() override {
-      collection.add(Tweet("msg", "@user"));
+      tweet = new Tweet("msg", "@user");
+      collection.add(*tweet);
+   }
+   
+   void teardown() override {
+      delete tweet;
+      tweet = nullptr;
    }
 };
 
@@ -41,10 +49,8 @@ TEST(ARetweetCollectionWithOneTweet, HasSizeOfOne) {
    LONGS_EQUAL(1, collection.size());
 }
 
-TEST(ARetweetCollection, IgnoresDuplicateTweetAdded) {
-   Tweet tweet("msg", "@user");
-   Tweet duplicate(tweet);
-   collection.add(tweet);
+TEST(ARetweetCollectionWithOneTweet, IgnoresDuplicateTweetAdded) {
+   Tweet duplicate(*tweet);
    collection.add(duplicate);
    LONGS_EQUAL(1, collection.size());
 }
