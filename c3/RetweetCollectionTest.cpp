@@ -2,6 +2,9 @@
 #include "cpputestext/mocksupport.h"
 
 #include "RetweetCollection.h"
+#include <memory>
+
+using namespace std;
 
 TEST_GROUP(ARetweetCollection) {
    RetweetCollection collection;
@@ -28,16 +31,11 @@ TEST(ARetweetCollection, IsNotEmptyWhenItsSizeIsNonZero) {
 
 TEST_GROUP(ARetweetCollectionWithOneTweet) {
    RetweetCollection collection;
-   Tweet* tweet;
+   shared_ptr<Tweet> tweet;
    
    void setup() override {
-      tweet = new Tweet("msg", "@user");
+      tweet = shared_ptr<Tweet>(new Tweet("msg", "@user"));
       collection.add(*tweet);
-   }
-   
-   void teardown() override {
-      delete tweet;
-      tweet = nullptr;
    }
 };
 

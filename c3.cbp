@@ -31,6 +31,7 @@
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
+		<Unit filename="c3\ParameterizedTest.cpp" />
 		<Unit filename="c3\RetweetCollection.cpp" />
 		<Unit filename="c3\RetweetCollection.h" />
 		<Unit filename="c3\RetweetCollectionTest.cpp" />
