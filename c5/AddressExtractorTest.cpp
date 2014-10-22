@@ -1,40 +1,40 @@
-#include "gmock/gmock.h"
+#include "cpputest/testharness.h"
+#include "cpputestext/mocksupport.h"
 #include "AddressExtractor.h"
 
 #include <algorithm>
 #include <string>
 
 using namespace std;
-using namespace testing;
 
-class AnAddressExtractor: public Test {
+TEST_GROUP(AnAddressExtractor) {
 public:
    AddressExtractor extractor;
+   bool IsEmpty(Address arg) {
+      return 
+         arg.road.empty() &&
+         arg.city.empty() &&
+         arg.state.empty() &&
+         arg.country.empty();
+   }
 };
 
-MATCHER(IsEmpty, "") {
-   return 
-      arg.road.empty() &&
-      arg.city.empty() &&
-      arg.state.empty() &&
-      arg.country.empty();
-}
 
-TEST_F(AnAddressExtractor, ReturnsAnEmptyAddressOnAFailedParse) {
+TEST(AnAddressExtractor, ReturnsAnEmptyAddressOnAFailedParse) {
    auto address = extractor.addressFrom("not valid json");
 
-   ASSERT_THAT(address, IsEmpty());
+   CHECK(IsEmpty(address));
 }
 
-TEST_F(AnAddressExtractor, ReturnsAnEmptyAddressWhenNoAddressFound) {
+TEST(AnAddressExtractor, ReturnsAnEmptyAddressWhenNoAddressFound) {
    auto json = R"({ "place_id":"15331615" })";
 
    auto address = extractor.addressFrom(json);
 
-   ASSERT_THAT(address, IsEmpty());
+   CHECK(IsEmpty(address));
 }
 
-TEST_F(AnAddressExtractor, ReturnsPopulatedAddressForValidJsonResult) {
+TEST(AnAddressExtractor, ReturnsPopulatedAddressForValidJsonResult) {
    auto json = R"({
          "place_id":"15331615",
          "address":{
@@ -47,13 +47,13 @@ TEST_F(AnAddressExtractor, ReturnsPopulatedAddressForValidJsonResult) {
 
    auto address = extractor.addressFrom(json);
 
-   ASSERT_THAT(address.road, Eq("War Eagle Court"));
-   ASSERT_THAT(address.city, Eq("Colorado Springs"));
-   ASSERT_THAT(address.state, Eq("Colorado"));
-   ASSERT_THAT(address.country, Eq("United States of America"));
+   STRCMP_EQUAL("War Eagle Court", address.road.c_str());
+   STRCMP_EQUAL("Colorado Springs", address.city.c_str());
+   STRCMP_EQUAL("Colorado", address.state.c_str());
+   STRCMP_EQUAL("United States of America", address.country.c_str());
 }
 
-TEST_F(AnAddressExtractor, DefaultsNonexistentFieldsToEmpty) {
+TEST(AnAddressExtractor, DefaultsNonexistentFieldsToEmpty) {
    auto json = R"({
          "address":{
             "road":"War Eagle Court",
@@ -62,6 +62,6 @@ TEST_F(AnAddressExtractor, DefaultsNonexistentFieldsToEmpty) {
 
    auto address = extractor.addressFrom(json);
 
-   ASSERT_THAT(address.state, Eq(""));
+   STRCMP_EQUAL("", address.state.c_str());
 }
 

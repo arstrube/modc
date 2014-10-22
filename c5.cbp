@@ -20,6 +20,8 @@
 			<Add option="-g" />
 			<Add option="-Werror" />
 			<Add directory="e:\cpputest\include" />
+			<Add directory="e:\libcurl\include" />
+			<Add directory="e:\jsoncpp\include" />
 		</Compiler>
 		<Linker>
 			<Add library="CppUTest" />
