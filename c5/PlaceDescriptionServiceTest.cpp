@@ -22,15 +22,21 @@ TEST_GROUP(APlaceDescriptionService) {
 class HttpStub: public Http {
    void initialize() override {}
    std::string get(const std::string& url) const override {
-      auto expectedArgs(
-         "lat=" + PlaceDescriptionServiceFixture::ValidLatitude + "&"
-         "lon=" + PlaceDescriptionServiceFixture::ValidLongitude);
-      STRCMP_CONTAINS(url.c_str(), expectedArgs.c_str());
+      verify(url);
       return R"({ "address": {
          "road":"Drury Ln",
          "city":"Fountain",
          "state":"CO",
          "country":"US" }})";
+   }
+
+   void verify(const string& url) const {
+      string urlStart(
+         "http://open.mapquestapi.com/nominatim/v1/reverse?format=json&");
+      string expected(urlStart + 
+         "lat=" + PlaceDescriptionServiceFixture::ValidLatitude + "&" +
+         "lon=" + PlaceDescriptionServiceFixture::ValidLongitude);
+      STRCMP_EQUAL(url.c_str(), expected.c_str());
    }
 };
 
