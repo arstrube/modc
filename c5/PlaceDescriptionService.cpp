@@ -10,7 +10,10 @@ PlaceDescriptionService::PlaceDescriptionService(Http* http) : http_(http) {}
 
 string PlaceDescriptionService::summaryDescription(
       const string& latitude, const string& longitude) const {
-   auto getRequestUrl = "lat=" + latitude + "&lon=" + longitude; 
+   (void)latitude;
+   (void)longitude;
+   auto getRequestUrl = "";
+   // auto getRequestUrl = "lat=" + latitude + "&lon=" + longitude; 
    auto jsonResponse = http_->get(getRequestUrl);
 
    AddressExtractor extractor;
@@ -18,5 +21,4 @@ string PlaceDescriptionService::summaryDescription(
    return address.road + ", " + address.city + ", " + 
           address.state + ", " + address.country;
 }
-
 

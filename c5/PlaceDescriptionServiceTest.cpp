@@ -23,7 +23,11 @@ class HttpStub: public Http {
    void initialize() override {}
    std::string get(const std::string& url) const override {
       (void) url;
-      return "???";
+      return R"({ "address": {
+         "road":"Drury Ln",
+         "city":"Fountain",
+         "state":"CO",
+         "country":"US" }})";
    }
 };
 
@@ -35,4 +39,3 @@ TEST(APlaceDescriptionService, ReturnsDescriptionForValidLocation) {
 
    STRCMP_EQUAL("Drury Ln, Fountain, CO, US", description.c_str());
 }
-

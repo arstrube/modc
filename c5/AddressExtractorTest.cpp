@@ -19,7 +19,6 @@ public:
    }
 };
 
-
 TEST(AnAddressExtractor, ReturnsAnEmptyAddressOnAFailedParse) {
    auto address = extractor.addressFrom("not valid json");
 
