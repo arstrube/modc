@@ -17,38 +17,32 @@ const string PlaceDescriptionServiceFixture::ValidLongitude("-104.44");
 
 TEST_GROUP(APlaceDescriptionService) {
    PlaceDescriptionServiceFixture f;
+   string expectedURL;
+   void teardown() {
+       mock().checkExpectations();
+       mock().clear();
+   }
 };
 
 class HttpStub: public Http {
 public:
-   string returnResponse;
-   string expectedURL;
-   void initialize() override {}
-   std::string get(const std::string& url) const override {
-      verify(url);
-      return returnResponse;
+   void initialize() override {
+       mock().actualCall("initialize");
    }
-   void verify(const string& url) const {
-      STRCMP_EQUAL(expectedURL.c_str(), url.c_str());
+   string get(const string& url) const override {
+      mock().actualCall("get").withParameter("url", url.c_str());
+      return string(mock().returnValue().getStringValue());
    }
 };
 
-TEST(APlaceDescriptionService, ReturnsDescriptionForValidLocation) {
+TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
    HttpStub httpStub;
-   httpStub.returnResponse = // ...
-                             R"({"address": {
-                                    "road":"Drury Ln",
-                                    "city":"Fountain",
-                                    "state":"CO",
-                                    "country":"US" }})";
-   string urlStart{
-      "http://open.mapquestapi.com/nominatim/v1/reverse?format=json&"};
-   httpStub.expectedURL = urlStart + 
-      "lat=" + PlaceDescriptionServiceFixture::ValidLatitude + "&" +
-      "lon=" + PlaceDescriptionServiceFixture::ValidLongitude;
+   string urlStart{"http://open.mapquestapi.com/nominatim/v1/reverse?format=json"};
+   expectedURL = urlStart + "&lat=" + f.ValidLatitude + "&lon=" + f.ValidLongitude;
+      
+   mock().expectOneCall("get").withParameter("url", expectedURL.c_str());
+   
    PlaceDescriptionService service{&httpStub};
-
-   auto description = service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
-
-   STRCMP_EQUAL("Drury Ln, Fountain, CO, US", description.c_str());
+   
+   service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 }
