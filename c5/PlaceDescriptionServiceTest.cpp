@@ -62,7 +62,8 @@ TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
 }
 
 TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
-   HttpStub httpStub;
+  
+   HttpStub httpStub; /// NiceMock<HttpStub> httpStub - no equivalent in CppUTest
    mock().expectOneCall("get").ignoreOtherParameters()
          .andReturnValue(R"({ "address": {
               "road":"Drury Ln",
