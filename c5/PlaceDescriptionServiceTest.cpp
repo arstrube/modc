@@ -22,18 +22,15 @@ TEST_GROUP(APlaceDescriptionService) {
 class HttpStub: public Http {
    void initialize() override {}
    std::string get(const std::string& url) const override {
-      verify(url);
+      auto expectedArgs(
+         "lat=" + PlaceDescriptionServiceFixture::ValidLatitude + "&"
+         "lon=" + PlaceDescriptionServiceFixture::ValidLongitude);
+      STRCMP_CONTAINS(url.c_str(), expectedArgs.c_str());
       return R"({ "address": {
          "road":"Drury Ln",
          "city":"Fountain",
          "state":"CO",
          "country":"US" }})";
-   }
-   void verify(const string& url) const {
-      auto expectedArgs(
-         "lat=" + PlaceDescriptionServiceFixture::ValidLatitude + "&"
-         "lon=" + PlaceDescriptionServiceFixture::ValidLongitude);
-         STRCMP_CONTAINS(url.c_str(), expectedArgs.c_str());
    }
 };
 
