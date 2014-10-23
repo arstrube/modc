@@ -47,3 +47,19 @@ TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
    
    service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 }
+
+TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
+   HttpStub httpStub;
+   mock().expectOneCall("get").ignoreOtherParameters()
+         .andReturnValue(R"({ "address": {
+              "road":"Drury Ln",
+              "city":"Fountain",
+              "state":"CO",
+              "country":"US" }})");
+              
+   PlaceDescriptionService service(&httpStub);
+   
+   auto description = service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
+   
+   STRCMP_EQUAL("Drury Ln, Fountain, CO, US", description.c_str());
+}
