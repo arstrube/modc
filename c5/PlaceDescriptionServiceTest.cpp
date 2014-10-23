@@ -40,8 +40,9 @@ TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
    string urlStart{"http://open.mapquestapi.com/nominatim/v1/reverse?format=json"};
    expectedURL = urlStart + "&lat=" + f.ValidLatitude + "&lon=" + f.ValidLongitude;
       
-   mock().expectOneCall("get").withParameter("url", expectedURL.c_str());
-   
+   mock().expectOneCall("get").withParameter("url", expectedURL.c_str())
+         .andReturnValue("");
+
    PlaceDescriptionService service{&httpStub};
    
    service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
