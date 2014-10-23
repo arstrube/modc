@@ -37,7 +37,8 @@ public:
 
 TEST(APlaceDescriptionService, HttpIsInitializedUponRequest) {
    HttpStub httpStub;
-      
+   
+   mock().strictOrder();
    mock().expectOneCall("initialize");
    mock().expectOneCall("get").ignoreOtherParameters()
          .andReturnValue("");
