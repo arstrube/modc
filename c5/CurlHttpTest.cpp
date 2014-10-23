@@ -17,7 +17,7 @@ TEST(Http, WriteCallback) {
 
 TEST_GROUP(HttpIntegration) {};
 
-TEST(HttpIntegration, Get) {
+IGNORE_TEST(HttpIntegration, Get) {
    CurlHttp http;
    http.initialize();
    auto response = http.get("http://langrsoft.com");
