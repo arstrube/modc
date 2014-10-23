@@ -20,17 +20,16 @@ TEST_GROUP(APlaceDescriptionService) {
 };
 
 class HttpStub: public Http {
+public:
+   string returnResponse;
    void initialize() override {}
    std::string get(const std::string& url) const override {
       verify(url);
-      return R"({ "address": {
-         "road":"Drury Ln",
-         "city":"Fountain",
-         "state":"CO",
-         "country":"US" }})";
+      return returnResponse;
    }
 
    void verify(const string& url) const {
+      // ...
       string urlStart(
          "http://open.mapquestapi.com/nominatim/v1/reverse?format=json&");
       string expected(urlStart + 
@@ -42,9 +41,12 @@ class HttpStub: public Http {
 
 TEST(APlaceDescriptionService, ReturnsDescriptionForValidLocation) {
    HttpStub httpStub;
+   httpStub.returnResponse = R"({"address": {
+                                    "road":"Drury Ln",
+                                    "city":"Fountain",
+                                    "state":"CO",
+                                    "country":"US" }})";
    PlaceDescriptionService service{&httpStub};
-
    auto description = service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
-
    STRCMP_EQUAL("Drury Ln, Fountain, CO, US", description.c_str());
 }

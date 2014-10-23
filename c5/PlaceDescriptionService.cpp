@@ -14,6 +14,7 @@ string PlaceDescriptionService::summaryDescription(
    auto response = get(request);
    return summaryDescription(response);
 }
+
 string PlaceDescriptionService::summaryDescription(
       const string& response) const {
    AddressExtractor extractor;
@@ -34,6 +35,7 @@ string PlaceDescriptionService::createGetRequestUrl(
       keyValue("lat", latitude) + "&" +
       keyValue("lon", longitude);
 }
+
 string PlaceDescriptionService::keyValue(
       const string& key, const string& value) const {
    return key + "=" + value;
