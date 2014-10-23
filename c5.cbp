@@ -41,14 +41,10 @@
 		<Unit filename="c5\Address.h" />
 		<Unit filename="c5\AddressExtractor.cpp" />
 		<Unit filename="c5\AddressExtractor.h" />
-		<Unit filename="c5\AddressExtractorTest.cpp">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
+		<Unit filename="c5\AddressExtractorTest.cpp" />
 		<Unit filename="c5\CurlHttp.cpp" />
 		<Unit filename="c5\CurlHttp.h" />
-		<Unit filename="c5\CurlHttpTest.cpp">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
+		<Unit filename="c5\CurlHttpTest.cpp" />
 		<Unit filename="c5\Http.h" />
 		<Unit filename="c5\PlaceDescriptionService.cpp" />
 		<Unit filename="c5\PlaceDescriptionService.h" />
