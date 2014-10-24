@@ -6,21 +6,20 @@
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/lotdd for more book information.
 ***/
-#ifndef Address_h
-#define Address_h
+#ifndef HttpFactory_h
+#define HttpFactory_h
 
-#include <string>
+#include <memory>
+#include "Http.h"
 
-struct Address {
-   std::string road;
-   std::string city;
-   std::string state;
-   std::string country;
+class HttpFactory {
+public:
+   HttpFactory();
+   std::shared_ptr<Http> get();
+   void setInstance(std::shared_ptr<Http>);
+   void reset();
 
-   std::string summaryDescription() const {
-      return road + ", " + city + ", " + state + ", " + country;
-   }
+private:
+   std::shared_ptr<Http> instance;
 };
-
 #endif
-

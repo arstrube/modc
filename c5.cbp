@@ -46,6 +46,8 @@
 		<Unit filename="c5\CurlHttp.h" />
 		<Unit filename="c5\CurlHttpTest.cpp" />
 		<Unit filename="c5\Http.h" />
+		<Unit filename="c5\HttpFactory.cpp" />
+		<Unit filename="c5\HttpFactory.h" />
 		<Unit filename="c5\OutParameterTest.cpp" />
 		<Unit filename="c5\PlaceDescriptionService.cpp" />
 		<Unit filename="c5\PlaceDescriptionService.h" />

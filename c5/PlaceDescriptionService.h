@@ -10,20 +10,17 @@
 #define PlaceDescriptionService_h
 
 #include <string>
+#include <memory>
 #include "Address.h"
-#include <curl/curl.h>
-#include <json/reader.h>
-#include <json/value.h>
+#include "HttpFactory.h"
+
+class Http;
 
 class PlaceDescriptionService {
 public:
-   PlaceDescriptionService();
-   ~PlaceDescriptionService() {
-      curl_global_cleanup();
-   }
+   PlaceDescriptionService(std::shared_ptr<HttpFactory> factory);
    std::string summaryDescription(
       const std::string& latitude, const std::string& longitude) const;
-   static size_t writeCallback(const char* buf, size_t size, size_t nMemb, void*);
 
 private:
    std::string createGetRequestUrl(
@@ -31,10 +28,10 @@ private:
    std::string summaryDescription(const Address& address) const;
    std::string keyValue(
       const std::string& key, const std::string& value) const;
-   std::string getString(Json::Value& result, const std::string& name) const;
+   std::string get(const std::string& requestUrl) const;
+   std::string summaryDescription(const std::string& response) const;
 
-   CURL* curl;
-   static std::string response_;
+   std::shared_ptr<HttpFactory> httpFactory_;
 };
 
 #endif
