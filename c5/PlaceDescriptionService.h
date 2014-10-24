@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Modern C++ Programming with Test-Driven Development",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material, 
+ * Copyrights apply to this code. It may not be used to create training material,
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose. 
+ * We make no guarantees that this code is fit for any purpose.
  * Visit http://www.pragmaticprogrammer.com/titles/lotdd for more book information.
 ***/
 #ifndef PlaceDescriptionService_h
@@ -13,7 +13,6 @@
 #include <memory>
 #include "Address.h"
 #include "AddressExtractor.h"
-//#include "Http.h"
 
 template<typename HTTP>
 class PlaceDescriptionServiceTemplate {
@@ -24,11 +23,6 @@ public:
       auto request = createGetRequestUrl(latitude, longitude);
       auto response = get(request);
       return summaryDescription(response);
-   }
-
-   // mocks in tests need the reference
-   HTTP& http() {
-      return http_;
    }
 private:
    // ...
