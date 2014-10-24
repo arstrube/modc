@@ -1,6 +1,6 @@
 #include "cpputest/testharness.h"
 #include "cpputestext/mocksupport.h"
-
+#include <memory>
 #include "PlaceDescriptionService.h"
 #include "Http.h"
 
@@ -34,8 +34,16 @@ TEST_GROUP(APlaceDescriptionService) {
    }
 };
 
+class PlaceDescriptionService_StubHttpService: public PlaceDescriptionService {
+public:
+   PlaceDescriptionService_StubHttpService(shared_ptr<HttpStub> httpStub) 
+      : httpStub_{httpStub} {}
+   shared_ptr<Http> httpService() const override { return httpStub_; }
+   shared_ptr<Http> httpStub_;
+};
+
 TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
-   HttpStub httpStub;
+   shared_ptr<HttpStub> httpStub{new HttpStub};
    string urlStart{"http://open.mapquestapi.com/nominatim/v1/reverse?format=json"};
    expectedURL = urlStart + "&lat=" + f.ValidLatitude + "&lon=" + f.ValidLongitude;
       
@@ -43,14 +51,14 @@ TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
          .andReturnValue("");
    mock().ignoreOtherCalls();
 
-   PlaceDescriptionService service{&httpStub};
+   PlaceDescriptionService_StubHttpService service{httpStub};
 
    service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 }
 
 TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
   
-   HttpStub httpStub; /// NiceMock<HttpStub> httpStub - no equivalent in CppUTest
+   shared_ptr<HttpStub> httpStub{new HttpStub}; /// NiceMock<HttpStub> httpStub - no equivalent in CppUTest
    mock().expectOneCall("get").ignoreOtherParameters()
          .andReturnValue(R"({ "address": {
               "road":"Drury Ln",
@@ -59,7 +67,7 @@ TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
               "country":"US" }})");
    mock().ignoreOtherCalls();
    
-   PlaceDescriptionService service(&httpStub);
+   PlaceDescriptionService_StubHttpService service{httpStub};
 
    auto description = service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 
@@ -67,14 +75,14 @@ TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
 }
 
 TEST(APlaceDescriptionService, HttpIsInitializedUponRequest) {
-   HttpStub httpStub;
+   shared_ptr<HttpStub> httpStub{new HttpStub};
    
    mock().strictOrder();
    mock().expectOneCall("initialize");
    mock().expectOneCall("get").ignoreOtherParameters()
          .andReturnValue("");
 
-   PlaceDescriptionService service{&httpStub};
+   PlaceDescriptionService_StubHttpService service{httpStub};
 
    service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 }

@@ -10,13 +10,15 @@
 #define PlaceDescriptionService_h
 
 #include <string>
+#include <memory>
 #include "Address.h"
 
 class Http;
 
 class PlaceDescriptionService {
 public:
-   PlaceDescriptionService(Http* http);
+   virtual ~PlaceDescriptionService() {}
+// ...
    std::string summaryDescription(
       const std::string& latitude, const std::string& longitude) const;
 
@@ -29,7 +31,8 @@ private:
    std::string get(const std::string& requestUrl) const;
    std::string summaryDescription(const std::string& response) const;
 
-   Http* http_;
+protected:
+   virtual std::shared_ptr<Http> httpService() const;
 };
 
 #endif
