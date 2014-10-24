@@ -21,13 +21,13 @@ public:
 
    void initialize();
    virtual std::string get(const std::string& url) const;
-   static std::string Response();
-   static size_t writeCallback(const char* buf, size_t size, size_t nMemb, void*);
+   std::string Response() const;
+   size_t writeCallback(const char* buf, size_t size, size_t nMemb, void*);
 
 private:
    CURL* curl;
 
-   static std::string response_;
+   std::string response_;
 };
 
 #endif
