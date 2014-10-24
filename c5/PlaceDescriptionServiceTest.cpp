@@ -28,10 +28,7 @@ const string PlaceDescriptionServiceFixture::ValidLongitude("-104.44");
 TEST_GROUP(APlaceDescriptionService) {
    PlaceDescriptionServiceFixture f;
    string expectedURL;
-   shared_ptr<HttpStub> httpStub;
-   void setup() {
-       httpStub = make_shared<HttpStub>();
-   };
+   shared_ptr<HttpStub> httpStub{new HttpStub};
    void teardown() {
        mock().checkExpectations();
        mock().clear();
