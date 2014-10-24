@@ -6,24 +6,6 @@
 
 using namespace std;
 
-class PlaceDescriptionServiceFixture {
-public:
-   static const string ValidLatitude;
-   static const string ValidLongitude;
-};
-
-const string PlaceDescriptionServiceFixture::ValidLatitude("38.005");
-const string PlaceDescriptionServiceFixture::ValidLongitude("-104.44");
-
-TEST_GROUP(APlaceDescriptionService) {
-   PlaceDescriptionServiceFixture f;
-   string expectedURL;
-   void teardown() {
-       mock().checkExpectations();
-       mock().clear();
-   }
-};
-
 class HttpStub: public Http {
 public:
    void initialize() override {
@@ -35,18 +17,22 @@ public:
    }
 };
 
-TEST(APlaceDescriptionService, HttpIsInitializedUponRequest) {
-   HttpStub httpStub;
-   
-   mock().strictOrder();
-   mock().expectOneCall("initialize");
-   mock().expectOneCall("get").ignoreOtherParameters()
-         .andReturnValue("");
+class PlaceDescriptionServiceFixture {
+public:
+   static const string ValidLatitude;
+   static const string ValidLongitude;
+};
+const string PlaceDescriptionServiceFixture::ValidLatitude("38.005");
+const string PlaceDescriptionServiceFixture::ValidLongitude("-104.44");
 
-   PlaceDescriptionService service{&httpStub};
-
-   service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
-}
+TEST_GROUP(APlaceDescriptionService) {
+   PlaceDescriptionServiceFixture f;
+   string expectedURL;
+   void teardown() {
+       mock().checkExpectations();
+       mock().clear();
+   }
+};
 
 TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
    HttpStub httpStub;
@@ -78,4 +64,17 @@ TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
    auto description = service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 
    STRCMP_EQUAL("Drury Ln, Fountain, CO, US", description.c_str());
+}
+
+TEST(APlaceDescriptionService, HttpIsInitializedUponRequest) {
+   HttpStub httpStub;
+   
+   mock().strictOrder();
+   mock().expectOneCall("initialize");
+   mock().expectOneCall("get").ignoreOtherParameters()
+         .andReturnValue("");
+
+   PlaceDescriptionService service{&httpStub};
+
+   service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 }
