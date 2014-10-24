@@ -25,7 +25,7 @@ string CurlHttp::get(const string& url) const {
 }
 
 string CurlHttp::Response() const {
-   return "invalid request"; // TODO test
+   return response_;
 }
 
 size_t CurlHttp::writeCallback(const char* buf, size_t size, size_t nMemb, void*) {
@@ -33,4 +33,3 @@ size_t CurlHttp::writeCallback(const char* buf, size_t size, size_t nMemb, void*
       response_.push_back(buf[i]);
    return size * nMemb;
 }
-
