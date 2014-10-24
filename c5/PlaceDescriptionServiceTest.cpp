@@ -72,7 +72,7 @@ TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
    STRCMP_EQUAL("Drury Ln, Fountain, CO, US", description.c_str());
 }
 
-TEST(APlaceDescriptionService, HttpIsInitializedUponRequest) {   
+TEST(APlaceDescriptionService, HttpIsInitializedUponConstruction) {   
    mock().strictOrder();
    mock().expectOneCall("initialize");
    mock().expectOneCall("get").ignoreOtherParameters()

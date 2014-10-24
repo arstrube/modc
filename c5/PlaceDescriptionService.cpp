@@ -7,6 +7,10 @@
 
 using namespace std;
 
+PlaceDescriptionService::PlaceDescriptionService() 
+   : http_{make_shared<CurlHttp>()} {}
+// ...
+
 string PlaceDescriptionService::summaryDescription(
       const string& latitude, const string& longitude) const {
    auto request = createGetRequestUrl(latitude, longitude);
@@ -28,7 +32,7 @@ string PlaceDescriptionService::get(const string& url) const {
 }
 
 shared_ptr<Http> PlaceDescriptionService::httpService() const {
-   return make_shared<CurlHttp>();
+   return http_;
 }
 
 string PlaceDescriptionService::createGetRequestUrl(
