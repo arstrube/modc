@@ -28,6 +28,10 @@ const string PlaceDescriptionServiceFixture::ValidLongitude("-104.44");
 TEST_GROUP(APlaceDescriptionService) {
    PlaceDescriptionServiceFixture f;
    string expectedURL;
+   shared_ptr<HttpStub> httpStub;
+   void setup() {
+       httpStub = make_shared<HttpStub>();
+   };
    void teardown() {
        mock().checkExpectations();
        mock().clear();
@@ -43,7 +47,6 @@ public:
 };
 
 TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
-   shared_ptr<HttpStub> httpStub{new HttpStub};
    string urlStart{"http://open.mapquestapi.com/nominatim/v1/reverse?format=json"};
    expectedURL = urlStart + "&lat=" + f.ValidLatitude + "&lon=" + f.ValidLongitude;
       
@@ -57,8 +60,6 @@ TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
 }
 
 TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
-  
-   shared_ptr<HttpStub> httpStub{new HttpStub}; /// NiceMock<HttpStub> httpStub - no equivalent in CppUTest
    mock().expectOneCall("get").ignoreOtherParameters()
          .andReturnValue(R"({ "address": {
               "road":"Drury Ln",
@@ -74,9 +75,7 @@ TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
    STRCMP_EQUAL("Drury Ln, Fountain, CO, US", description.c_str());
 }
 
-TEST(APlaceDescriptionService, HttpIsInitializedUponRequest) {
-   shared_ptr<HttpStub> httpStub{new HttpStub};
-   
+TEST(APlaceDescriptionService, HttpIsInitializedUponRequest) {   
    mock().strictOrder();
    mock().expectOneCall("initialize");
    mock().expectOneCall("get").ignoreOtherParameters()
