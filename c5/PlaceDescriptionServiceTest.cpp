@@ -35,6 +35,18 @@ public:
    }
 };
 
+TEST(APlaceDescriptionService, HttpIsInitializedUponRequest) {
+   HttpStub httpStub;
+      
+   mock().expectOneCall("initialize");
+   mock().expectOneCall("get").ignoreOtherParameters()
+         .andReturnValue("");
+
+   PlaceDescriptionService service{&httpStub};
+
+   service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
+}
+
 TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
    HttpStub httpStub;
    string urlStart{"http://open.mapquestapi.com/nominatim/v1/reverse?format=json"};
@@ -42,7 +54,7 @@ TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
       
    mock().expectOneCall("get").withParameter("url", expectedURL.c_str())
          .andReturnValue("");
-   mock().expectOneCall("initialize");
+   mock().ignoreOtherCalls();
 
    PlaceDescriptionService service{&httpStub};
 
