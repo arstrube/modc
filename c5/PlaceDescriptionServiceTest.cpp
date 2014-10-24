@@ -1,9 +1,8 @@
 #include "cpputest/testharness.h"
 #include "cpputestext/mocksupport.h"
-#include <memory>
+
 #include "PlaceDescriptionService.h"
 #include "Http.h"
-#include "HttpFactory.h"
 
 using namespace std;
 
@@ -28,17 +27,8 @@ const string PlaceDescriptionServiceFixture::ValidLongitude("-104.44");
 
 TEST_GROUP(APlaceDescriptionService) {
    PlaceDescriptionServiceFixture f;
+   PlaceDescriptionServiceTemplate<HttpStub> service;
    string expectedURL;
-   shared_ptr<HttpStub> httpStub;
-   shared_ptr<HttpFactory> factory;
-   shared_ptr<PlaceDescriptionService> service;
-   
-   void setup() override {
-      httpStub = make_shared<HttpStub>();
-      factory = make_shared<HttpFactory>();
-      service = make_shared<PlaceDescriptionService>(factory);
-      factory->setInstance(httpStub);
-   }
    
    void teardown() override {
        mock().checkExpectations();
@@ -54,7 +44,7 @@ TEST(APlaceDescriptionService, MakesHttpRequestToObtainAddress) {
          .andReturnValue("");
    mock().ignoreOtherCalls();
 
-   service->summaryDescription(f.ValidLatitude, f.ValidLongitude);
+   service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 }
 
 TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
@@ -66,7 +56,7 @@ TEST(APlaceDescriptionService, FormatsRetrievedAddressIntoSummaryDescription) {
               "country":"US" }})");
    mock().ignoreOtherCalls();
    
-   auto description = service->summaryDescription(f.ValidLatitude, f.ValidLongitude);
+   auto description = service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 
    STRCMP_EQUAL("Drury Ln, Fountain, CO, US", description.c_str());
 }
@@ -77,5 +67,5 @@ TEST(APlaceDescriptionService, HttpIsInitializedUponConstruction) {
    mock().expectOneCall("get").ignoreOtherParameters()
          .andReturnValue("");
 
-   service->summaryDescription(f.ValidLatitude, f.ValidLongitude);
+   service.summaryDescription(f.ValidLatitude, f.ValidLongitude);
 }
