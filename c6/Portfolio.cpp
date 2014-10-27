@@ -14,9 +14,10 @@ void Portfolio::Purchase(
 
 void Portfolio::Sell(
       const string& symbol, unsigned int shareCount, const date& transactionDate) {
-   if (shareCount > ShareCount(symbol)) throw InvalidSellException();
+   if (shareCount > ShareCount(symbol)) throw InsufficientSharesException();
    Transact(symbol, -shareCount, transactionDate);
 }
+
 void Portfolio::Transact(
       const string& symbol, int shareChange, const date& transactionDate) {
    if (0 == shareChange) throw ShareCountCannotBeZeroException();
