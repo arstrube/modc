@@ -14,11 +14,11 @@ class date
 {
 public:
 
-   date(unsigned /*y*/, Month /*m*/, unsigned /*d*/) /* : year_(y), month_(m), day_(d) */ {}
+   date(unsigned y, Month m, unsigned d) : year_(y), month_(m), day_(d) {}
 
    bool operator==(const date& rhs) const
    {
-      return day_ == rhs.day_ && month_ == rhs.day_ && year_ == rhs.year_;
+      return day_ == rhs.day_ && month_ == rhs.month_ && year_ == rhs.year_;
    }
    
 private:
