@@ -28,6 +28,6 @@ unsigned int Portfolio::ShareCount(const string& symbol) const {
 }
 
 
-vector<PurchaseRecord> Portfolio::Purchases(const string& symbol) const {
+vector<PurchaseRecord> Portfolio::Purchases(const string& /*symbol*/) const {
    return purchases_;
 }

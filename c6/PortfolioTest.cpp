@@ -80,6 +80,6 @@ TEST(APortfolio, AnswersThePurchaseRecordForASinglePurchase) {
    auto purchases = portfolio_.Purchases(SAMSUNG);
 
    auto purchase = purchases[0];
-   ASSERT_THAT(purchase.ShareCount, Eq(5u));
-   ASSERT_THAT(purchase.Date, Eq(Portfolio::FIXED_PURCHASE_DATE));
+   LONGS_EQUAL(5u, purchase.ShareCount);
+   CHECK(purchase.Date == Portfolio::FIXED_PURCHASE_DATE);
 }
