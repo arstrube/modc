@@ -113,3 +113,7 @@ TEST(APortfolio, IncludesSalesInPurchaseRecords) {
    auto sales = portfolio_.Purchases(SAMSUNG);
    ASSERT_PURCHASE(sales[1], -5, arbitraryDate);
 }
+
+TEST(APortfolio, ThrowsOnSellOfZeroShares) {
+   ASSERT_THROW_E(sell(IBM, 0), ShareCountCannotBeZeroException);
+}
