@@ -9,11 +9,12 @@ bool Portfolio::IsEmpty() const {
    return 0 == holdings_.size(); 
 }
 
-
-void Portfolio::Purchase(const string& symbol, unsigned int shareCount) {
+void Portfolio::Purchase(
+      const string& symbol, unsigned int shareCount, const date& transactionDate) {
    if (0 == shareCount) throw InvalidPurchaseException();
+   
    holdings_[symbol] = shareCount + ShareCount(symbol);
-   purchases_.push_back(PurchaseRecord(shareCount, FIXED_PURCHASE_DATE));
+   purchases_.push_back(PurchaseRecord(shareCount, transactionDate));
 }
 
 void Portfolio::Sell(const string& symbol, unsigned int shareCount) {
@@ -27,7 +28,7 @@ unsigned int Portfolio::ShareCount(const string& symbol) const {
    return it->second;
 }
 
-
 vector<PurchaseRecord> Portfolio::Purchases(const string& /*symbol*/) const {
    return purchases_;
 }
+

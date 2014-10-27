@@ -26,7 +26,6 @@ struct PurchaseRecord {
    : ShareCount(shareCount) 
    , Date(date) {
    }
-   
    unsigned int ShareCount;
    boost::gregorian::date Date;
 };
@@ -34,12 +33,15 @@ struct PurchaseRecord {
 class Portfolio {
 public:
    static const boost::gregorian::date FIXED_PURCHASE_DATE;
-
    bool IsEmpty() const;
-   
-   void Purchase(const std::string& symbol, unsigned int shareCount);
+   void Purchase(
+         const std::string& symbol, 
+		 
+         unsigned int shareCount,
+		 
+         const boost::gregorian::date& transactionDate=
+            Portfolio::FIXED_PURCHASE_DATE);
    void Sell(const std::string& symbol, unsigned int shareCount);
-   
    unsigned int ShareCount(const std::string& symbol) const;
    std::vector<PurchaseRecord> Purchases(const std::string& symbol) const;
 

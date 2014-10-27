@@ -8,7 +8,7 @@ namespace gregorian {
   *
   */
 
-enum Month {Jan=1};
+enum Month {Jan=1,Feb,Mar};
 
 class date
 {

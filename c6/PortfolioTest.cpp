@@ -1,5 +1,8 @@
 #include "cpputest/testharness.h"
 #include "Portfolio.h"
+#include "boost/date_time/gregorian/gregorian_types.hpp"
+
+using namespace boost::gregorian;
 
 TEST_GROUP(APortfolio) {
    std::string IBM, SAMSUNG;
@@ -76,10 +79,11 @@ TEST(APortfolio, ThrowsWhenSellingMoreSharesThanPurchased) {
 }
 
 TEST(APortfolio, AnswersThePurchaseRecordForASinglePurchase) {
-   portfolio_.Purchase(SAMSUNG, 5);
+   date dateOfPurchase(2014, Mar, 17);
+   portfolio_.Purchase(SAMSUNG, 5, dateOfPurchase);
    auto purchases = portfolio_.Purchases(SAMSUNG);
 
    auto purchase = purchases[0];
    LONGS_EQUAL(5u, purchase.ShareCount);
-   CHECK(purchase.Date == Portfolio::FIXED_PURCHASE_DATE);
+   CHECK(purchase.Date == dateOfPurchase);
 }
