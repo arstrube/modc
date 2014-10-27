@@ -1,5 +1,6 @@
 #include "cpputest/testharness.h"
 #include "Portfolio.h"
+#include "PurchaseRecord.h"
 #include "boost/date_time/gregorian/gregorian_types.hpp"
 
 using namespace boost::gregorian;
@@ -117,3 +118,27 @@ TEST(APortfolio, IncludesSalesInPurchaseRecords) {
 TEST(APortfolio, ThrowsOnSellOfZeroShares) {
    ASSERT_THROW_E(sell(IBM, 0), ShareCountCannotBeZeroException);
 }
+
+bool operator==(const PurchaseRecord& lhs, const PurchaseRecord& rhs) {
+   return lhs.ShareCount == rhs.ShareCount && lhs.Date == rhs.Date;
+}
+
+#define CHECK_ELEMENT(set, record) {\
+   for(auto it : set) {\
+      if(it == record) break;\
+      if(it == set.end()) FAIL("Set not found");\
+   }\
+}
+
+TEST(APortfolio, SeparatesPurchaseRecordsBySymbol) {
+   purchase(SAMSUNG, 5, arbitraryDate);
+   purchase(IBM, 1, arbitraryDate);
+
+   auto sales = portfolio_.Purchases(SAMSUNG);
+   for (auto it : sales) {
+      if(it == PurchaseRecord(5, arbitraryDate)) break;
+      if(it == sales.end()) {}
+   }
+   // CHECK_ELEMENT(sales, PurchaseRecord(5, arbitraryDate));
+}
+
