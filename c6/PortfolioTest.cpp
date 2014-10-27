@@ -124,10 +124,9 @@ bool operator==(const PurchaseRecord& lhs, const PurchaseRecord& rhs) {
 }
 
 #define CHECK_ELEMENT(set, record) {\
-   for(auto it : set) {\
-      if(it == record) break;\
-      if(it == set.end()) FAIL("Set not found");\
-   }\
+   for(auto it : set) if(it == record) goto found;\
+   FAIL("Record not found");\
+   found: ;\
 }
 
 TEST(APortfolio, SeparatesPurchaseRecordsBySymbol) {
@@ -135,10 +134,6 @@ TEST(APortfolio, SeparatesPurchaseRecordsBySymbol) {
    purchase(IBM, 1, arbitraryDate);
 
    auto sales = portfolio_.Purchases(SAMSUNG);
-   for (auto it : sales) {
-      if(it == PurchaseRecord(5, arbitraryDate)) break;
-      if(it == sales.end()) {}
-   }
-   // CHECK_ELEMENT(sales, PurchaseRecord(5, arbitraryDate));
+   CHECK_ELEMENT(sales, PurchaseRecord(5, arbitraryDate));
 }
 
