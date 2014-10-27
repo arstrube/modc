@@ -74,3 +74,12 @@ TEST(APortfolio, ReducesShareCountOfSymbolOnSell)  {
 TEST(APortfolio, ThrowsWhenSellingMoreSharesThanPurchased) {
    ASSERT_THROW_E(portfolio_.Sell(SAMSUNG, 1), InvalidSellException);
 }
+
+TEST(APortfolio, AnswersThePurchaseRecordForASinglePurchase) {
+   portfolio_.Purchase(SAMSUNG, 5);
+   auto purchases = portfolio_.Purchases(SAMSUNG);
+
+   auto purchase = purchases[0];
+   ASSERT_THAT(purchase.ShareCount, Eq(5u));
+   ASSERT_THAT(purchase.Date, Eq(Portfolio::FIXED_PURCHASE_DATE));
+}
