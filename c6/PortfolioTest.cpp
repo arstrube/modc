@@ -2,7 +2,11 @@
 #include "Portfolio.h"
 
 TEST_GROUP(APortfolio) {
+   std::string IBM;
    Portfolio portfolio_;
+   void setup() {
+       IBM = "IBM";
+   }
 };
 
 TEST(APortfolio, IsEmptyWhenCreated) {
@@ -10,8 +14,7 @@ TEST(APortfolio, IsEmptyWhenCreated) {
 }
 
 TEST(APortfolio, IsNotEmptyAfterPurchase) {
-   portfolio_.Purchase("IBM", 1);
-
+   portfolio_.Purchase(IBM, 1);
    CHECK_FALSE(portfolio_.IsEmpty());
 }
 
@@ -20,6 +23,14 @@ TEST(APortfolio, AnswersZeroForShareCountOfUnpurchasedSymbol) {
 }
 
 TEST(APortfolio, AnswersShareCountForPurchasedSymbol) {
-   portfolio_.Purchase("IBM", 2);
+   portfolio_.Purchase(IBM, 2);
    LONGS_EQUAL(2u, portfolio_.ShareCount("IBM"));
+}
+
+TEST(APortfolio, ThrowsOnPurchaseOfZeroShares) {
+   try {
+      portfolio_.Purchase(IBM, 0);
+      FAIL("Expected exception but got none.");
+   } 
+   catch (InvalidPurchaseException expected) {}
 }
