@@ -14,12 +14,17 @@ class date
 {
 public:
 
-   date(int /*y*/, Month /*m*/, int /*d*/) /* : years_(y), months(m), days_(d) */ {}
+   date(unsigned /*y*/, Month /*m*/, unsigned /*d*/) /* : year_(y), month_(m), day_(d) */ {}
 
-   bool operator==(const date& /*rhs*/) const
+   bool operator==(const date& rhs) const
    {
-      return false;
+      return day_ == rhs.day_ && month_ == rhs.day_ && year_ == rhs.year_;
    }
+   
+private:
+   unsigned year_;
+   Month month_;
+   unsigned day_;
 };
 
 } } // namespaces
