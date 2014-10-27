@@ -10,6 +10,24 @@ TEST_GROUP(APortfolio) {
    }
 };
 
+#define ASSERT_THROW(method_call){\
+   try {\
+      method_call;\
+      FAIL("Expected exception but got none.");\
+   }\
+   catch (std::exception e) {}\
+}
+
+#define ASSERT_THROW_E(method_call, expected_exception){\
+   try {\
+      method_call;\
+      FAIL("Expected exception but got none.");\
+   }\
+   catch (expected_exception expected) {\
+      ; /* Check type of exception here? */\
+   }\
+}
+
 TEST(APortfolio, IsEmptyWhenCreated) {
    CHECK_TRUE(portfolio_.IsEmpty());
 }
@@ -29,12 +47,9 @@ TEST(APortfolio, AnswersShareCountForPurchasedSymbol) {
 }
 
 TEST(APortfolio, ThrowsOnPurchaseOfZeroShares) {
-   try {
-      portfolio_.Purchase(IBM, 0);
-      FAIL("Expected exception but got none.");
-   } 
-   catch (InvalidPurchaseException e) {}
+   ASSERT_THROW(portfolio_.Purchase(IBM, 0));
 }
+
 TEST(APortfolio, AnswersShareCountForAppropriateSymbol) {
    portfolio_.Purchase(IBM, 5);
    portfolio_.Purchase(SAMSUNG, 10);
@@ -57,8 +72,5 @@ TEST(APortfolio, ReducesShareCountOfSymbolOnSell)  {
 }
 
 TEST(APortfolio, ThrowsWhenSellingMoreSharesThanPurchased) {
-   try {
-      portfolio_.Sell(SAMSUNG, 1);
-   }
-   catch (InvalidSellException e) {}
+   ASSERT_THROW_E(portfolio_.Sell(SAMSUNG, 1), InvalidSellException);
 }
