@@ -4,12 +4,22 @@
 
 using namespace boost::gregorian;
 
+static const date arbitraryDate(2014, Sep, 5);
+
 TEST_GROUP(APortfolio) {
    std::string IBM, SAMSUNG;
    Portfolio portfolio_;
+   
    void setup() {
        IBM = "IBM";
        SAMSUNG = "SSNLF";
+       
+   }
+   void purchase(
+         const std::string& symbol, 
+         unsigned int shareCount,
+         const date& transactionDate=arbitraryDate) {
+      portfolio_.Purchase(symbol, shareCount, transactionDate);
    }
 };
 
@@ -36,7 +46,7 @@ TEST(APortfolio, IsEmptyWhenCreated) {
 }
 
 TEST(APortfolio, IsNotEmptyAfterPurchase) {
-   portfolio_.Purchase(IBM, 1);
+   purchase(IBM, 1);
    CHECK_FALSE(portfolio_.IsEmpty());
 }
 
@@ -45,30 +55,30 @@ TEST(APortfolio, AnswersZeroForShareCountOfUnpurchasedSymbol) {
 }
 
 TEST(APortfolio, AnswersShareCountForPurchasedSymbol) {
-   portfolio_.Purchase(IBM, 2);
+   purchase(IBM, 2);
    LONGS_EQUAL(2u, portfolio_.ShareCount("IBM"));
 }
 
 TEST(APortfolio, ThrowsOnPurchaseOfZeroShares) {
-   ASSERT_THROW(portfolio_.Purchase(IBM, 0));
+   ASSERT_THROW(purchase(IBM, 0));
 }
 
 TEST(APortfolio, AnswersShareCountForAppropriateSymbol) {
-   portfolio_.Purchase(IBM, 5);
-   portfolio_.Purchase(SAMSUNG, 10);
+   purchase(IBM, 5);
+   purchase(SAMSUNG, 10);
 
    LONGS_EQUAL(5u, portfolio_.ShareCount(IBM));
 }
 
 TEST(APortfolio, ShareCountReflectsAccumulatedPurchasesOfSameSymbol) {
-   portfolio_.Purchase(IBM, 5);
-   portfolio_.Purchase(IBM, 15);
+   purchase(IBM, 5);
+   purchase(IBM, 15);
 
    LONGS_EQUAL(5u + 15, portfolio_.ShareCount(IBM));
 }
 
 TEST(APortfolio, ReducesShareCountOfSymbolOnSell)  {
-   portfolio_.Purchase(SAMSUNG, 30);
+   purchase(SAMSUNG, 30);
    portfolio_.Sell(SAMSUNG, 13);
 
    LONGS_EQUAL(30u - 13, portfolio_.ShareCount(SAMSUNG));
@@ -80,7 +90,7 @@ TEST(APortfolio, ThrowsWhenSellingMoreSharesThanPurchased) {
 
 TEST(APortfolio, AnswersThePurchaseRecordForASinglePurchase) {
    date dateOfPurchase(2014, Mar, 17);
-   portfolio_.Purchase(SAMSUNG, 5, dateOfPurchase);
+   purchase(SAMSUNG, 5, dateOfPurchase);
    auto purchases = portfolio_.Purchases(SAMSUNG);
 
    auto purchase = purchases[0];
