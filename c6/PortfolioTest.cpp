@@ -55,7 +55,7 @@ TEST(APortfolio, AnswersZeroForShareCountOfUnpurchasedSymbol) {
 }
 
 TEST(APortfolio, AnswersShareCountForPurchasedSymbol) {
-   purchase(IBM, 2);
+   portfolio_.Purchase(IBM, 2, arbitraryDate);
    LONGS_EQUAL(2u, portfolio_.ShareCount("IBM"));
 }
 
@@ -64,8 +64,8 @@ TEST(APortfolio, ThrowsOnPurchaseOfZeroShares) {
 }
 
 TEST(APortfolio, AnswersShareCountForAppropriateSymbol) {
-   purchase(IBM, 5);
-   purchase(SAMSUNG, 10);
+   portfolio_.Purchase(IBM, 5, arbitraryDate);
+   portfolio_.Purchase(SAMSUNG, 10, arbitraryDate);
 
    LONGS_EQUAL(5u, portfolio_.ShareCount(IBM));
 }
