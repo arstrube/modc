@@ -39,6 +39,9 @@
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
 		<Unit filename="c6\DateTestConstants.h" />
+		<Unit filename="c6\Holding.cpp" />
+		<Unit filename="c6\Holding.h" />
+		<Unit filename="c6\HoldingTest.cpp" />
 		<Unit filename="c6\Portfolio.cpp" />
 		<Unit filename="c6\Portfolio.h" />
 		<Unit filename="c6\PortfolioTest.cpp" />
