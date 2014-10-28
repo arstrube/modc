@@ -57,7 +57,6 @@ private:
       return it == map.end() ? T{} : it->second;
    }
 
-   std::unordered_map<std::string, unsigned int> holdings_;
    std::unordered_map<std::string, std::vector<PurchaseRecord>> purchaseRecords_;
 };
 #endif
