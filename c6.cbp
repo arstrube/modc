@@ -38,6 +38,7 @@
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
+		<Unit filename="c6\DateTestConstants.h" />
 		<Unit filename="c6\Portfolio.cpp" />
 		<Unit filename="c6\Portfolio.h" />
 		<Unit filename="c6\PortfolioTest.cpp" />

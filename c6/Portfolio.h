@@ -47,8 +47,17 @@ private:
          const boost::gregorian::date&);
    void ThrowIfShareCountIsZero(int shareChange) const;
 
+   bool ContainsSymbol(const std::string& symbol) const;
+   void InitializePurchaseRecords(const std::string& symbol);
+   void Add(const std::string& symbol, PurchaseRecord&& record);
+
+   template<typename T>
+   T Find(std::unordered_map<std::string, T> map, const std::string& key) const {
+      auto it = map.find(key);
+      return it == map.end() ? T{} : it->second;
+   }
+
    std::unordered_map<std::string, unsigned int> holdings_;
-   std::vector<PurchaseRecord> purchases_;
    std::unordered_map<std::string, std::vector<PurchaseRecord>> purchaseRecords_;
 };
 #endif

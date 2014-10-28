@@ -2,10 +2,14 @@
 #include "Portfolio.h"
 #include "PurchaseRecord.h"
 #include "boost/date_time/gregorian/gregorian_types.hpp"
+#include "DateTestConstants.h"
+#include <vector>
 
 using namespace boost::gregorian;
 
-static const date arbitraryDate(2014, Sep, 5);
+bool operator==(const PurchaseRecord& lhs, const PurchaseRecord& rhs) {
+      return lhs.ShareCount == rhs.ShareCount && lhs.Date == rhs.Date;
+}
 
 TEST_GROUP(APortfolio) {
    std::string IBM, SAMSUNG;
@@ -119,14 +123,13 @@ TEST(APortfolio, ThrowsOnSellOfZeroShares) {
    ASSERT_THROW_E(sell(IBM, 0), ShareCountCannotBeZeroException);
 }
 
-bool operator==(const PurchaseRecord& lhs, const PurchaseRecord& rhs) {
-   return lhs.ShareCount == rhs.ShareCount && lhs.Date == rhs.Date;
-}
-
-#define CHECK_ELEMENT(set, record) {\
-   for(auto it : set) if(it == record) goto found;\
-   FAIL("Record not found");\
-   found: ;\
+#define CHECK_ELEMENT(set, record) { \
+   auto fail = true; \
+   for(auto it : set) if(it == record ) { \
+      fail = false; \
+      break; \
+   } \
+   if(fail) FAIL("Record not found"); \
 }
 
 TEST(APortfolio, SeparatesPurchaseRecordsBySymbol) {
@@ -137,3 +140,16 @@ TEST(APortfolio, SeparatesPurchaseRecordsBySymbol) {
    CHECK_ELEMENT(sales, PurchaseRecord(5, arbitraryDate));
 }
 
+TEST(APortfolio, AnswersEmptyPurchaseRecordVectorWhenSymbolNotFound) {
+   CHECK(portfolio_.Purchases(SAMSUNG)==std::vector<PurchaseRecord>())
+}
+
+TEST(APortfolio, SupportsMultiplePurchaseRecordsOfSymbol) {
+   purchase(SAMSUNG, 4, arbitraryDate);
+   purchase(SAMSUNG, 11, arbitraryDate);
+
+   auto sales = portfolio_.Purchases(SAMSUNG);
+
+   CHECK_ELEMENT(sales, PurchaseRecord(4, arbitraryDate));
+   CHECK_ELEMENT(sales, PurchaseRecord(11, arbitraryDate));
+}
