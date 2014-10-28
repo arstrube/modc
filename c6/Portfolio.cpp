@@ -41,12 +41,10 @@ void Portfolio::AddPurchaseRecord(
 }
 
 void Portfolio::InitializePurchaseRecords(const string& symbol) {
-   purchaseRecords_[symbol] = vector<PurchaseRecord>();
    holdings_[symbol] = Holding();
 }
 
 void Portfolio::Add(const string& symbol, PurchaseRecord&& record) {
-   purchaseRecords_[symbol].push_back(record);
    holdings_[symbol].Add(record);
 }
 

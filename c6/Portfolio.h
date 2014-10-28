@@ -58,8 +58,6 @@ private:
       return it == map.end() ? T{} : it->second;
    }
 
-   // no longer needed!
-   std::unordered_map<std::string, std::vector<PurchaseRecord>> purchaseRecords_;
    std::unordered_map<std::string, Holding> holdings_;
 };
 #endif
