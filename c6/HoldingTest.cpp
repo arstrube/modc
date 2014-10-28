@@ -1,4 +1,5 @@
 #include "cpputest/testharness.h"
+
 #include "Holding.h"
 #include "DateTestConstants.h"
 

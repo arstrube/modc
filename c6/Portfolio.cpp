@@ -1,7 +1,5 @@
 #include "Portfolio.h"
 #include "PurchaseRecord.h"
-#include <numeric>
-#include <vector>
 
 using namespace std;
 using namespace boost::gregorian;

@@ -1,9 +1,9 @@
 #include "cpputest/testharness.h"
+#include "boost/date_time/gregorian/gregorian_types.hpp"
+
 #include "Portfolio.h"
 #include "PurchaseRecord.h"
-#include "boost/date_time/gregorian/gregorian_types.hpp"
 #include "DateTestConstants.h"
-#include <vector>
 
 using namespace boost::gregorian;
 
