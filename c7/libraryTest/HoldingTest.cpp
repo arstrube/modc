@@ -1,4 +1,4 @@
-#include "gmock/gmock.h"
+#include "CppUTest/TestHarness.h"
 #include "Holding.h"
 #include "Book.h"
 #include "ClassificationData.h"
@@ -11,21 +11,45 @@ using namespace boost::gregorian;
 using namespace BranchTestData;
 using namespace ClassificationData;
 using namespace std;
-using namespace testing;
 
-class HoldingTest: public Test
+#define ASSERT_THROW(method_call){\
+   try {\
+      method_call;\
+      FAIL("Expected exception but got none.");\
+   }\
+   catch (std::exception e) {}\
+}
+
+#define ASSERT_THROW_E(method_call, expected_exception){\
+   try {\
+      method_call;\
+      FAIL("Expected exception but got none.");\
+   }\
+   catch (expected_exception expected) {\
+      ; /* Check type of exception here? */\
+   }\
+}
+
+class HoldingTestFixture 
+{
+public:
+   static const date ArbitraryDate;
+};
+
+const date HoldingTestFixture::ArbitraryDate(2014, Jan, 1);
+
+TEST_GROUP(HoldingTest)
 {
 public:
    Holding* holding;
-   static const date ArbitraryDate;
    Branch* arbitraryBranch;
-   virtual void SetUp() override
+   virtual void setup() override
    {
       holding = new Holding(THE_TRIAL_CLASSIFICATION, 1);
       arbitraryBranch = new Branch(EAST_BRANCH);
    }
 
-   virtual void TearDown() override
+   virtual void teardown() override
    {
       delete holding;
       delete arbitraryBranch;
@@ -33,8 +57,8 @@ public:
 
    void VerifyAvailability(const Branch& branch)
    {
-      ASSERT_THAT(holding->CurrentBranch(), Eq(branch));
-      ASSERT_THAT(holding->IsAvailable(), Eq(branch != Branch::CHECKED_OUT));
+      CHECK(holding->CurrentBranch() == branch);
+      CHECK(holding->IsAvailable() == (branch != Branch::CHECKED_OUT));
    }
 
     bool IsAvailableAt(Holding* holding, Branch& branch) 
@@ -49,74 +73,73 @@ public:
     }
 };
 
-const date HoldingTest::ArbitraryDate(2013, Jan, 1);
 
-TEST_F(HoldingTest, BarcodeRequiresColon)
+TEST(HoldingTest, BarcodeRequiresColon)
 {
-    ASSERT_THROW(Holding("A"), InvalidBarcodeException);
+    ASSERT_THROW_E(Holding("A"), InvalidBarcodeException);
 }
 
-TEST_F(HoldingTest, CanExtractClassificationWhenCreatedWithBarcode)
+TEST(HoldingTest, CanExtractClassificationWhenCreatedWithBarcode)
 {
     Holding holding(Holding::ConstructBarcode("A123", 3));
 
-    ASSERT_THAT(holding.Classification(), Eq("A123"));
+    STRCMP_EQUAL("A123", holding.Classification().c_str());
 }
 
-TEST_F(HoldingTest, CanExtractCopyNumberWhenCreatedWithBarcode)
+TEST(HoldingTest, CanExtractCopyNumberWhenCreatedWithBarcode)
 {
     Holding holding(Holding::ConstructBarcode("A234", 5));
 
-    ASSERT_THAT(holding.CopyNumber(), Eq(5));
+    LONGS_EQUAL(5u, holding.CopyNumber());
 }
 
-TEST_F(HoldingTest, IsNotAvailableWhenCreated)
+TEST(HoldingTest, IsNotAvailableWhenCreated)
 {
     Holding holding(Holding::ConstructBarcode("A", 1));
 
-    ASSERT_FALSE(holding.IsAvailable());
+    CHECK_FALSE(holding.IsAvailable());
 }
 
-TEST_F(HoldingTest, CanSpecifyClassificationSeparatelyWhenCreated)
+TEST(HoldingTest, CanSpecifyClassificationSeparatelyWhenCreated)
 {
     Holding holding("B", 2);
 
-    ASSERT_THAT(holding.Classification(), Eq("B"));
+    STRCMP_EQUAL("B", holding.Classification().c_str());
 }
 
-TEST_F(HoldingTest, CanSpecifyCopyNumberSeparatelyWhenCreated)
+TEST(HoldingTest, CanSpecifyCopyNumberSeparatelyWhenCreated)
 {
     Holding holding("A", 7);
 
-    ASSERT_THAT(holding.CopyNumber(), Eq(7));
+    LONGS_EQUAL(7, holding.CopyNumber());
 }
 
-TEST_F(HoldingTest, IsNotAvailableWhenCreatedWithSeparateClassificationAndCopy)
+TEST(HoldingTest, IsNotAvailableWhenCreatedWithSeparateClassificationAndCopy)
 {
     Holding holding("A", 2);
 
-    ASSERT_FALSE(holding.IsAvailable());
+    CHECK_FALSE(holding.IsAvailable());
 }
 
-TEST_F(HoldingTest, AssignmentCopiesAllMembers)
+TEST(HoldingTest, AssignmentCopiesAllMembers)
 {
    holding->Transfer(EAST_BRANCH);
 
    Holding newHolding = *holding;
 
-   ASSERT_THAT(newHolding.Classification(), Eq(THE_TRIAL_CLASSIFICATION));
-   ASSERT_THAT(newHolding.CopyNumber(), Eq(holding->CopyNumber()));
-   ASSERT_TRUE(IsAvailableAt(&newHolding, EAST_BRANCH));
+   STRCMP_EQUAL(THE_TRIAL_CLASSIFICATION.c_str(), newHolding.Classification().c_str());
+   LONGS_EQUAL(holding->CopyNumber(), newHolding.CopyNumber());
+   CHECK(IsAvailableAt(&newHolding, EAST_BRANCH));
 }
-
-TEST_F(HoldingTest, TransferMakesHoldingAvailableAtBranch)
+#if 0
+TEST(HoldingTest, TransferMakesHoldingAvailableAtBranch)
 {
    holding->Transfer(EAST_BRANCH);
 
     ASSERT_TRUE(IsAvailableAt(holding, EAST_BRANCH));
 }
 
-TEST_F(HoldingTest, BarCodeCombinesClassificationAndCopyNumber)
+TEST(HoldingTest, BarCodeCombinesClassificationAndCopyNumber)
 {
    Holding holding(THE_TRIAL_CLASSIFICATION, 5);
 
@@ -125,28 +148,28 @@ TEST_F(HoldingTest, BarCodeCombinesClassificationAndCopyNumber)
     ASSERT_THAT(barcode, Eq(THE_TRIAL_CLASSIFICATION + ":5"));
 }
 
-TEST_F(HoldingTest, AreEqualWhenClassificationAndCopyMatch)
+TEST(HoldingTest, AreEqualWhenClassificationAndCopyMatch)
 {
    Holding copy(holding->Classification(), holding->CopyNumber());
 
     ASSERT_TRUE(*holding == copy);
 }
 
-TEST_F(HoldingTest, AreUnequalWhenCopyDoesNotMatch)
+TEST(HoldingTest, AreUnequalWhenCopyDoesNotMatch)
 {
    Holding extraCopy(holding->Classification(), holding->CopyNumber() + 1);
 
     ASSERT_TRUE(*holding != extraCopy);
 }
 
-TEST_F(HoldingTest, AreUnequalWhenClassificationDoesNotMatch)
+TEST(HoldingTest, AreUnequalWhenClassificationDoesNotMatch)
 {
    Holding differentBook(holding->Classification() + "X", 1);
 
     ASSERT_TRUE(*holding != differentBook);
 }
 
-TEST_F(HoldingTest, IsLessThanWhenClassificationsAreLessThan)
+TEST(HoldingTest, IsLessThanWhenClassificationsAreLessThan)
 {
     Holding a("A:1");
     Holding b("B:1");
@@ -154,7 +177,7 @@ TEST_F(HoldingTest, IsLessThanWhenClassificationsAreLessThan)
    ASSERT_TRUE(a < b);
 }
 
-TEST_F(HoldingTest, IsNotLessThanWhenClassificationIsNotLessThan)
+TEST(HoldingTest, IsNotLessThanWhenClassificationIsNotLessThan)
 {
     Holding a("A:1");
     Holding b("B:1");
@@ -162,7 +185,7 @@ TEST_F(HoldingTest, IsNotLessThanWhenClassificationIsNotLessThan)
     ASSERT_TRUE(!(b < a));
 }
 
-TEST_F(HoldingTest, IsNotLessThanWhenBarcodesAreEqual)
+TEST(HoldingTest, IsNotLessThanWhenBarcodesAreEqual)
 {
     Holding a("A:1");
     Holding aCopy("A:1");
@@ -170,7 +193,7 @@ TEST_F(HoldingTest, IsNotLessThanWhenBarcodesAreEqual)
     ASSERT_FALSE(a < aCopy);
 }
 
-TEST_F(HoldingTest, ck)
+TEST(HoldingTest, ck)
 {
    holding->Transfer(EAST_BRANCH);
 
@@ -186,7 +209,7 @@ TEST_F(HoldingTest, ck)
    ASSERT_THAT(holding->DueDate(), Eq(expectedDue));
 }
 
-TEST_F(HoldingTest, Availability)
+TEST(HoldingTest, Availability)
 {
    holding->Transfer(EAST_BRANCH);
    holding->CheckOut(ArbitraryDate);
@@ -197,7 +220,7 @@ TEST_F(HoldingTest, Availability)
    EXPECT_TRUE(holding->IsAvailable());
 }
 
-TEST_F(HoldingTest, UnavailableOnCheckout)
+TEST(HoldingTest, UnavailableOnCheckout)
 {
     MakeAvailableAtABranch(holding);
 
@@ -206,7 +229,7 @@ TEST_F(HoldingTest, UnavailableOnCheckout)
     ASSERT_FALSE(holding->IsAvailable());
 }
 
-TEST_F(HoldingTest, UpdatesCheckoutDateOnCheckout)
+TEST(HoldingTest, UpdatesCheckoutDateOnCheckout)
 {
     MakeAvailableAtABranch(holding);
 
@@ -224,7 +247,7 @@ public:
    }
 };
 
-TEST_F(ACheckedInHolding, UpdatesDateDueOnCheckout)
+TEST(ACheckedInHolding, UpdatesDateDueOnCheckout)
 {
    ASSERT_TRUE(IsAvailableAt(holding, *arbitraryBranch));
    holding->CheckOut(ArbitraryDate);
@@ -233,7 +256,7 @@ TEST_F(ACheckedInHolding, UpdatesDateDueOnCheckout)
       Eq(ArbitraryDate + date_duration(Book::BOOK_CHECKOUT_PERIOD)));
 }
 
-TEST_F(HoldingTest, UpdatesDateDueOnCheckout)
+TEST(HoldingTest, UpdatesDateDueOnCheckout)
 {
     MakeAvailableAtABranch(holding);
 
@@ -243,7 +266,7 @@ TEST_F(HoldingTest, UpdatesDateDueOnCheckout)
         Eq(ArbitraryDate + date_duration(Book::BOOK_CHECKOUT_PERIOD)));
 }
 
-TEST_F(HoldingTest, Ckin)
+TEST(HoldingTest, Ckin)
 {
    holding->Transfer(EAST_BRANCH);
    date checkoutOn(2007, Mar, 1);
@@ -256,7 +279,7 @@ TEST_F(HoldingTest, Ckin)
    ASSERT_TRUE(IsAvailableAt(holding, branch2));
 }
 
-TEST_F(HoldingTest, CheckinMakesBookAvailableAtAnotherBranch)
+TEST(HoldingTest, CheckinMakesBookAvailableAtAnotherBranch)
 {
    holding->Transfer(EAST_BRANCH);
    holding->CheckOut(ArbitraryDate);
@@ -267,7 +290,7 @@ TEST_F(HoldingTest, CheckinMakesBookAvailableAtAnotherBranch)
    ASSERT_TRUE(IsAvailableAt(holding, WEST_BRANCH));
 }
 
-TEST_F(HoldingTest, DateDueForMovies)
+TEST(HoldingTest, DateDueForMovies)
 {
    Holding holdingA(SEVEN_CLASSIFICATION, 1);
    holdingA.Transfer(EAST_BRANCH);
@@ -277,7 +300,7 @@ TEST_F(HoldingTest, DateDueForMovies)
    ASSERT_THAT(holdingA.DueDate(), Eq(checkoutOn + date_duration(Book::MOVIE_CHECKOUT_PERIOD)));
 }
 
-TEST_F(HoldingTest, MoviesDueCheckoutPeriodDaysAfterCheckout)
+TEST(HoldingTest, MoviesDueCheckoutPeriodDaysAfterCheckout)
 {
     Holding movie(SEVEN_CLASSIFICATION, 1);
     MakeAvailableAtABranch(&movie);
@@ -287,3 +310,4 @@ TEST_F(HoldingTest, MoviesDueCheckoutPeriodDaysAfterCheckout)
     ASSERT_THAT(movie.DueDate(), 
         Eq(ArbitraryDate + date_duration(Book::MOVIE_CHECKOUT_PERIOD)));
 }
+#endif
