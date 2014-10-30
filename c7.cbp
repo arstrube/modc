@@ -21,7 +21,7 @@
 			<Add option="-Werror" />
 			<Add directory="e:\cpputest\include" />
 			<Add directory="c7\library\include" />
-			<Add directory="." />
+			<Add directory="c7" />
 		</Compiler>
 		<Linker>
 			<Add library="CppUTest" />
@@ -35,6 +35,7 @@
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
+		<Unit filename="c7\boost\date_time\gregorian\gregorian_types.hpp" />
 		<Unit filename="c7\libraryTest\ASSERT_CURRENT_STATE.h" />
 		<Unit filename="c7\libraryTest\HoldingTest.cpp">
 			<Option target="&lt;{~None~}&gt;" />
