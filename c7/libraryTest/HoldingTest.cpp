@@ -83,6 +83,20 @@ TEST(HoldingTest, BarcodeRequiresColon)
     ASSERT_THROW_E(Holding("A"), InvalidBarcodeException);
 }
 
+TEST_GROUP(AHolding) {};
+TEST(AHolding, CanBeCreatedFromAnother)
+{
+   Holding holding(THE_TRIAL_CLASSIFICATION, 1);
+   holding.Transfer(EAST_BRANCH);
+
+   Holding copy(holding, 2);
+
+   STRCMP_EQUAL(THE_TRIAL_CLASSIFICATION.c_str(), copy.Classification().c_str());
+   LONGS_EQUAL(2, copy.CopyNumber());
+   CHECK_TRUE(copy.CurrentBranch() == EAST_BRANCH);
+   CHECK_TRUE(copy.LastCheckedOutOn().is_not_a_date());
+}
+
 TEST(HoldingTest, CanExtractClassificationWhenCreatedWithBarcode)
 {
     Holding holding(Holding::ConstructBarcode("A123", 3));
@@ -221,6 +235,25 @@ TEST(HoldingTest, Availability)
 
    date nextDay = f.ArbitraryDate + date_duration(1);
    f.holding->CheckIn(nextDay, EAST_BRANCH);
+   CHECK_TRUE(f.holding->IsAvailable());
+}
+
+TEST(HoldingTest, IsNotAvailableAfterCheckout)
+{
+   f.holding->Transfer(EAST_BRANCH);
+
+   f.holding->CheckOut(f.ArbitraryDate);
+
+   CHECK_FALSE(f.holding->IsAvailable());
+}
+
+TEST(HoldingTest, IsAvailableAfterCheckin)
+{
+   f.holding->Transfer(EAST_BRANCH);
+   f.holding->CheckOut(f.ArbitraryDate);
+
+   f.holding->CheckIn(f.ArbitraryDate + date_duration(1), EAST_BRANCH);
+
    CHECK_TRUE(f.holding->IsAvailable());
 }
 
