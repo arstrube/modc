@@ -131,50 +131,50 @@ TEST(HoldingTest, AssignmentCopiesAllMembers)
    LONGS_EQUAL(holding->CopyNumber(), newHolding.CopyNumber());
    CHECK(IsAvailableAt(&newHolding, EAST_BRANCH));
 }
-#if 0
+
 TEST(HoldingTest, TransferMakesHoldingAvailableAtBranch)
 {
    holding->Transfer(EAST_BRANCH);
 
-    ASSERT_TRUE(IsAvailableAt(holding, EAST_BRANCH));
+   CHECK_TRUE(IsAvailableAt(holding, EAST_BRANCH));
 }
 
 TEST(HoldingTest, BarCodeCombinesClassificationAndCopyNumber)
 {
    Holding holding(THE_TRIAL_CLASSIFICATION, 5);
 
-    string barcode = holding.Barcode();
+   string barcode = holding.Barcode();
 
-    ASSERT_THAT(barcode, Eq(THE_TRIAL_CLASSIFICATION + ":5"));
+   STRCMP_EQUAL((THE_TRIAL_CLASSIFICATION + ":5").c_str(), barcode.c_str());
 }
 
 TEST(HoldingTest, AreEqualWhenClassificationAndCopyMatch)
 {
    Holding copy(holding->Classification(), holding->CopyNumber());
 
-    ASSERT_TRUE(*holding == copy);
+   CHECK_TRUE(*holding == copy);
 }
 
 TEST(HoldingTest, AreUnequalWhenCopyDoesNotMatch)
 {
    Holding extraCopy(holding->Classification(), holding->CopyNumber() + 1);
 
-    ASSERT_TRUE(*holding != extraCopy);
+   CHECK_TRUE(*holding != extraCopy);
 }
 
 TEST(HoldingTest, AreUnequalWhenClassificationDoesNotMatch)
 {
    Holding differentBook(holding->Classification() + "X", 1);
 
-    ASSERT_TRUE(*holding != differentBook);
+   CHECK_TRUE(*holding != differentBook);
 }
 
 TEST(HoldingTest, IsLessThanWhenClassificationsAreLessThan)
 {
-    Holding a("A:1");
-    Holding b("B:1");
+   Holding a("A:1");
+   Holding b("B:1");
 
-   ASSERT_TRUE(a < b);
+   CHECK_TRUE(a < b);
 }
 
 TEST(HoldingTest, IsNotLessThanWhenClassificationIsNotLessThan)
@@ -182,7 +182,7 @@ TEST(HoldingTest, IsNotLessThanWhenClassificationIsNotLessThan)
     Holding a("A:1");
     Holding b("B:1");
 
-    ASSERT_TRUE(!(b < a));
+    CHECK_TRUE(!(b < a));
 }
 
 TEST(HoldingTest, IsNotLessThanWhenBarcodesAreEqual)
@@ -190,9 +190,9 @@ TEST(HoldingTest, IsNotLessThanWhenBarcodesAreEqual)
     Holding a("A:1");
     Holding aCopy("A:1");
 
-    ASSERT_FALSE(a < aCopy);
+    CHECK_FALSE(a < aCopy);
 }
-
+#if 0
 TEST(HoldingTest, ck)
 {
    holding->Transfer(EAST_BRANCH);
