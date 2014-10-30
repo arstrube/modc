@@ -30,10 +30,26 @@ using namespace std;
    }\
 }
 
-class HoldingTestFixture 
+class HoldingTestFixture
 {
 public:
    static const date ArbitraryDate;
+   Holding* holding;
+   Branch* arbitraryBranch;
+
+   void VerifyAvailability(const Branch& branch) {
+      CHECK(holding->CurrentBranch() == branch);
+      CHECK(holding->IsAvailable() == (branch != Branch::CHECKED_OUT));
+   }
+
+    bool IsAvailableAt(Holding* holding, Branch& branch) {
+        return holding->CurrentBranch() == branch &&
+               holding->IsAvailable();
+    }
+
+    void MakeAvailableAtABranch(Holding* holding) {
+        holding->Transfer(EAST_BRANCH);
+    }
 };
 
 const date HoldingTestFixture::ArbitraryDate(2014, Jan, 1);
@@ -41,38 +57,18 @@ const date HoldingTestFixture::ArbitraryDate(2014, Jan, 1);
 TEST_GROUP(HoldingTest)
 {
 public:
-   Holding* holding;
-   Branch* arbitraryBranch;
-   virtual void setup() override
-   {
-      holding = new Holding(THE_TRIAL_CLASSIFICATION, 1);
-      arbitraryBranch = new Branch(EAST_BRANCH);
+   HoldingTestFixture f;
+
+   virtual void setup() override {
+      f.holding = new Holding(THE_TRIAL_CLASSIFICATION, 1);
+      f.arbitraryBranch = new Branch(EAST_BRANCH);
    }
 
-   virtual void teardown() override
-   {
-      delete holding;
-      delete arbitraryBranch;
+   virtual void teardown() override {
+      delete f.holding;
+      delete f.arbitraryBranch;
    }
-
-   void VerifyAvailability(const Branch& branch)
-   {
-      CHECK(holding->CurrentBranch() == branch);
-      CHECK(holding->IsAvailable() == (branch != Branch::CHECKED_OUT));
-   }
-
-    bool IsAvailableAt(Holding* holding, Branch& branch) 
-    {
-        return holding->CurrentBranch() == branch && 
-               holding->IsAvailable();
-    }
-
-    void MakeAvailableAtABranch(Holding* holding)
-    {
-        holding->Transfer(EAST_BRANCH);
-    }
 };
-
 
 TEST(HoldingTest, BarcodeRequiresColon)
 {
@@ -123,20 +119,20 @@ TEST(HoldingTest, IsNotAvailableWhenCreatedWithSeparateClassificationAndCopy)
 
 TEST(HoldingTest, AssignmentCopiesAllMembers)
 {
-   holding->Transfer(EAST_BRANCH);
+   f.holding->Transfer(EAST_BRANCH);
 
-   Holding newHolding = *holding;
+   Holding newHolding = *f.holding;
 
    STRCMP_EQUAL(THE_TRIAL_CLASSIFICATION.c_str(), newHolding.Classification().c_str());
-   LONGS_EQUAL(holding->CopyNumber(), newHolding.CopyNumber());
-   CHECK(IsAvailableAt(&newHolding, EAST_BRANCH));
+   LONGS_EQUAL(f.holding->CopyNumber(), newHolding.CopyNumber());
+   CHECK(f.IsAvailableAt(&newHolding, EAST_BRANCH));
 }
 
 TEST(HoldingTest, TransferMakesHoldingAvailableAtBranch)
 {
-   holding->Transfer(EAST_BRANCH);
+   f.holding->Transfer(EAST_BRANCH);
 
-   CHECK_TRUE(IsAvailableAt(holding, EAST_BRANCH));
+   CHECK_TRUE(f.IsAvailableAt(f.holding, EAST_BRANCH));
 }
 
 TEST(HoldingTest, BarCodeCombinesClassificationAndCopyNumber)
@@ -150,23 +146,23 @@ TEST(HoldingTest, BarCodeCombinesClassificationAndCopyNumber)
 
 TEST(HoldingTest, AreEqualWhenClassificationAndCopyMatch)
 {
-   Holding copy(holding->Classification(), holding->CopyNumber());
+   Holding copy(f.holding->Classification(), f.holding->CopyNumber());
 
-   CHECK_TRUE(*holding == copy);
+   CHECK_TRUE(*f.holding == copy);
 }
 
 TEST(HoldingTest, AreUnequalWhenCopyDoesNotMatch)
 {
-   Holding extraCopy(holding->Classification(), holding->CopyNumber() + 1);
+   Holding extraCopy(f.holding->Classification(), f.holding->CopyNumber() + 1);
 
-   CHECK_TRUE(*holding != extraCopy);
+   CHECK_TRUE(*f.holding != extraCopy);
 }
 
 TEST(HoldingTest, AreUnequalWhenClassificationDoesNotMatch)
 {
-   Holding differentBook(holding->Classification() + "X", 1);
+   Holding differentBook(f.holding->Classification() + "X", 1);
 
-   CHECK_TRUE(*holding != differentBook);
+   CHECK_TRUE(*f.holding != differentBook);
 }
 
 TEST(HoldingTest, IsLessThanWhenClassificationsAreLessThan)
@@ -192,53 +188,53 @@ TEST(HoldingTest, IsNotLessThanWhenBarcodesAreEqual)
 
     CHECK_FALSE(a < aCopy);
 }
-#if 0
+
 TEST(HoldingTest, ck)
 {
-   holding->Transfer(EAST_BRANCH);
+   f.holding->Transfer(EAST_BRANCH);
 
    date checkoutOn(2007, Mar, 1);
-   holding->CheckOut(checkoutOn);
+   f.holding->CheckOut(checkoutOn);
 
-   ASSERT_FALSE(holding->IsAvailable());
+   CHECK_FALSE(f.holding->IsAvailable());
 
-   ASSERT_THAT(holding->LastCheckedOutOn(), Eq(checkoutOn));
+   CHECK_TRUE(f.holding->LastCheckedOutOn() == checkoutOn);
 
    date_duration daysCheckedOut(Book::BOOK_CHECKOUT_PERIOD);
    date expectedDue = checkoutOn + daysCheckedOut;
-   ASSERT_THAT(holding->DueDate(), Eq(expectedDue));
+   CHECK_TRUE(f.holding->DueDate() == expectedDue);
 }
 
 TEST(HoldingTest, Availability)
 {
-   holding->Transfer(EAST_BRANCH);
-   holding->CheckOut(ArbitraryDate);
-   EXPECT_FALSE(holding->IsAvailable());
+   f.holding->Transfer(EAST_BRANCH);
+   f.holding->CheckOut(f.ArbitraryDate);
+   CHECK_FALSE(f.holding->IsAvailable());
 
-   date nextDay = ArbitraryDate + date_duration(1);
-   holding->CheckIn(nextDay, EAST_BRANCH);
-   EXPECT_TRUE(holding->IsAvailable());
+   date nextDay = f.ArbitraryDate + date_duration(1);
+   f.holding->CheckIn(nextDay, EAST_BRANCH);
+   CHECK_TRUE(f.holding->IsAvailable());
 }
 
 TEST(HoldingTest, UnavailableOnCheckout)
 {
-    MakeAvailableAtABranch(holding);
+    f.MakeAvailableAtABranch(f.holding);
 
-    holding->CheckOut(ArbitraryDate);
+    f.holding->CheckOut(f.ArbitraryDate);
 
-    ASSERT_FALSE(holding->IsAvailable());
+    CHECK_FALSE(f.holding->IsAvailable());
 }
 
 TEST(HoldingTest, UpdatesCheckoutDateOnCheckout)
 {
-    MakeAvailableAtABranch(holding);
+    f.MakeAvailableAtABranch(f.holding);
 
-    holding->CheckOut(ArbitraryDate);
+    f.holding->CheckOut(f.ArbitraryDate);
 
-    ASSERT_THAT(holding->LastCheckedOutOn(), Eq(ArbitraryDate));
+    CHECK_TRUE(f.holding->LastCheckedOutOn() == f.ArbitraryDate);
 }
-
-class ACheckedInHolding: public HoldingTest
+#if 0
+TEST_GROUP(ACheckedInHolding)
 {
 public:
    void SetUp() override {
@@ -262,7 +258,7 @@ TEST(HoldingTest, UpdatesDateDueOnCheckout)
 
     holding->CheckOut(ArbitraryDate);
 
-    ASSERT_THAT(holding->DueDate(), 
+    ASSERT_THAT(holding->DueDate(),
         Eq(ArbitraryDate + date_duration(Book::BOOK_CHECKOUT_PERIOD)));
 }
 
@@ -307,7 +303,7 @@ TEST(HoldingTest, MoviesDueCheckoutPeriodDaysAfterCheckout)
 
     movie.CheckOut(ArbitraryDate);
 
-    ASSERT_THAT(movie.DueDate(), 
+    ASSERT_THAT(movie.DueDate(),
         Eq(ArbitraryDate + date_duration(Book::MOVIE_CHECKOUT_PERIOD)));
 }
 #endif
