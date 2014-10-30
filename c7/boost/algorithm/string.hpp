@@ -14,7 +14,8 @@ namespace boost {
         {
             (void)Input;
             (void)Pred;
-            Result.push_back("foo");
+            Result.push_back("A");
+            Result.push_back("1");
             return Result;
         }
         
