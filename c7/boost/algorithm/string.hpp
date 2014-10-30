@@ -2,24 +2,30 @@
 #define BOOST_STRING_SPLIT_HPP
 
 #include <string>
-using namespace std;
+#include <sstream>
+#include <vector>
+
+//using namespace std;
 
 namespace boost {
     namespace algorithm {
 
-        inline const vector<string>& split(
-            vector<string>& Result,
-            const string& Input,
-            const string& Pred )
+        inline const std::vector<std::string>& split(
+            std::vector<std::string>& Result,
+            const std::string& Input,
+            const std::string& Pred )
         {
-            (void)Input;
             (void)Pred;
-            Result.push_back("A");
-            Result.push_back("1");
+            const char delim = ':';
+            std::stringstream ss(Input);
+            std::string item;
+            while (std::getline(ss, item, delim)) {
+                Result.push_back(item);
+            }
             return Result;
         }
         
-        inline const string& is_any_of( const string& Set )
+        inline const std::string& is_any_of( const std::string& Set )
         {
             return Set; 
         }
