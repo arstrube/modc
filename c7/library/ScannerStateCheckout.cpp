@@ -46,7 +46,7 @@ void ScannerStateCheckout::ScanHolding(const string& barcode)
 }
 
 void ScannerStateCheckout::ScanBranchCard(const string& barcode)
-{   
+{
     (void)barcode;
     ShowMessage(ScannerStateCheckout::MSG_COMPLETE_CHECKOUT_FIRST);
 }

@@ -12,7 +12,7 @@
 #include "boost/algorithm/string.hpp"
 
 using namespace boost::gregorian;
-//using namespace boost::algorithm;
+using namespace boost::algorithm;
 using namespace std;
 
 Holding::Holding(const string& barcode)

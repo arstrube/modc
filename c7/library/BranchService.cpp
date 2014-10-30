@@ -1,4 +1,5 @@
 #include "BranchService.h"
+
 #include "Branch.h"
 
 #include <string>
