@@ -254,6 +254,7 @@ public:
 TEST_GROUP(ACheckedInHolding)
 {
    CheckedInHoldingTestFixture f;
+
    void setup() override {
        f.setup();
    }
