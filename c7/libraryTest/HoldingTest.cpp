@@ -37,19 +37,29 @@ public:
    Holding* holding;
    Branch* arbitraryBranch;
 
+   virtual void setup() {
+      holding = new Holding(THE_TRIAL_CLASSIFICATION, 1);
+      arbitraryBranch = new Branch(EAST_BRANCH);
+   }
+
+   virtual void teardown() {
+      delete holding;
+      delete arbitraryBranch;
+   }
+
    void VerifyAvailability(const Branch& branch) {
       CHECK(holding->CurrentBranch() == branch);
       CHECK(holding->IsAvailable() == (branch != Branch::CHECKED_OUT));
    }
 
-    bool IsAvailableAt(Holding* holding, Branch& branch) {
-        return holding->CurrentBranch() == branch &&
-               holding->IsAvailable();
-    }
+   bool IsAvailableAt(Holding* holding, Branch& branch) {
+      return holding->CurrentBranch() == branch &&
+          holding->IsAvailable();
+   }
 
-    void MakeAvailableAtABranch(Holding* holding) {
-        holding->Transfer(EAST_BRANCH);
-    }
+   void MakeAvailableAtABranch(Holding* holding) {
+      holding->Transfer(EAST_BRANCH);
+   }
 };
 
 const date HoldingTestFixture::ArbitraryDate(2014, Jan, 1);
@@ -60,13 +70,11 @@ public:
    HoldingTestFixture f;
 
    virtual void setup() override {
-      f.holding = new Holding(THE_TRIAL_CLASSIFICATION, 1);
-      f.arbitraryBranch = new Branch(EAST_BRANCH);
+      f.setup();
    }
 
    virtual void teardown() override {
-      delete f.holding;
-      delete f.arbitraryBranch;
+      f.teardown();
    }
 };
 
@@ -233,57 +241,68 @@ TEST(HoldingTest, UpdatesCheckoutDateOnCheckout)
 
     CHECK_TRUE(f.holding->LastCheckedOutOn() == f.ArbitraryDate);
 }
-#if 0
+
+
+class CheckedInHoldingTestFixture : public HoldingTestFixture {
+public:
+   void setup() override {
+      HoldingTestFixture::setup();
+      MakeAvailableAtABranch(holding);
+   }
+};
+
 TEST_GROUP(ACheckedInHolding)
 {
-public:
-   void SetUp() override {
-      HoldingTest::SetUp();
-      MakeAvailableAtABranch(holding);
+   CheckedInHoldingTestFixture f;
+   void setup() override {
+       f.setup();
+   }
+   void teardown() override {
+       f.teardown();
    }
 };
 
 TEST(ACheckedInHolding, UpdatesDateDueOnCheckout)
 {
-   ASSERT_TRUE(IsAvailableAt(holding, *arbitraryBranch));
-   holding->CheckOut(ArbitraryDate);
+   CHECK_TRUE(f.IsAvailableAt(f.holding, *f.arbitraryBranch));
+   f.holding->CheckOut(f.ArbitraryDate);
 
-   ASSERT_THAT(holding->DueDate(),
-      Eq(ArbitraryDate + date_duration(Book::BOOK_CHECKOUT_PERIOD)));
+   CHECK_TRUE(f.holding->DueDate() ==
+      f.ArbitraryDate + date_duration(Book::BOOK_CHECKOUT_PERIOD));
 }
 
 TEST(HoldingTest, UpdatesDateDueOnCheckout)
 {
-    MakeAvailableAtABranch(holding);
+    f.MakeAvailableAtABranch(f.holding);
 
-    holding->CheckOut(ArbitraryDate);
+    f.holding->CheckOut(f.ArbitraryDate);
 
-    ASSERT_THAT(holding->DueDate(),
-        Eq(ArbitraryDate + date_duration(Book::BOOK_CHECKOUT_PERIOD)));
+    CHECK_TRUE(f.holding->DueDate() ==
+        f.ArbitraryDate + date_duration(Book::BOOK_CHECKOUT_PERIOD));
 }
 
 TEST(HoldingTest, Ckin)
 {
-   holding->Transfer(EAST_BRANCH);
+   f.holding->Transfer(EAST_BRANCH);
    date checkoutOn(2007, Mar, 1);
-   holding->CheckOut(checkoutOn);
+   f.holding->CheckOut(checkoutOn);
 
    date checkinOn(2007, Mar, 2);
    Branch branch2("2", "branch2");
-   holding->CheckIn(checkinOn, branch2);
+   f.holding->CheckIn(checkinOn, branch2);
 
-   ASSERT_TRUE(IsAvailableAt(holding, branch2));
+   CHECK_TRUE(f.IsAvailableAt(f.holding, branch2));
 }
 
 TEST(HoldingTest, CheckinMakesBookAvailableAtAnotherBranch)
 {
-   holding->Transfer(EAST_BRANCH);
-   holding->CheckOut(ArbitraryDate);
+   f.holding->Transfer(EAST_BRANCH);
+   f.holding->CheckOut(f.ArbitraryDate);
 
-   holding->CheckIn(
-       ArbitraryDate + date_duration(1), WEST_BRANCH);
+   f.holding->CheckIn(
+       f.ArbitraryDate + date_duration(1), WEST_BRANCH);
 
-   ASSERT_TRUE(IsAvailableAt(holding, WEST_BRANCH));
+   CHECK_TRUE(f.IsAvailableAt(f.holding, WEST_BRANCH));
 }
 
 TEST(HoldingTest, DateDueForMovies)
@@ -293,17 +312,16 @@ TEST(HoldingTest, DateDueForMovies)
    date checkoutOn(2007, Mar, 1);
    holdingA.CheckOut(checkoutOn);
 
-   ASSERT_THAT(holdingA.DueDate(), Eq(checkoutOn + date_duration(Book::MOVIE_CHECKOUT_PERIOD)));
+   CHECK_TRUE(holdingA.DueDate() == checkoutOn + date_duration(Book::MOVIE_CHECKOUT_PERIOD));
 }
 
 TEST(HoldingTest, MoviesDueCheckoutPeriodDaysAfterCheckout)
 {
     Holding movie(SEVEN_CLASSIFICATION, 1);
-    MakeAvailableAtABranch(&movie);
+    f.MakeAvailableAtABranch(&movie);
 
-    movie.CheckOut(ArbitraryDate);
+    movie.CheckOut(f.ArbitraryDate);
 
-    ASSERT_THAT(movie.DueDate(),
-        Eq(ArbitraryDate + date_duration(Book::MOVIE_CHECKOUT_PERIOD)));
+    CHECK_TRUE(movie.DueDate() ==
+        f.ArbitraryDate + date_duration(Book::MOVIE_CHECKOUT_PERIOD));
 }
-#endif
