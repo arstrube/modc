@@ -40,6 +40,7 @@
 		<Unit filename="c7\boost\date_time\gregorian\gregorian_types.hpp" />
 		<Unit filename="c7\libraryTest\ASSERT_CURRENT_STATE.h" />
 		<Unit filename="c7\libraryTest\HoldingTest.cpp" />
+		<Unit filename="c7\libraryTest\RomanTest.cpp" />
 		<Unit filename="c7\library\Book.cpp" />
 		<Unit filename="c7\library\Branch.cpp" />
 		<Unit filename="c7\library\BranchAccess.cpp" />
@@ -62,6 +63,7 @@
 		<Unit filename="c7\library\Patron.cpp" />
 		<Unit filename="c7\library\PatronAccess.cpp" />
 		<Unit filename="c7\library\PatronService.cpp" />
+		<Unit filename="c7\library\RomanConverter.cpp" />
 		<Unit filename="c7\library\Scanner.cpp" />
 		<Unit filename="c7\library\ScannerState.cpp" />
 		<Unit filename="c7\library\ScannerStateCheckin.cpp" />
@@ -100,6 +102,7 @@
 		<Unit filename="c7\library\include\Persistence.h" />
 		<Unit filename="c7\library\include\Report.h" />
 		<Unit filename="c7\library\include\ReportMailer.h" />
+		<Unit filename="c7\library\include\RomanConverter.h" />
 		<Unit filename="c7\library\include\Scanner.h" />
 		<Unit filename="c7\library\include\ScannerState.h" />
 		<Unit filename="c7\library\include\ScannerStateCheckin.h" />
