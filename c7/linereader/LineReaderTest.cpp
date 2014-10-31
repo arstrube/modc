@@ -35,18 +35,19 @@
 #include "sys_stubs.h"
 #include "LineReader.h"
 
+static const char templ[] = "/tmp/line-reader-unittest-XXXXXX";
+
 static int TemporaryFile() {
-  static const char templ[] = "/tmp/line-reader-unittest-XXXXXX";
-  char templ_copy[sizeof(templ)];
-  memcpy(templ_copy, templ, sizeof(templ));
-  const int fd = mkstemp(templ_copy);
-  if (fd >= 0)
-    unlink(templ_copy);
+  const int fd = mkstemp(templ);
 
   return fd;
 }
 
-TEST_GROUP(LineReaderTest) {};
+TEST_GROUP(LineReaderTest) {
+    void teardown() override {
+        unlink(templ);
+    }
+};
 
 TEST(LineReaderTest, EmptyFile) {
   const int fd = TemporaryFile();
@@ -58,7 +59,7 @@ TEST(LineReaderTest, EmptyFile) {
 
   close(fd);
 }
-#if 0
+
 TEST(LineReaderTest, OneLineTerminated) {
   const int fd = TemporaryFile();
   write(fd, "a\n", 2);
@@ -67,13 +68,12 @@ TEST(LineReaderTest, OneLineTerminated) {
 
   const char *line;
   unsigned int len;
-  ASSERT_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ(len, (unsigned int)1);
-  ASSERT_EQ(line[0], 'a');
-  ASSERT_EQ(line[1], 0);
+  CHECK_TRUE(reader.GetNextLine(&line, &len));
+  LONGS_EQUAL(1, len);
+  STRCMP_EQUAL("a", line);
   reader.PopLine(len);
 
-  ASSERT_FALSE(reader.GetNextLine(&line, &len));
+  CHECK_FALSE(reader.GetNextLine(&line, &len));
 
   close(fd);
 }
@@ -86,13 +86,12 @@ TEST(LineReaderTest, OneLine) {
 
   const char *line;
   unsigned len;
-  ASSERT_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ(len, (unsigned)1);
-  ASSERT_EQ(line[0], 'a');
-  ASSERT_EQ(line[1], 0);
+  CHECK_TRUE(reader.GetNextLine(&line, &len));
+  LONGS_EQUAL(1U, len);
+  STRCMP_EQUAL("a", line);
   reader.PopLine(len);
 
-  ASSERT_FALSE(reader.GetNextLine(&line, &len));
+  CHECK_FALSE(reader.GetNextLine(&line, &len));
 
   close(fd);
 }
@@ -105,23 +104,21 @@ TEST(LineReaderTest, TwoLinesTerminated) {
 
   const char *line;
   unsigned len;
-  ASSERT_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ(len, (unsigned)1);
-  ASSERT_EQ(line[0], 'a');
-  ASSERT_EQ(line[1], 0);
+  CHECK_TRUE(reader.GetNextLine(&line, &len));
+  LONGS_EQUAL(1u, len);
+  STRCMP_EQUAL("a", line);
   reader.PopLine(len);
 
-  ASSERT_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ(len, (unsigned)1);
-  ASSERT_EQ(line[0], 'b');
-  ASSERT_EQ(line[1], 0);
+  CHECK_TRUE(reader.GetNextLine(&line, &len));
+  LONGS_EQUAL(1u, len);
+  STRCMP_EQUAL("b", line);
   reader.PopLine(len);
 
-  ASSERT_FALSE(reader.GetNextLine(&line, &len));
+  CHECK_FALSE(reader.GetNextLine(&line, &len));
 
   close(fd);
 }
-
+#if 0
 TEST(LineReaderTest, TwoLines) {
   const int fd = TemporaryFile();
   write(fd, "a\nb", 3);
@@ -131,18 +128,16 @@ TEST(LineReaderTest, TwoLines) {
   const char *line;
   unsigned len;
   ASSERT_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ(len, (unsigned)1);
-  ASSERT_EQ(line[0], 'a');
-  ASSERT_EQ(line[1], 0);
+  LONGS_EQUAL(1u, len);
+  STRCMP_EQUAL("a", line);
   reader.PopLine(len);
 
   ASSERT_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ(len, (unsigned)1);
-  ASSERT_EQ(line[0], 'b');
-  ASSERT_EQ(line[1], 0);
+  LONGS_EQUAL(1u, len);
+  STRCMP_EQUAL("b", line);
   reader.PopLine(len);
 
-  ASSERT_FALSE(reader.GetNextLine(&line, &len));
+  CHECK_FALSE(reader.GetNextLine(&line, &len));
 
   close(fd);
 }
@@ -157,10 +152,10 @@ TEST(LineReaderTest, MaxLength) {
 
   const char *line;
   unsigned len;
-  ASSERT_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ(len, sizeof(l));
-  ASSERT_TRUE(memcmp(l, line, sizeof(l)) == 0);
-  ASSERT_EQ(line[len], 0);
+  CHECK_TRUE(reader.GetNextLine(&line, &len));
+  LONGS_EQUAL( sizeof(l), len);
+  CHECK_TRUE(memcmp(l, line, sizeof(l)) == 0);
+  CHECK_TRUE(0 == line[len]);
 
   close(fd);
 }

@@ -117,7 +117,6 @@
 		<Unit filename="c7\library\include\VectorWriter.h" />
 		<Unit filename="c7\linereader\LineReader.h" />
 		<Unit filename="c7\linereader\LineReaderTest.cpp" />
-		<Unit filename="c7\linereader\linux_syscall_support.h" />
 		<Unit filename="c7\linereader\sys_stubs.h" />
 		<Extensions>
 			<code_completion />

@@ -3,17 +3,15 @@
 
 extern "C" {
 #include <string.h>
+#include <fcntl.h>
 
 inline size_t sys_read (int fd, void* buffer, size_t n) {
-    (void)fd;
-    (void)buffer;
-    (void)n;
-    return 0;
+    return read(fd, buffer, n);
 }
 
 inline int mkstemp(const char* name) {
-    (void)name;
-    return 0;
+    close(open(name, O_CREAT, S_IRUSR||S_IWUSR));
+    return open(name, O_RDWR);
 }
 
 } // extern "C"
