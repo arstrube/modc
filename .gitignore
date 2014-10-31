@@ -1,5 +1,5 @@
 *.depend
 *.exe
-*.layout
+*.layout*
 *.o
 *.stackdump
