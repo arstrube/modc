@@ -118,7 +118,7 @@ TEST(LineReaderTest, TwoLinesTerminated) {
 
   close(fd);
 }
-#if 0
+
 TEST(LineReaderTest, TwoLines) {
   const int fd = TemporaryFile();
   write(fd, "a\nb", 3);
@@ -127,12 +127,12 @@ TEST(LineReaderTest, TwoLines) {
 
   const char *line;
   unsigned len;
-  ASSERT_TRUE(reader.GetNextLine(&line, &len));
+  CHECK_TRUE(reader.GetNextLine(&line, &len));
   LONGS_EQUAL(1u, len);
   STRCMP_EQUAL("a", line);
   reader.PopLine(len);
 
-  ASSERT_TRUE(reader.GetNextLine(&line, &len));
+  CHECK_TRUE(reader.GetNextLine(&line, &len));
   LONGS_EQUAL(1u, len);
   STRCMP_EQUAL("b", line);
   reader.PopLine(len);
@@ -170,8 +170,7 @@ TEST(LineReaderTest, TooLong) {
 
   const char *line;
   unsigned len;
-  ASSERT_FALSE(reader.GetNextLine(&line, &len));
+  CHECK_FALSE(reader.GetNextLine(&line, &len));
 
   close(fd);
 }
-#endif
