@@ -27,11 +27,12 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "gmock/gmock.h"
+#include "CppUTest/TestHarness.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 
+#include "sys_stubs.h"
 #include "LineReader.h"
 
 static int TemporaryFile() {
@@ -45,9 +46,7 @@ static int TemporaryFile() {
   return fd;
 }
 
-namespace {
-typedef testing::Test LineReaderTest;
-}
+TEST_GROUP(LineReaderTest) {};
 
 TEST(LineReaderTest, EmptyFile) {
   const int fd = TemporaryFile();
@@ -55,11 +54,11 @@ TEST(LineReaderTest, EmptyFile) {
 
   const char *line;
   unsigned len;
-  ASSERT_FALSE(reader.GetNextLine(&line, &len));
+  CHECK_FALSE(reader.GetNextLine(&line, &len));
 
   close(fd);
 }
-
+#if 0
 TEST(LineReaderTest, OneLineTerminated) {
   const int fd = TemporaryFile();
   write(fd, "a\n", 2);
@@ -180,3 +179,4 @@ TEST(LineReaderTest, TooLong) {
 
   close(fd);
 }
+#endif

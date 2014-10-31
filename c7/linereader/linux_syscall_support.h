@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Modern C++ Programming with Test-Driven Development",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material, 
+ * Copyrights apply to this code. It may not be used to create training material,
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose. 
+ * We make no guarantees that this code is fit for any purpose.
  * Visit http://www.pragmaticprogrammer.com/titles/lotdd for more book information.
 ***/
 /* Copyright (c) 2005-2010, Google Inc.
@@ -1464,29 +1464,29 @@ struct kernel_statfs {
       void (**entrypoint)(void);
       asm volatile(".bss\n"
                    ".align 8\n"
-                   ".globl "SYS_SYSCALL_ENTRYPOINT"\n"
-                   ".common "SYS_SYSCALL_ENTRYPOINT",8,8\n"
+                   ".globl " SYS_SYSCALL_ENTRYPOINT "\n"
+                   ".common " SYS_SYSCALL_ENTRYPOINT ",8,8\n"
                    ".previous\n"
-                   /* This logically does 'lea "SYS_SYSCALL_ENTRYPOINT", %0' */
+                   /* This logically does 'lea " SYS_SYSCALL_ENTRYPOINT ", %0' */
                    "call 0f\n"
                  "0:pop  %0\n"
                    "add  $_GLOBAL_OFFSET_TABLE_+[.-0b], %0\n"
-                   "mov  "SYS_SYSCALL_ENTRYPOINT"@GOT(%0), %0\n"
+                   "mov  " SYS_SYSCALL_ENTRYPOINT "@GOT(%0), %0\n"
                    : "=r"(entrypoint));
       return entrypoint;
     }
 
     #define LSS_ENTRYPOINT ".bss\n"                                           \
                            ".align 8\n"                                       \
-                           ".globl "SYS_SYSCALL_ENTRYPOINT"\n"                \
-                           ".common "SYS_SYSCALL_ENTRYPOINT",8,8\n"           \
+                           ".globl " SYS_SYSCALL_ENTRYPOINT "\n"                \
+                           ".common " SYS_SYSCALL_ENTRYPOINT ",8,8\n"           \
                            ".previous\n"                                      \
                            /* Check the SYS_SYSCALL_ENTRYPOINT vector      */ \
                            "push %%eax\n"                                     \
                            "call 10000f\n"                                    \
                      "10000:pop  %%eax\n"                                     \
                            "add  $_GLOBAL_OFFSET_TABLE_+[.-10000b], %%eax\n"  \
-                           "mov  "SYS_SYSCALL_ENTRYPOINT"@GOT(%%eax), %%eax\n"\
+                           "mov  " SYS_SYSCALL_ENTRYPOINT "@GOT(%%eax), %%eax\n"\
                            "mov  0(%%eax), %%eax\n"                           \
                            "test %%eax, %%eax\n"                              \
                            "jz   10001f\n"                                    \
@@ -1756,10 +1756,10 @@ struct kernel_statfs {
       void (**entrypoint)(void);
       asm volatile(".bss\n"
                    ".align 8\n"
-                   ".globl "SYS_SYSCALL_ENTRYPOINT"\n"
-                   ".common "SYS_SYSCALL_ENTRYPOINT",8,8\n"
+                   ".globl " SYS_SYSCALL_ENTRYPOINT "\n"
+                   ".common " SYS_SYSCALL_ENTRYPOINT ",8,8\n"
                    ".previous\n"
-                   "mov "SYS_SYSCALL_ENTRYPOINT"@GOTPCREL(%%rip), %0\n"
+                   "mov " SYS_SYSCALL_ENTRYPOINT "@GOTPCREL(%%rip), %0\n"
                    : "=r"(entrypoint));
       return entrypoint;
     }
@@ -1767,10 +1767,10 @@ struct kernel_statfs {
     #define LSS_ENTRYPOINT                                                    \
               ".bss\n"                                                        \
               ".align 8\n"                                                    \
-              ".globl "SYS_SYSCALL_ENTRYPOINT"\n"                             \
-              ".common "SYS_SYSCALL_ENTRYPOINT",8,8\n"                        \
+              ".globl " SYS_SYSCALL_ENTRYPOINT "\n"                             \
+              ".common " SYS_SYSCALL_ENTRYPOINT ",8,8\n"                        \
               ".previous\n"                                                   \
-              "mov "SYS_SYSCALL_ENTRYPOINT"@GOTPCREL(%%rip), %%rcx\n"         \
+              "mov " SYS_SYSCALL_ENTRYPOINT "@GOTPCREL(%%rip), %%rcx\n"         \
               "mov  0(%%rcx), %%rcx\n"                                        \
               "test %%rcx, %%rcx\n"                                           \
               "jz   10001f\n"                                                 \
@@ -3001,7 +3001,7 @@ struct kernel_statfs {
       return 0;
     }
   }
-  
+
   LSS_INLINE int LSS_NAME(sigismember)(struct kernel_sigset_t *set,
                                           int signum) {
     if (signum < 1 || signum > (int)(8*sizeof(set->sig))) {
