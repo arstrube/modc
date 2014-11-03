@@ -13,7 +13,7 @@ inline size_t sys_read (int fd, void* buffer, size_t n) {
  * Therfore, test must explicitly call unlink(name) when done.
  */
 inline int mkstemp(const char* name) {
-    close(open(name, O_CREAT, S_IRUSR||S_IWUSR));
+    close(open(name, O_CREAT, S_IRWXU|S_IRWXG|S_IRWXO));
     return open(name, O_RDWR);
 }
 
