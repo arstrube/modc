@@ -53,11 +53,17 @@ static int TemporaryFile() {
 }
 
 TEST_GROUP(LineReaderTest) {
+   int fd;
+   
    int WriteTemporaryFile(const char* records) {
-      const int fd = TemporaryFile();
+      fd = TemporaryFile();
       write(fd, records, strlen(records));
       lseek(fd, 0, SEEK_SET);
       return fd;
+   }
+
+   void teardown() override {
+      close(fd);
    }
 };
 
@@ -68,8 +74,6 @@ TEST(LineReaderTest, EmptyFile) {
   const char *line;
   unsigned len;
   CHECK_FALSE(reader.GetNextLine(&line, &len));
-
-  close(fd);
 }
 
 TEST(LineReaderTest, OneLineTerminated) {
@@ -100,8 +104,6 @@ TEST(LineReaderTest, OneLine) {
   reader.PopLine(len);
 
   CHECK_FALSE(reader.GetNextLine(&line, &len));
-
-  close(fd);
 }
 
 TEST(LineReaderTest, TwoLinesTerminated) {
@@ -121,8 +123,6 @@ TEST(LineReaderTest, TwoLinesTerminated) {
   reader.PopLine(len);
 
   CHECK_FALSE(reader.GetNextLine(&line, &len));
-
-  close(fd);
 }
 
 TEST(LineReaderTest, TwoLines) {
@@ -142,8 +142,6 @@ TEST(LineReaderTest, TwoLines) {
   reader.PopLine(len);
 
   CHECK_FALSE(reader.GetNextLine(&line, &len));
-
-  close(fd);
 }
 
 TEST(LineReaderTest, MaxLength) {
@@ -160,8 +158,6 @@ TEST(LineReaderTest, MaxLength) {
   LONGS_EQUAL( sizeof(l), len);
   CHECK_TRUE(memcmp(l, line, sizeof(l)) == 0);
   CHECK_TRUE(0 == line[len]);
-
-  close(fd);
 }
 
 TEST(LineReaderTest, TooLong) {
@@ -173,6 +169,4 @@ TEST(LineReaderTest, TooLong) {
   const char *line;
   unsigned len;
   CHECK_FALSE(reader.GetNextLine(&line, &len));
-
-  close(fd);
 }
