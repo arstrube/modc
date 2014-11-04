@@ -63,7 +63,6 @@ TEST_GROUP(LineReaderTest) {
    }
 
    void teardown() override {
-      close(fd);
    }
 };
 
