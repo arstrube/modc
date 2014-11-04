@@ -68,8 +68,7 @@ TEST_GROUP(LineReaderTest) {
 };
 
 TEST(LineReaderTest, EmptyFile) {
-  const int fd = WriteTemporaryFile("");
-  LineReader reader(fd);
+  LineReader reader(WriteTemporaryFile(""));
 
   const char *line;
   unsigned len;
@@ -77,8 +76,7 @@ TEST(LineReaderTest, EmptyFile) {
 }
 
 TEST(LineReaderTest, OneLineTerminated) {
-  const int fd = WriteTemporaryFile("a\n");
-  LineReader reader(fd);
+  LineReader reader(WriteTemporaryFile("a\n"));
 
   const char *line;
   unsigned int len;
@@ -93,8 +91,7 @@ TEST(LineReaderTest, OneLineTerminated) {
 }
 
 TEST(LineReaderTest, OneLine) {
-  const int fd = WriteTemporaryFile("a");
-  LineReader reader(fd);
+  LineReader reader(WriteTemporaryFile("a"));
 
   const char *line;
   unsigned len;
@@ -107,8 +104,7 @@ TEST(LineReaderTest, OneLine) {
 }
 
 TEST(LineReaderTest, TwoLinesTerminated) {
-  const int fd = WriteTemporaryFile("a\nb\n");
-  LineReader reader(fd);
+  LineReader reader(WriteTemporaryFile("a\nb\n"));
 
   const char *line;
   unsigned len;
@@ -145,17 +141,14 @@ TEST(LineReaderTest, TwoLines) {
 }
 
 TEST(LineReaderTest, MaxLength) {
-  const int fd = TemporaryFile();
   char l[LineReader::kMaxLineLen - 1];
   memset(l, 'a', sizeof(l));
-  write(fd, l, sizeof(l));
-  lseek(fd, 0, SEEK_SET);
-  LineReader reader(fd);
+  LineReader reader(WriteTemporaryFile(l));
 
   const char *line;
   unsigned len;
   CHECK_TRUE(reader.GetNextLine(&line, &len));
-  LONGS_EQUAL( sizeof(l), len);
+  LONGS_EQUAL(sizeof(l), len);
   CHECK_TRUE(memcmp(l, line, sizeof(l)) == 0);
   CHECK_TRUE(0 == line[len]);
 }
