@@ -1,5 +1,5 @@
-#ifndef SYS_LINUX_SYSCALL_SUPPORT_H
-#define SYS_LINUX_SYSCALL_SUPPORT_H
+#ifndef SYS_STUBS_H
+#define SYS_STUBS_H
 
 extern "C" {
 #include <string.h>
@@ -9,6 +9,9 @@ inline size_t sys_read (int fd, void* buffer, size_t n) {
     return read(fd, buffer, n);
 }
 
+/** Note: This is not a 'real' mkstemp() implementation.
+ * Therfore, test must explicitly call unlink(name) when done.
+ */
 inline int mkstemp(const char* name) {
     close(open(name, O_CREAT, S_IRUSR||S_IWUSR));
     return open(name, O_RDWR);
@@ -16,4 +19,4 @@ inline int mkstemp(const char* name) {
 
 } // extern "C"
 
-#endif
+#endif // SYS_STUBS_H
