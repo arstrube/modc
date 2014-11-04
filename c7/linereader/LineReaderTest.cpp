@@ -43,19 +43,6 @@
 #define ASSERT_EQ_WITH_LENGTH(expected,actual,length) {\
   LONGS_EQUAL(length, strlen(actual));\
   STRCMP_EQUAL(expected, actual);\
-  reader.PopLine(length);\
-  CHECK_FALSE(reader.GetNextLine(&f.line, &length));\
-}
-
-/** This macro is necessary because some test still contain two tests
- *  for two lines. Once we get rid of those, we don't need this kludge
- *  any more.
- */
-#define ASSERT_EQ_WITH_LENGTH_NOT_LAST_KLUDGE(expected,actual,length) {\
-  LONGS_EQUAL(length, strlen(actual));\
-  STRCMP_EQUAL(expected, actual);\
-  reader.PopLine(length);\
-  CHECK_TRUE(reader.GetNextLine(&f.line, &length));\
 }
 
 #define last_line true
@@ -143,20 +130,29 @@ TEST(LineReaderTest, TwoLinesTerminated) {
   LineReader reader(f.WriteTemporaryFile("a\nb\n"));
 
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
-  ASSERT_EQ_WITH_LENGTH_NOT_LAST_KLUDGE("a", f.line, f.len);
-
+  ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
+  
+  reader.PopLine(f.len);  
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
   ASSERT_EQ_WITH_LENGTH("b", f.line, f.len);
+  
+  reader.PopLine(f.len);  
+  CHECK_FALSE(reader.GetNextLine(&f.line, &f.len));
+
 }
 
 TEST(LineReaderTest, TwoLines) {
   LineReader reader(f.WriteTemporaryFile("a\nb"));
 
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
-  ASSERT_EQ_WITH_LENGTH_NOT_LAST_KLUDGE("a", f.line, f.len);
-
+  ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
+  reader.PopLine(f.len);  
+  
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
   ASSERT_EQ_WITH_LENGTH("b", f.line, f.len);
+  reader.PopLine(f.len);
+  
+  CHECK_FALSE(reader.GetNextLine(&f.line, &f.len));
 }
 
 TEST(LineReaderTest, MaxLength) {
