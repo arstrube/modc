@@ -53,10 +53,16 @@ static int TemporaryFile() {
 }
 
 TEST_GROUP(LineReaderTest) {
+   int WriteTemporaryFile(const char* records) {
+      const int fd = TemporaryFile();
+      write(fd, records, strlen(records));
+      lseek(fd, 0, SEEK_SET);
+      return fd;
+   }
 };
 
 TEST(LineReaderTest, EmptyFile) {
-  const int fd = TemporaryFile();
+  const int fd = WriteTemporaryFile("");
   LineReader reader(fd);
 
   const char *line;
@@ -67,9 +73,7 @@ TEST(LineReaderTest, EmptyFile) {
 }
 
 TEST(LineReaderTest, OneLineTerminated) {
-  const int fd = TemporaryFile();
-  write(fd, "a\n", 2);
-  lseek(fd, 0, SEEK_SET);
+  const int fd = WriteTemporaryFile("a\n");
   LineReader reader(fd);
 
   const char *line;
@@ -85,9 +89,7 @@ TEST(LineReaderTest, OneLineTerminated) {
 }
 
 TEST(LineReaderTest, OneLine) {
-  const int fd = TemporaryFile();
-  write(fd, "a", 1);
-  lseek(fd, 0, SEEK_SET);
+  const int fd = WriteTemporaryFile("a");
   LineReader reader(fd);
 
   const char *line;
@@ -103,9 +105,7 @@ TEST(LineReaderTest, OneLine) {
 }
 
 TEST(LineReaderTest, TwoLinesTerminated) {
-  const int fd = TemporaryFile();
-  write(fd, "a\nb\n", 4);
-  lseek(fd, 0, SEEK_SET);
+  const int fd = WriteTemporaryFile("a\nb\n");
   LineReader reader(fd);
 
   const char *line;
@@ -126,9 +126,7 @@ TEST(LineReaderTest, TwoLinesTerminated) {
 }
 
 TEST(LineReaderTest, TwoLines) {
-  const int fd = TemporaryFile();
-  write(fd, "a\nb", 3);
-  lseek(fd, 0, SEEK_SET);
+  const int fd = WriteTemporaryFile("a\nb");
   LineReader reader(fd);
 
   const char *line;
@@ -167,11 +165,9 @@ TEST(LineReaderTest, MaxLength) {
 }
 
 TEST(LineReaderTest, TooLong) {
-  const int fd = TemporaryFile();
   char l[LineReader::kMaxLineLen];
   memset(l, 'a', sizeof(l));
-  write(fd, l, sizeof(l));
-  lseek(fd, 0, SEEK_SET);
+  const int fd = WriteTemporaryFile(l);
   LineReader reader(fd);
 
   const char *line;
