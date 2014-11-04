@@ -27,8 +27,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+// strict ansi shouldn't be defined, but under Cygwin G++, it is defined
+// even when not commanded by -ansi
+
+#undef __STRICT_ANSI__
+
 #include "CppUTest/TestHarness.h"
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
 #include <sys/types.h>
 
@@ -38,15 +43,16 @@
 static const char templ[] = "/tmp/line-reader-unittest-XXXXXX";
 
 static int TemporaryFile() {
-  const int fd = mkstemp(templ);
+   char templ_copy[sizeof(templ)];
+   memcpy(templ_copy, templ, sizeof(templ));
+   const int fd = mkstemp(templ_copy);
+   if (fd >= 0)
+      unlink(templ_copy);
 
-  return fd;
+   return fd;
 }
 
 TEST_GROUP(LineReaderTest) {
-    void teardown() override {
-        unlink(templ);
-    }
 };
 
 TEST(LineReaderTest, EmptyFile) {
