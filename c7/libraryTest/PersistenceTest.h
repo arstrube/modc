@@ -8,7 +8,7 @@
 ***/
 #pragma once
 
-#include "gtest/gtest.h"
+#include "CppUTest/TestHarness.h"
 
 #include "KeyedFilePersistence.h"
 #include "KeyedMemoryPersistence.h"
@@ -18,28 +18,25 @@ using namespace std;
 
 typedef Persistence<TestSerializable>* (*PersistenceFactoryFunction)();
 
-class PersistenceTest: public ::testing::TestWithParam<PersistenceFactoryFunction> {
+class PersistenceTestFixture /*<PersistenceFactoryFunction>*/ {
 public:
     Persistence<TestSerializable>* persister;
 
     TestSerializable* objectWithId1;
     TestSerializable* objectWithId2;
 
-    void SetUp() override 
-    {
+    void SetUp() {
         persister = (*InjectedFactoryFunction())();
         persister->Clear();
         objectWithId1 = new TestSerializable("one", "1");
         objectWithId2 = new TestSerializable("two", "2");
     }
 
-    PersistenceFactoryFunction InjectedFactoryFunction() 
-    {
+    PersistenceFactoryFunction InjectedFactoryFunction() {
         return GetParam();
     }
 
-    void TearDown() override
-    {
+    void TearDown() {
         persister->Clear();
         delete objectWithId2;
         delete objectWithId1;

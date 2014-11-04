@@ -40,7 +40,10 @@
 		<Unit filename="c7\boost\date_time\gregorian\gregorian_types.hpp" />
 		<Unit filename="c7\libraryTest\ASSERT_CURRENT_STATE.h" />
 		<Unit filename="c7\libraryTest\HoldingTest.cpp" />
+		<Unit filename="c7\libraryTest\PersistenceTest.cpp" />
+		<Unit filename="c7\libraryTest\PersistenceTest.h" />
 		<Unit filename="c7\libraryTest\RomanTest.cpp" />
+		<Unit filename="c7\libraryTest\TestSerializable.h" />
 		<Unit filename="c7\library\Book.cpp" />
 		<Unit filename="c7\library\Branch.cpp" />
 		<Unit filename="c7\library\BranchAccess.cpp" />

@@ -1,27 +1,37 @@
 #include "PersistenceTest.h"
 
-#include "gmock/gmock.h"
 
 #include <memory>
 #include "KeyedMemoryPersistence.h"
 #include "TestSerializable.h"
 
 using namespace std;
-using namespace testing;
 
-TEST_P(PersistenceTest, IsEmptyOnCreation)
+TEST_GROUP(PersistenceTest) {
+    PersistenceTestFixture f;
+    
+    void setup() override {
+        f.SetUp();
+    }
+    
+    void teardown() override {
+        f.TearDown();
+    }
+};
+
+TEST(PersistenceTest, IsEmptyOnCreation)
 {
-    ASSERT_THAT(persister->Size(), Eq(0u));
+    LONGS_EQUAL(0u, f.persister->Size());
 }
 
-TEST_P(PersistenceTest, SizeSetToOneOnFirstAdd)
+/*
+TEST(PersistenceTest, SizeSetToOneOnFirstAdd)
 {
-    persister->Add(*objectWithId1);
+    f.persister->Add(*f.objectWithId1);
 
-    ASSERT_THAT(persister->Size(), Eq(1u));
+    LONGS_EQUAL(1u, f.persister->Size());
 }
-
-TEST_P(PersistenceTest, SizeIncrementsWithEachAdd)
+TEST(PersistenceTest, SizeIncrementsWithEachAdd)
 {
     persister->Add(*objectWithId1);
     persister->Add(*objectWithId2);
@@ -29,7 +39,7 @@ TEST_P(PersistenceTest, SizeIncrementsWithEachAdd)
     ASSERT_THAT(persister->Size(), Eq(2u));
 }
 
-TEST_P(PersistenceTest, ReturnsNullPointerWhenItemNotFound)
+TEST(PersistenceTest, ReturnsNullPointerWhenItemNotFound)
 {
     auto_ptr<TestSerializable> found = persister->Get("1");
 
@@ -38,26 +48,26 @@ TEST_P(PersistenceTest, ReturnsNullPointerWhenItemNotFound)
     ASSERT_THAT(serializable, IsNull());
 }
 
-TEST_P(PersistenceTest, AddedItemCanBeRetrievedById)
+TEST(PersistenceTest, AddedItemCanBeRetrievedById)
 {
     persister->Add(*objectWithId1);
 
     ASSERT_THAT(*persister->Get("1"), Eq(*objectWithId1));
 }
 
-TEST_P(PersistenceTest, GetAnswersNullWhenNoMatchingEntries)
+TEST(PersistenceTest, GetAnswersNullWhenNoMatchingEntries)
 {
     ASSERT_THAT(persister->Get("1").get(), IsNull());
 };
 
-TEST_P(PersistenceTest, RetrievedItemIsNewInstance)
+TEST(PersistenceTest, RetrievedItemIsNewInstance)
 {
     persister->Add(*objectWithId1);
 
     ASSERT_FALSE(objectWithId1 == persister->Get("1").get());
 }
 
-TEST_P(PersistenceTest, CanPersistMultipleObjects)
+TEST(PersistenceTest, CanPersistMultipleObjects)
 {
     persister->Add(*objectWithId1);
     persister->Add(*objectWithId2);
@@ -71,7 +81,7 @@ bool NameMatcher(Serializable& each, const string& name)
     return (dynamic_cast<TestSerializable&>(each)).Name() == name;
 }
 
-TEST_P(PersistenceTest, MatchesAnswersTrueWithMatchingEntries)
+TEST(PersistenceTest, MatchesAnswersTrueWithMatchingEntries)
 {
     persister->Add(*objectWithId1);
     persister->Add(*objectWithId2);
@@ -82,14 +92,14 @@ TEST_P(PersistenceTest, MatchesAnswersTrueWithMatchingEntries)
     ASSERT_TRUE(exists);
 };
 
-TEST_P(PersistenceTest, MatchesAnswersFalseWhenNoMatchingEntries)
+TEST(PersistenceTest, MatchesAnswersFalseWhenNoMatchingEntries)
 {
     bool exists = persister->Matches(NameMatcher, "don't match anything");
 
     ASSERT_FALSE(exists);
 };
 
-TEST_P(PersistenceTest, FindAllMatching) 
+TEST(PersistenceTest, FindAllMatching) 
 {
     TestSerializable coolidge("Calvin", "1");
     TestSerializable langr("Jeff", "2");
@@ -103,3 +113,4 @@ TEST_P(PersistenceTest, FindAllMatching)
 
     ASSERT_THAT(matches.size(), Eq(2u));
 };
+*/
