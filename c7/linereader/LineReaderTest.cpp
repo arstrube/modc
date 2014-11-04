@@ -122,8 +122,7 @@ TEST(LineReaderTest, TwoLinesTerminated) {
 }
 
 TEST(LineReaderTest, TwoLines) {
-  const int fd = WriteTemporaryFile("a\nb");
-  LineReader reader(fd);
+  LineReader reader(WriteTemporaryFile("a\nb"));
 
   const char *line;
   unsigned len;
@@ -141,23 +140,24 @@ TEST(LineReaderTest, TwoLines) {
 }
 
 TEST(LineReaderTest, MaxLength) {
-  char l[LineReader::kMaxLineLen - 1];
-  memset(l, 'a', sizeof(l));
+  char l[LineReader::kMaxLineLen];
+  memset(l, 'a', sizeof(l)-1);
+  l[sizeof(l)] = '\0';
   LineReader reader(WriteTemporaryFile(l));
 
   const char *line;
   unsigned len;
   CHECK_TRUE(reader.GetNextLine(&line, &len));
-  LONGS_EQUAL(sizeof(l), len);
+  LONGS_EQUAL(strlen(l), len);
   CHECK_TRUE(memcmp(l, line, sizeof(l)) == 0);
   CHECK_TRUE(0 == line[len]);
 }
 
 TEST(LineReaderTest, TooLong) {
-  char l[LineReader::kMaxLineLen];
-  memset(l, 'a', sizeof(l));
-  const int fd = WriteTemporaryFile(l);
-  LineReader reader(fd);
+  char l[LineReader::kMaxLineLen+1];
+  memset(l, 'a', sizeof(l)-1);
+  l[sizeof(l)] = '\0';
+  LineReader reader(WriteTemporaryFile(l));
 
   const char *line;
   unsigned len;
