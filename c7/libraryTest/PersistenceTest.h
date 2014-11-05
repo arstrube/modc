@@ -16,9 +16,7 @@
 
 using namespace std;
 
-typedef Persistence<TestSerializable>* (*PersistenceFactoryFunction)();
-
-class PersistenceTestFixture /*<PersistenceFactoryFunction>*/ {
+class PersistenceTestFixture {
 public:
     Persistence<TestSerializable>* persister;
 
@@ -26,14 +24,10 @@ public:
     TestSerializable* objectWithId2;
 
     void SetUp() {
-        persister = (*InjectedFactoryFunction())();
+        persister = new KeyedMemoryPersistence<TestSerializable>("");
         persister->Clear();
         objectWithId1 = new TestSerializable("one", "1");
         objectWithId2 = new TestSerializable("two", "2");
-    }
-
-    PersistenceFactoryFunction InjectedFactoryFunction() {
-        return GetParam();
     }
 
     void TearDown() {
@@ -42,5 +36,4 @@ public:
         delete objectWithId1;
         delete persister;
     }
-
 };

@@ -31,6 +31,7 @@ TEST(PersistenceTest, SizeSetToOneOnFirstAdd)
 
     LONGS_EQUAL(1u, f.persister->Size());
 }
+
 TEST(PersistenceTest, SizeIncrementsWithEachAdd)
 {
     persister->Add(*objectWithId1);
