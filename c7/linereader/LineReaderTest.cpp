@@ -65,6 +65,7 @@ public:
    int fd;
    const char *line;
    unsigned len;
+   static const char* ArbitraryText;
 
    int WriteTemporaryFile(const char* records) {
       fd = TemporaryFile();
@@ -74,6 +75,8 @@ public:
    }
 };
 
+const char* LineReaderTestFixture::ArbitraryText {"a"};
+
 TEST_GROUP(LineReaderTest) {
    LineReaderTestFixture f;
 };
@@ -81,12 +84,6 @@ TEST_GROUP(LineReaderTest) {
 TEST_GROUP(GetNextLinefromLineReader) {
    LineReaderTestFixture f;
 };
-
-/** TODO: Need to extract fixture and make a
- *  new test group for this stuff
- */
-
-#define GetNextLinefromLineReader LineReaderTest
 
 TEST(GetNextLinefromLineReader, EmptyFile) {
   LineReader reader(f.WriteTemporaryFile(""));
@@ -100,19 +97,19 @@ TEST(GetNextLinefromLineReader, OneLineTerminated) {
 }
 
 TEST(GetNextLinefromLineReader, UpdatesLineAndLenOnRead) {
-  LineReader reader(f.WriteTemporaryFile("a"));
+  LineReader reader(f.WriteTemporaryFile(f.ArbitraryText));
   reader.GetNextLine(&f.line, &f.len);
   ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
 }
 
 TEST(LineReaderTest, AnswersTrueWhenLineAvailable) {
-  LineReader reader(f.WriteTemporaryFile("a"));
+  LineReader reader(f.WriteTemporaryFile(f.ArbitraryText));
   bool wasLineRead = reader.GetNextLine(&f.line, &f.len);
   CHECK_TRUE(wasLineRead);
 }
 
 TEST(LineReaderTest, AnswersFalseWhenAtEOF) {
-  LineReader reader(f.WriteTemporaryFile("a"));
+  LineReader reader(f.WriteTemporaryFile(f.ArbitraryText));
   reader.GetNextLine(&f.line, &f.len);
   reader.PopLine(f.len);
   bool wasLineRead = reader.GetNextLine(&f.line, &f.len);
@@ -120,7 +117,7 @@ TEST(LineReaderTest, AnswersFalseWhenAtEOF) {
 }
 
 TEST(LineReaderTest, OneLine) {
-  LineReader reader(f.WriteTemporaryFile("a"));
+  LineReader reader(f.WriteTemporaryFile(f.ArbitraryText));
 
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
   ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
