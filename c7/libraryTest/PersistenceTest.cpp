@@ -9,11 +9,11 @@ using namespace std;
 
 TEST_GROUP(PersistenceTest) {
     PersistenceTestFixture f;
-    
+
     void setup() override {
         f.SetUp();
     }
-    
+
     void teardown() override {
         f.TearDown();
     }
@@ -41,17 +41,16 @@ TEST(PersistenceTest, SizeIncrementsWithEachAdd)
 
 TEST(PersistenceTest, ReturnsNullPointerWhenItemNotFound)
 {
-    auto_ptr<TestSerializable> found = f.persister->Get("1");
-
-    TestSerializable* serializable = found.get();
-
-    CHECK_TRUE(serializable==NULL);
+    POINTERS_EQUAL(NULL, f.persister->Get("no id there").get());
 }
 
 TEST(PersistenceTest, AddedItemCanBeRetrievedById)
 {
     f.persister->Add(*f.objectWithId1);
 
+    auto found = f.persister->Get("1").get();
+
+    CHECK(NULL != found);
     CHECK(*f.objectWithId1==*f.persister->Get("1"));
 }
 
@@ -99,7 +98,7 @@ TEST(PersistenceTest, MatchesAnswersFalseWhenNoMatchingEntries)
     CHECK_FALSE(exists);
 };
 
-TEST(PersistenceTest, FindAllMatching) 
+TEST(PersistenceTest, FindAllMatching)
 {
     TestSerializable coolidge("Calvin", "1");
     TestSerializable langr("Jeff", "2");
