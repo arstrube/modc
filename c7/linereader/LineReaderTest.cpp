@@ -81,17 +81,41 @@ TEST_GROUP(LineReaderTest) {
    }
 };
 
-TEST(LineReaderTest, EmptyFile) {
-  LineReader reader(WriteTemporaryFile(""));
+/** TODO: Need to extract fixture and make a
+ *  new test group for this stuff
+ */
 
+#define GetNextLinefromLineReader LineReaderTest
+
+TEST(GetNextLinefromLineReader, EmptyFile) {
+  LineReader reader(WriteTemporaryFile(""));
   CHECK_FALSE(reader.GetNextLine(&line, &len));
 }
 
-TEST(LineReaderTest, OneLineTerminated) {
+TEST(GetNextLinefromLineReader, OneLineTerminated) {
   LineReader reader(WriteTemporaryFile("a\n"));
-
   CHECK_TRUE(reader.GetNextLine(&line, &len));
   ASSERT_EQ_WITH_LENGTH("a", line, len, last_line);
+}
+
+TEST(GetNextLinefromLineReader, UpdatesLineAndLenOnRead) {
+  LineReader reader(WriteTemporaryFile("a"));
+  reader.GetNextLine(&line, &len);
+  ASSERT_EQ_WITH_LENGTH("a", line, len, last_line);
+}
+
+TEST(LineReaderTest, AnswersTrueWhenLineAvailable) {
+  LineReader reader(WriteTemporaryFile("a"));
+  bool wasLineRead = reader.GetNextLine(&line, &len);
+  CHECK_TRUE(wasLineRead);
+}
+
+TEST(LineReaderTest, AnswersFalseWhenAtEOF) {
+  LineReader reader(WriteTemporaryFile("a"));
+  reader.GetNextLine(&line, &len);
+  reader.PopLine(len);
+  bool wasLineRead = reader.GetNextLine(&line, &len);
+  CHECK_FALSE(wasLineRead);
 }
 
 TEST(LineReaderTest, OneLine) {
