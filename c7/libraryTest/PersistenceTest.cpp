@@ -11,11 +11,13 @@ TEST_GROUP(PersistenceTest) {
     PersistenceTestFixture f;
 
     void setup() override {
+        MemoryLeakWarningPlugin::turnOffNewDeleteOverloads(); // TODO: Persistence.Remove()
         f.SetUp();
     }
 
     void teardown() override {
         f.TearDown();
+        MemoryLeakWarningPlugin::turnOnNewDeleteOverloads();
     }
 };
 
