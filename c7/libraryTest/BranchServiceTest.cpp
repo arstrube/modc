@@ -1,40 +1,41 @@
-#include "gmock/gmock.h"
+#include "CppUTest/TestHarness.h"
 
 #include "Branch.h"
 #include "BranchService.h"
 
 using std::string;
-using namespace testing;
 
-class BranchServiceTest: public Test
+TEST_GROUP(BranchServiceTest)
 {
 public:
     Branch* eastBranch;
     Branch* westBranch;
     BranchService service;
 
-    virtual void SetUp() override
+    virtual void setup() override
     {
+        MemoryLeakWarningPlugin::turnOffNewDeleteOverloads(); // TODO: Persistence.Remove()
         BranchService::DeleteAll();
         eastBranch = new Branch("1", "east");
         westBranch = new Branch("2", "west");
     }
 
-    virtual void TearDown() override
+    virtual void teardown() override
     {
         delete eastBranch;
         delete westBranch;
         BranchService::DeleteAll();
+        MemoryLeakWarningPlugin::turnOnNewDeleteOverloads();
     }
 };
 
-TEST_F(BranchServiceTest, AddReturnsGeneratedId)
+TEST(BranchServiceTest, AddReturnsGeneratedId)
 {
     string id = service.Add("newname", "address");
 
-    ASSERT_THAT(id, Gt("0"));
+    CHECK(id > "0");
 }
-
+#if 0
 TEST_F(BranchServiceTest, AddGeneratesUniqueId)
 {
     string id1 = service.Add("newname1", "address");
@@ -72,7 +73,7 @@ TEST_F(BranchServiceTest, DeleteAllSetsCountToZero)
     service.Add(*westBranch);
 
     BranchService::DeleteAll();
-    
+
     ASSERT_THAT(service.BranchCount(), Eq(0));
 }
 
@@ -84,7 +85,7 @@ TEST_F(BranchServiceTest, FindAnswersFalseForNonexistentBranch)
 TEST_F(BranchServiceTest, FindAnswersTrueForAddedBranch)
 {
     service.Add(*eastBranch);
-    
+
     ASSERT_TRUE(service.Find(*eastBranch));
 }
 
@@ -115,3 +116,4 @@ TEST_F(BranchServiceTest, PersistsAcrossServiceInstances)
     ASSERT_TRUE(anotherServiceInstance.Find(*eastBranch));
     ASSERT_THAT(anotherServiceInstance.BranchCount(), Eq(1));
 }
+#endif
