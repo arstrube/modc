@@ -40,6 +40,19 @@
 #include "sys_stubs.h"
 #include "LineReader.h"
 
+#define ASSERT_EQ_WITH_LENGTH(expected,actual,length,last) {\
+  LONGS_EQUAL(length, strlen(actual));\
+  STRCMP_EQUAL(expected, actual);\
+  reader.PopLine(length);\
+  if(!last) {\
+    CHECK_TRUE(reader.GetNextLine(&line, &length));\
+  } else {\
+    CHECK_FALSE(reader.GetNextLine(&line, &length));\
+  }\
+}
+#define last_line true
+#define not_last_line false
+
 static const char templ[] = "/tmp/line-reader-unittest-XXXXXX";
 
 static int TemporaryFile() {
@@ -78,56 +91,34 @@ TEST(LineReaderTest, OneLineTerminated) {
   LineReader reader(WriteTemporaryFile("a\n"));
 
   CHECK_TRUE(reader.GetNextLine(&line, &len));
-  LONGS_EQUAL(1, len);
-  STRCMP_EQUAL("a", line);
-  reader.PopLine(len);
-
-  CHECK_FALSE(reader.GetNextLine(&line, &len));
-
-  close(fd);
+  ASSERT_EQ_WITH_LENGTH("a", line, len, last_line);
 }
 
 TEST(LineReaderTest, OneLine) {
   LineReader reader(WriteTemporaryFile("a"));
 
   CHECK_TRUE(reader.GetNextLine(&line, &len));
-  LONGS_EQUAL(1U, len);
-  STRCMP_EQUAL("a", line);
-  reader.PopLine(len);
-
-  CHECK_FALSE(reader.GetNextLine(&line, &len));
+  ASSERT_EQ_WITH_LENGTH("a", line, len, last_line);
 }
 
 TEST(LineReaderTest, TwoLinesTerminated) {
   LineReader reader(WriteTemporaryFile("a\nb\n"));
 
   CHECK_TRUE(reader.GetNextLine(&line, &len));
-  LONGS_EQUAL(1u, len);
-  STRCMP_EQUAL("a", line);
-  reader.PopLine(len);
+  ASSERT_EQ_WITH_LENGTH("a", line, len, not_last_line);
 
   CHECK_TRUE(reader.GetNextLine(&line, &len));
-  LONGS_EQUAL(1u, len);
-  STRCMP_EQUAL("b", line);
-  reader.PopLine(len);
-
-  CHECK_FALSE(reader.GetNextLine(&line, &len));
+  ASSERT_EQ_WITH_LENGTH("b", line, len, last_line);
 }
 
 TEST(LineReaderTest, TwoLines) {
   LineReader reader(WriteTemporaryFile("a\nb"));
 
   CHECK_TRUE(reader.GetNextLine(&line, &len));
-  LONGS_EQUAL(1u, len);
-  STRCMP_EQUAL("a", line);
-  reader.PopLine(len);
+  ASSERT_EQ_WITH_LENGTH("a", line, len, not_last_line);
 
   CHECK_TRUE(reader.GetNextLine(&line, &len));
-  LONGS_EQUAL(1u, len);
-  STRCMP_EQUAL("b", line);
-  reader.PopLine(len);
-
-  CHECK_FALSE(reader.GetNextLine(&line, &len));
+  ASSERT_EQ_WITH_LENGTH("b", line, len, last_line);
 }
 
 TEST(LineReaderTest, MaxLength) {
