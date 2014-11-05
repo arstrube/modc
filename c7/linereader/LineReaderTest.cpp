@@ -54,7 +54,9 @@ static int TemporaryFile() {
 
 TEST_GROUP(LineReaderTest) {
    int fd;
-   
+   const char *line;
+   unsigned len;
+
    int WriteTemporaryFile(const char* records) {
       fd = TemporaryFile();
       write(fd, records, strlen(records));
@@ -69,16 +71,12 @@ TEST_GROUP(LineReaderTest) {
 TEST(LineReaderTest, EmptyFile) {
   LineReader reader(WriteTemporaryFile(""));
 
-  const char *line;
-  unsigned len;
   CHECK_FALSE(reader.GetNextLine(&line, &len));
 }
 
 TEST(LineReaderTest, OneLineTerminated) {
   LineReader reader(WriteTemporaryFile("a\n"));
 
-  const char *line;
-  unsigned int len;
   CHECK_TRUE(reader.GetNextLine(&line, &len));
   LONGS_EQUAL(1, len);
   STRCMP_EQUAL("a", line);
@@ -92,8 +90,6 @@ TEST(LineReaderTest, OneLineTerminated) {
 TEST(LineReaderTest, OneLine) {
   LineReader reader(WriteTemporaryFile("a"));
 
-  const char *line;
-  unsigned len;
   CHECK_TRUE(reader.GetNextLine(&line, &len));
   LONGS_EQUAL(1U, len);
   STRCMP_EQUAL("a", line);
@@ -105,8 +101,6 @@ TEST(LineReaderTest, OneLine) {
 TEST(LineReaderTest, TwoLinesTerminated) {
   LineReader reader(WriteTemporaryFile("a\nb\n"));
 
-  const char *line;
-  unsigned len;
   CHECK_TRUE(reader.GetNextLine(&line, &len));
   LONGS_EQUAL(1u, len);
   STRCMP_EQUAL("a", line);
@@ -123,8 +117,6 @@ TEST(LineReaderTest, TwoLinesTerminated) {
 TEST(LineReaderTest, TwoLines) {
   LineReader reader(WriteTemporaryFile("a\nb"));
 
-  const char *line;
-  unsigned len;
   CHECK_TRUE(reader.GetNextLine(&line, &len));
   LONGS_EQUAL(1u, len);
   STRCMP_EQUAL("a", line);
@@ -144,8 +136,8 @@ TEST(LineReaderTest, MaxLength) {
   l[sizeof(l)] = '\0';
   LineReader reader(WriteTemporaryFile(l));
 
-  const char *line;
-  unsigned len;
+  const char *line; // TODO: If I refactor these by removing them and using
+  unsigned len;     // instance variables instead, the test will fail.
   CHECK_TRUE(reader.GetNextLine(&line, &len));
   LONGS_EQUAL(strlen(l), len);
   CHECK_TRUE(memcmp(l, line, sizeof(l)) == 0);
@@ -158,7 +150,5 @@ TEST(LineReaderTest, TooLong) {
   l[sizeof(l)] = '\0';
   LineReader reader(WriteTemporaryFile(l));
 
-  const char *line;
-  unsigned len;
   CHECK_FALSE(reader.GetNextLine(&line, &len));
 }
