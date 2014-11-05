@@ -1,11 +1,15 @@
 #include "PersistenceTest.h"
 
-
 #include <memory>
 #include "KeyedMemoryPersistence.h"
 #include "TestSerializable.h"
 
 using namespace std;
+
+#define POINTEE_EQUAL(expected, actual) {\
+    CHECK(NULL != actual);\
+    CHECK(*expected==*actual);\
+}
 
 TEST_GROUP(PersistenceTest) {
     PersistenceTestFixture f;
@@ -52,8 +56,7 @@ TEST(PersistenceTest, AddedItemCanBeRetrievedById)
 
     auto found = f.persister->Get("1").get();
 
-    CHECK(NULL != found);
-    CHECK(*f.objectWithId1==*f.persister->Get("1"));
+    POINTEE_EQUAL(f.objectWithId1, found);
 }
 
 TEST(PersistenceTest, GetAnswersNullWhenNoMatchingEntries)
