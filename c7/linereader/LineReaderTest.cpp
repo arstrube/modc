@@ -40,16 +40,24 @@
 #include "sys_stubs.h"
 #include "LineReader.h"
 
-#define ASSERT_EQ_WITH_LENGTH(expected,actual,length,last) {\
+#define ASSERT_EQ_WITH_LENGTH(expected,actual,length) {\
   LONGS_EQUAL(length, strlen(actual));\
   STRCMP_EQUAL(expected, actual);\
   reader.PopLine(length);\
-  if(!last) {\
-    CHECK_TRUE(reader.GetNextLine(&line, &length));\
-  } else {\
-    CHECK_FALSE(reader.GetNextLine(&line, &length));\
-  }\
+  CHECK_FALSE(reader.GetNextLine(&f.line, &length));\
 }
+
+/** This macro is necessary because some test still contain two tests
+ *  for two lines. Once we get rid of those, we don't need this kludge
+ *  any more.
+ */
+#define ASSERT_EQ_WITH_LENGTH_NOT_LAST_KLUDGE(expected,actual,length) {\
+  LONGS_EQUAL(length, strlen(actual));\
+  STRCMP_EQUAL(expected, actual);\
+  reader.PopLine(length);\
+  CHECK_TRUE(reader.GetNextLine(&f.line, &length));\
+}
+
 #define last_line true
 #define not_last_line false
 
@@ -65,7 +73,8 @@ static int TemporaryFile() {
    return fd;
 }
 
-TEST_GROUP(LineReaderTest) {
+class LineReaderTestFixture {
+public:
    int fd;
    const char *line;
    unsigned len;
@@ -76,9 +85,14 @@ TEST_GROUP(LineReaderTest) {
       lseek(fd, 0, SEEK_SET);
       return fd;
    }
+};
 
-   void teardown() override {
-   }
+TEST_GROUP(LineReaderTest) {
+   LineReaderTestFixture f;
+};
+
+TEST_GROUP(GetNextLinefromLineReader) {
+   LineReaderTestFixture f;
 };
 
 /** TODO: Need to extract fixture and make a
@@ -88,68 +102,68 @@ TEST_GROUP(LineReaderTest) {
 #define GetNextLinefromLineReader LineReaderTest
 
 TEST(GetNextLinefromLineReader, EmptyFile) {
-  LineReader reader(WriteTemporaryFile(""));
-  CHECK_FALSE(reader.GetNextLine(&line, &len));
+  LineReader reader(f.WriteTemporaryFile(""));
+  CHECK_FALSE(reader.GetNextLine(&f.line, &f.len));
 }
 
 TEST(GetNextLinefromLineReader, OneLineTerminated) {
-  LineReader reader(WriteTemporaryFile("a\n"));
-  CHECK_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ_WITH_LENGTH("a", line, len, last_line);
+  LineReader reader(f.WriteTemporaryFile("a\n"));
+  CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
+  ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
 }
 
 TEST(GetNextLinefromLineReader, UpdatesLineAndLenOnRead) {
-  LineReader reader(WriteTemporaryFile("a"));
-  reader.GetNextLine(&line, &len);
-  ASSERT_EQ_WITH_LENGTH("a", line, len, last_line);
+  LineReader reader(f.WriteTemporaryFile("a"));
+  reader.GetNextLine(&f.line, &f.len);
+  ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
 }
 
 TEST(LineReaderTest, AnswersTrueWhenLineAvailable) {
-  LineReader reader(WriteTemporaryFile("a"));
-  bool wasLineRead = reader.GetNextLine(&line, &len);
+  LineReader reader(f.WriteTemporaryFile("a"));
+  bool wasLineRead = reader.GetNextLine(&f.line, &f.len);
   CHECK_TRUE(wasLineRead);
 }
 
 TEST(LineReaderTest, AnswersFalseWhenAtEOF) {
-  LineReader reader(WriteTemporaryFile("a"));
-  reader.GetNextLine(&line, &len);
-  reader.PopLine(len);
-  bool wasLineRead = reader.GetNextLine(&line, &len);
+  LineReader reader(f.WriteTemporaryFile("a"));
+  reader.GetNextLine(&f.line, &f.len);
+  reader.PopLine(f.len);
+  bool wasLineRead = reader.GetNextLine(&f.line, &f.len);
   CHECK_FALSE(wasLineRead);
 }
 
 TEST(LineReaderTest, OneLine) {
-  LineReader reader(WriteTemporaryFile("a"));
+  LineReader reader(f.WriteTemporaryFile("a"));
 
-  CHECK_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ_WITH_LENGTH("a", line, len, last_line);
+  CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
+  ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
 }
 
 TEST(LineReaderTest, TwoLinesTerminated) {
-  LineReader reader(WriteTemporaryFile("a\nb\n"));
+  LineReader reader(f.WriteTemporaryFile("a\nb\n"));
 
-  CHECK_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ_WITH_LENGTH("a", line, len, not_last_line);
+  CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
+  ASSERT_EQ_WITH_LENGTH_NOT_LAST_KLUDGE("a", f.line, f.len);
 
-  CHECK_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ_WITH_LENGTH("b", line, len, last_line);
+  CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
+  ASSERT_EQ_WITH_LENGTH("b", f.line, f.len);
 }
 
 TEST(LineReaderTest, TwoLines) {
-  LineReader reader(WriteTemporaryFile("a\nb"));
+  LineReader reader(f.WriteTemporaryFile("a\nb"));
 
-  CHECK_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ_WITH_LENGTH("a", line, len, not_last_line);
+  CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
+  ASSERT_EQ_WITH_LENGTH_NOT_LAST_KLUDGE("a", f.line, f.len);
 
-  CHECK_TRUE(reader.GetNextLine(&line, &len));
-  ASSERT_EQ_WITH_LENGTH("b", line, len, last_line);
+  CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
+  ASSERT_EQ_WITH_LENGTH("b", f.line, f.len);
 }
 
 TEST(LineReaderTest, MaxLength) {
   char l[LineReader::kMaxLineLen];
   memset(l, 'a', sizeof(l)-1);
   l[sizeof(l)] = '\0';
-  LineReader reader(WriteTemporaryFile(l));
+  LineReader reader(f.WriteTemporaryFile(l));
 
   const char *line; // TODO: If I refactor these by removing them and using
   unsigned len;     // instance variables instead, the test will fail.
@@ -163,7 +177,7 @@ TEST(LineReaderTest, TooLong) {
   char l[LineReader::kMaxLineLen+1];
   memset(l, 'a', sizeof(l)-1);
   l[sizeof(l)] = '\0';
-  LineReader reader(WriteTemporaryFile(l));
+  LineReader reader(f.WriteTemporaryFile(l));
 
-  CHECK_FALSE(reader.GetNextLine(&line, &len));
+  CHECK_FALSE(reader.GetNextLine(&f.line, &f.len));
 }
