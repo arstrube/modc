@@ -23,6 +23,7 @@
 			<Add directory="e:\cpputest\include" />
 			<Add directory="c7\library\include" />
 			<Add directory="c7" />
+			<Add directory="." />
 		</Compiler>
 		<Linker>
 			<Add library="CppUTest" />
@@ -36,6 +37,7 @@
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
+		<Unit filename="assert_throw.h" />
 		<Unit filename="c7\boost\algorithm\string.hpp" />
 		<Unit filename="c7\boost\date_time\gregorian\gregorian_types.hpp" />
 		<Unit filename="c7\libraryTest\ASSERT_CURRENT_STATE.h" />

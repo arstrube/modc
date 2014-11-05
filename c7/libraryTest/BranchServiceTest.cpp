@@ -1,4 +1,5 @@
 #include "CppUTest/TestHarness.h"
+#include "assert_throw.h"
 
 #include "Branch.h"
 #include "BranchService.h"
@@ -35,85 +36,84 @@ TEST(BranchServiceTest, AddReturnsGeneratedId)
 
     CHECK(id > "0");
 }
-#if 0
-TEST_F(BranchServiceTest, AddGeneratesUniqueId)
+
+TEST(BranchServiceTest, AddGeneratesUniqueId)
 {
     string id1 = service.Add("newname1", "address");
     string id2 = service.Add("newname2", "address");
 
-    ASSERT_THAT(id1, Ne(id2));
+    CHECK(id1 != id2);
 }
 
-TEST_F(BranchServiceTest, AddThrowsWhenNameNotUnique)
+TEST(BranchServiceTest, AddThrowsWhenNameNotUnique)
 {
     service.Add("samename", "address1");
 
-    ASSERT_THROW(service.Add("samename", "address2"), DuplicateBranchNameException);
+    ASSERT_THROW_E(service.Add("samename", "address2"), DuplicateBranchNameException);
 }
 
-TEST_F(BranchServiceTest, CountInitiallyZero)
+TEST(BranchServiceTest, CountInitiallyZero)
 {
-    ASSERT_THAT(service.BranchCount(), Eq(0));
+    LONGS_EQUAL(0, service.BranchCount());
 }
 
-TEST_F(BranchServiceTest, DeleteAllRemovesAnyAddedBranches)
-{
-    service.Add(*eastBranch);
-    service.Add(*westBranch);
-
-    BranchService::DeleteAll();
-
-    ASSERT_FALSE(service.Find(*eastBranch));
-    ASSERT_FALSE(service.Find(*westBranch));
-}
-
-TEST_F(BranchServiceTest, DeleteAllSetsCountToZero)
+TEST(BranchServiceTest, DeleteAllRemovesAnyAddedBranches)
 {
     service.Add(*eastBranch);
     service.Add(*westBranch);
 
     BranchService::DeleteAll();
 
-    ASSERT_THAT(service.BranchCount(), Eq(0));
+    CHECK_FALSE(service.Find(*eastBranch));
+    CHECK_FALSE(service.Find(*westBranch));
 }
 
-TEST_F(BranchServiceTest, FindAnswersFalseForNonexistentBranch)
+TEST(BranchServiceTest, DeleteAllSetsCountToZero)
 {
-    ASSERT_FALSE(service.Find(*eastBranch));
+    service.Add(*eastBranch);
+    service.Add(*westBranch);
+
+    BranchService::DeleteAll();
+
+    LONGS_EQUAL(0, service.BranchCount());
 }
 
-TEST_F(BranchServiceTest, FindAnswersTrueForAddedBranch)
+TEST(BranchServiceTest, FindAnswersFalseForNonexistentBranch)
+{
+    CHECK_FALSE(service.Find(*eastBranch));
+}
+
+TEST(BranchServiceTest, FindAnswersTrueForAddedBranch)
 {
     service.Add(*eastBranch);
 
-    ASSERT_TRUE(service.Find(*eastBranch));
+    CHECK_TRUE(service.Find(*eastBranch));
 }
 
-TEST_F(BranchServiceTest, FindRetrievesById)
+TEST(BranchServiceTest, FindRetrievesById)
 {
     service.Add(*eastBranch);
 
     Branch retrieved(eastBranch->Id(), "");
     service.Find(retrieved);
 
-    ASSERT_THAT(retrieved.Name(), Eq(eastBranch->Name()));
+    STRCMP_EQUAL(eastBranch->Name().c_str(), retrieved.Name().c_str());
 }
 
-TEST_F(BranchServiceTest, AddBranchIncrementsCount)
+TEST(BranchServiceTest, AddBranchIncrementsCount)
 {
     service.Add(*eastBranch);
-    ASSERT_THAT(service.BranchCount(), Eq(1));
+    LONGS_EQUAL(1, service.BranchCount());
 
     service.Add(*westBranch);
-    ASSERT_THAT(service.BranchCount(), Eq(2));
+    LONGS_EQUAL(2, service.BranchCount());
 }
 
-TEST_F(BranchServiceTest, PersistsAcrossServiceInstances)
+TEST(BranchServiceTest, PersistsAcrossServiceInstances)
 {
     service.Add(*eastBranch);
 
     BranchService anotherServiceInstance;
-    ASSERT_TRUE(anotherServiceInstance.Find(*eastBranch));
-    ASSERT_THAT(anotherServiceInstance.BranchCount(), Eq(1));
+    CHECK_TRUE(anotherServiceInstance.Find(*eastBranch));
+    LONGS_EQUAL(1, anotherServiceInstance.BranchCount());
 }
-#endif
