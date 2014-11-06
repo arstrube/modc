@@ -56,18 +56,20 @@ TEST(BranchServiceTest, AddThrowsWhenNameNotUnique)
     ASSERT_THROW_E(f.service.Add("samename", "address2"), DuplicateBranchNameException);
 }
 
-TEST_GROUP(ABranchService)
+TEST_GROUP(ABranchServiceWithOneBranchAdded)
 {
 public:
     BranchServiceTestFixture f;
+    Branch* BranchAlreadyAdded;
     void setup() {
-        f.service.Add(*f.eastBranch);
+        BranchAlreadyAdded = f.eastBranch;
+        f.service.Add(*BranchAlreadyAdded);
     }
 };
 
-TEST(ABranchService, ThrowsWhenDuplicateBranchAdded)
+TEST(ABranchServiceWithOneBranchAdded, ThrowsWhenDuplicateBranchAdded)
 {
-   ASSERT_THROW_E(f.service.Add("east", ""), DuplicateBranchNameException);
+   ASSERT_THROW_E(f.service.Add(BranchAlreadyAdded->Name(), ""), DuplicateBranchNameException);
 }
 
 TEST(BranchServiceTest, CountInitiallyZero)
