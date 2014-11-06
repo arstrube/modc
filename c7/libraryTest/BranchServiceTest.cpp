@@ -100,16 +100,13 @@ TEST(BranchServiceTest, FindRetrievesById)
     STRCMP_EQUAL(eastBranch->Name().c_str(), retrieved.Name().c_str());
 }
 
-// test that adding a branch increments the count
 TEST(BranchServiceTest, AddBranchIncrementsCount)
 {
-    // first branch
     service.Add(*eastBranch);
     LONGS_EQUAL(1, service.BranchCount());
 
-    // second branch
     service.Add(*westBranch);
-    LONGS_EQUAL(2, service.BranchCount()); // count now 2
+    LONGS_EQUAL(2, service.BranchCount());
 }
 
 TEST(BranchServiceTest, PersistsAcrossServiceInstances)
