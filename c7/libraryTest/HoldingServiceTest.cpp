@@ -180,21 +180,21 @@ TEST(HoldingServiceTest, FindByClassificationReturnsEmptyWhenNoMatch)
 
     CHECK_TRUE(holdings.empty());
 }
-#if 0
+
 TEST(HoldingServiceTest, FindByClassificationReturnsMultipleMatches)
 {
-    holdingService.AddAtBranch(branch1->Id(), HoldingBarcode(THE_TRIAL_CLASSIFICATION, 1).AsString());
-    holdingService.AddAtBranch(branch1->Id(), HoldingBarcode(THE_TRIAL_CLASSIFICATION, 2).AsString());
-    holdingService.AddAtBranch(branch1->Id(), HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString());
+    holdingService->AddAtBranch(branch1->Id(), HoldingBarcode(THE_TRIAL_CLASSIFICATION, 1).AsString());
+    holdingService->AddAtBranch(branch1->Id(), HoldingBarcode(THE_TRIAL_CLASSIFICATION, 2).AsString());
+    holdingService->AddAtBranch(branch1->Id(), HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString());
     set<Holding> holdings;
 
-    holdingService.FindByClassification(THE_TRIAL_CLASSIFICATION, holdings);
+    holdingService->FindByClassification(THE_TRIAL_CLASSIFICATION, holdings);
 
     Holding trialCopy1(THE_TRIAL_CLASSIFICATION, 1);
     Holding trialCopy2(THE_TRIAL_CLASSIFICATION, 2);
-    ASSERT_THAT(holdings, Eq(list_of(trialCopy1)(trialCopy2)));
+    CHECK_TRUE(holdings == list_of(trialCopy1, trialCopy2));
 }
-#endif
+
 TEST(HoldingServiceTest, Transfer)
 {
 	holdingService->AddAtBranch(branch1->Id(), HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString());
@@ -216,19 +216,20 @@ TEST(HoldingServiceTest, CheckedOutHoldingUnavailable)
 	holdingService->FindByBarCode(retrieved);
 	CHECK_FALSE(retrieved.IsAvailable());
 }
-#if 0
+
 TEST(HoldingServiceTest, CheckedOutBooksAddedToPatron)
 {
-    holdingService.AddAtBranch(branch1->Id(), HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString());
+    holdingService->AddAtBranch(branch1->Id(), HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString());
     string barcode = HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString();
     AddPatronWithId("p1001");
 
-    holdingService.CheckOut("p1001", HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString(), *arbitraryDate);
+    holdingService->CheckOut("p1001", HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString(), *arbitraryDate);
 
     Holding holding(HoldingBarcode(CATCH22_CLASSIFICATION, 1).AsString());
-    ASSERT_THAT(FindPatronWithId("p1001").Holdings(), Eq(list_of(holding)));
+    std::set<Holding> expected_holdings;
+    CHECK_TRUE(FindPatronWithId("p1001").Holdings() == list_of(holding));
 }
-#endif
+
 TEST(HoldingServiceTest, CheckInUpdatesHoldingBranch)
 {
     HoldingBarcode barcode(THE_TRIAL_CLASSIFICATION, 1);
