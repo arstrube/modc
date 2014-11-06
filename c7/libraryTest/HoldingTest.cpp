@@ -84,6 +84,7 @@ TEST(HoldingTest, BarcodeRequiresColon)
 }
 
 TEST_GROUP(AHolding) {};
+
 TEST(AHolding, CanBeCreatedFromAnother)
 {
    Holding holding(THE_TRIAL_CLASSIFICATION, 1);
@@ -337,6 +338,31 @@ TEST(HoldingTest, CheckinMakesBookAvailableAtAnotherBranch)
        f.ArbitraryDate + date_duration(1), WEST_BRANCH);
 
    CHECK_TRUE(f.IsAvailableAt(f.holding, WEST_BRANCH));
+}
+
+TEST_GROUP(AMovieHolding) 
+{
+public:
+   HoldingTestFixture f;
+   shared_ptr<Holding> movie;
+
+   virtual void setup() override {
+      f.setup();
+      movie = make_shared<Holding>(SEVEN_CLASSIFICATION, 1);
+      movie->Transfer(EAST_BRANCH);
+   }
+   
+   virtual void teardown() override {
+       f.teardown();
+   }
+};
+
+TEST(AMovieHolding, AnswersDateDueWhenCheckedOut)
+{
+   date checkoutdate(2007, Mar, 1);
+   movie->CheckOut(checkoutdate);
+   date due = movie->DueDate();
+   CHECK_TRUE(due == checkoutdate + date_duration(Book::MOVIE_CHECKOUT_PERIOD));
 }
 
 TEST(HoldingTest, DateDueForMovies)
