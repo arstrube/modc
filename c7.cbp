@@ -39,9 +39,11 @@
 		<Unit filename="CppUTestMain.cpp" />
 		<Unit filename="assert_throw.h" />
 		<Unit filename="c7\boost\algorithm\string.hpp" />
+		<Unit filename="c7\boost\assign\list_of.hpp" />
 		<Unit filename="c7\boost\date_time\gregorian\gregorian_types.hpp" />
 		<Unit filename="c7\libraryTest\ASSERT_CURRENT_STATE.h" />
 		<Unit filename="c7\libraryTest\BranchServiceTest.cpp" />
+		<Unit filename="c7\libraryTest\HoldingServiceTest.cpp" />
 		<Unit filename="c7\libraryTest\HoldingTest.cpp" />
 		<Unit filename="c7\libraryTest\PersistenceTest.cpp" />
 		<Unit filename="c7\libraryTest\PersistenceTest.h" />
@@ -51,16 +53,12 @@
 		<Unit filename="c7\library\Branch.cpp" />
 		<Unit filename="c7\library\BranchAccess.cpp" />
 		<Unit filename="c7\library\BranchService.cpp" />
-		<Unit filename="c7\library\Catalog.cpp">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
+		<Unit filename="c7\library\Catalog.cpp" />
 		<Unit filename="c7\library\ClassificationService.cpp" />
 		<Unit filename="c7\library\Endpoint.cpp" />
 		<Unit filename="c7\library\EndpointValidator.cpp" />
 		<Unit filename="c7\library\Holding.cpp" />
-		<Unit filename="c7\library\HoldingService.cpp">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
+		<Unit filename="c7\library\HoldingService.cpp" />
 		<Unit filename="c7\library\InventoryReport.cpp">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>

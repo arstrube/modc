@@ -33,6 +33,9 @@ public:
    date operator+(const date_duration& rhs) const {
       return date(y_, m_, d_ + rhs.get_days());
    }
+   bool operator>(const date& rhs) const {
+      return d_ > rhs.d_;
+   }
    bool is_not_a_date() {
        return d_ < 0;
    }
