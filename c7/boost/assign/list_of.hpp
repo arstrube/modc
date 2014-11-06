@@ -3,16 +3,24 @@
 namespace boost
 {
 
+namespace assign_detail
+{
+    template< class T >
+    class generic_list : public std::set<T>
+    {
+    public:
+        generic_list& operator()(const T& u) {
+            this->insert(u);
+            return *this;
+        }
+    };
+}
+
 namespace assign
 {
-    std::set<Holding> list_of(Holding holding) {
-        auto s =  {holding};
-        return s;
-    }
-
-    std::set<Holding> list_of(Holding holding1, Holding holding2 ) {
-        auto s =  {holding1, holding2};
-        return s;
+    template< class T >
+    inline assign_detail::generic_list<T> list_of(const T& t) {
+        return assign_detail::generic_list<T>()(t);
     }
 
 } // namespace 'assign'

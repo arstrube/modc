@@ -192,7 +192,7 @@ TEST(HoldingServiceTest, FindByClassificationReturnsMultipleMatches)
 
     Holding trialCopy1(THE_TRIAL_CLASSIFICATION, 1);
     Holding trialCopy2(THE_TRIAL_CLASSIFICATION, 2);
-    CHECK_TRUE(holdings == list_of(trialCopy1, trialCopy2));
+    CHECK_TRUE(holdings == list_of(trialCopy1)(trialCopy2));
 }
 
 TEST(HoldingServiceTest, Transfer)
