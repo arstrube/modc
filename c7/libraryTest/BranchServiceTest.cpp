@@ -39,20 +39,10 @@ TEST(BranchServiceTest, AddReturnsGeneratedId)
 
 TEST(BranchServiceTest, AddGeneratesUniqueId)
 {
-   // Don't do this!
-   // Eliminate try/catch in tests that should
-   // not generate exceptions
-   
-    try
-    {
-        string id1 = service.Add("newname1", "address");
-        string id2 = service.Add("newname2", "address");
+    string id1 = service.Add("newname1", "address");
+    string id2 = service.Add("newname2", "address");
 
-        CHECK(id1 != id2);
-    }
-    catch (...) {
-        FAIL("Exception caught");
-    }
+    CHECK(id1 != id2);
 }
 
 TEST(BranchServiceTest, AddThrowsWhenNameNotUnique)
