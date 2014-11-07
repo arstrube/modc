@@ -80,7 +80,7 @@ string WavReader::toString(int8_t* bytes, unsigned int size) {
    return string{(char*)bytes, size};
 }
 
-void WavReader::writeSamples(ofstream& out, char* data,
+void WavReader::writeSamples(ostream& out, char* data,
       uint32_t startingSample,
       uint32_t samplesToWrite,
       uint32_t bytesPerSample) {
