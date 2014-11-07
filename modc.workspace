@@ -5,6 +5,7 @@
 		<Project filename="c3.cbp" />
 		<Project filename="c5.cbp" />
 		<Project filename="c6.cbp" />
-		<Project filename="c7.cbp" active="1" />
+		<Project filename="c7.cbp" />
+		<Project filename="wav.cbp" active="1" />
 	</Workspace>
 </CodeBlocks_workspace_file>
