@@ -39,11 +39,22 @@
 		<Unit filename="CppUTestMain.cpp">
 			<Option target="Debug" />
 		</Unit>
+		<Unit filename="wav\FileUtil.cpp" />
+		<Unit filename="wav\FileUtil.h" />
+		<Unit filename="wav\FileUtilTest.cpp">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="wav\StreamUtil.cpp" />
+		<Unit filename="wav\StreamUtilTest.cpp">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="wav\WavDescriptor.cpp" />
 		<Unit filename="wav\WavDescriptor.h" />
 		<Unit filename="wav\WavReader.cpp" />
 		<Unit filename="wav\WavReader.h" />
-		<Unit filename="wav\WavReaderTest.cpp" />
+		<Unit filename="wav\WavReaderTest.cpp">
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="wav\boost\filesystem.hpp" />
 		<Unit filename="wav\main.cpp">
 			<Option target="Release" />
