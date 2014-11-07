@@ -28,7 +28,7 @@ TEST(WavReader_WriteSamples, WritesSingleSample) {
    uint32_t bytesPerSample { 1 };
    uint32_t startingSample { 0 };
    uint32_t samplesToWrite { 1 };
-   reader.writeSamples(&out, data, startingSample, samplesToWrite, bytesPerSample);
+   reader.writeSamples(out, data, startingSample, samplesToWrite, bytesPerSample);
    CHECK_EQUAL(string{"a"}, out.str());
 }
 
@@ -38,7 +38,7 @@ TEST(WavReader_WriteSamples, WritesMultibyteSampleFromMiddle) {
    uint32_t startingSample { 4 };
    uint32_t samplesToWrite { 3 };
 
-   reader.writeSamples(&out, data, startingSample, samplesToWrite, bytesPerSample);
+   reader.writeSamples(out, data, startingSample, samplesToWrite, bytesPerSample);
    CHECK_EQUAL(string{"89ABCD"}, out.str());
 }
 
