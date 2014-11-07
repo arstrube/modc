@@ -18,7 +18,7 @@ bool hasExtension(const string& filename, const string& s) {
    if (ext.length() > filename.length()) return false;
    return 0 == filename.compare(filename.length() - ext.length(), ext.length(), ext);
 }
-#if 0
+
 struct RiffHeader {
    int8_t id[4];
    uint32_t length;
@@ -66,7 +66,7 @@ WavReader::~WavReader() {
    delete descriptor_;
    delete channel;
 }
-
+#if 0
 void WavReader::publishSnippets() {
    directory_iterator itEnd;
    for (directory_iterator it(source_); it != itEnd; ++it)
@@ -75,7 +75,7 @@ void WavReader::publishSnippets() {
           hasExtension(it->path().filename().string(), "wav"))
         open(it->path().filename().string(), false);
 }
-
+#endif
 string WavReader::toString(int8_t* bytes, unsigned int size) {
    return string{(char*)bytes, size};
 }
@@ -208,4 +208,3 @@ void WavReader::seekToEndOfHeader(ifstream& file, int subchunkSize) {
    auto bytes = subchunkSize - sizeof(FormatSubchunk) + 1;
    file.seekg(bytes, ios_base::cur);
 }
-#endif

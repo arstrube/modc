@@ -2,5 +2,8 @@
 
 namespace rlog
 {
-    class RLogChannel;
+    #define RLOG_CHANNEL(string) NULL
+
+    class RLogChannel {};
+
 } // namespace rlog
