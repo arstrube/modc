@@ -31,6 +31,12 @@ public:
          std::vector<boost::filesystem::path>& found) const;
    void listAll() const;
    void publishSnippets();
+public:
+   // ...
+   void writeSamples(std::ofstream& out, char* data,
+         uint32_t startingSample,
+         uint32_t samplesToWrite,
+         uint32_t bytesPerSample);
 
 private:
    rlog::StdioNode log{STDERR_FILENO};
