@@ -83,15 +83,21 @@ string WavReader::toString(int8_t* bytes, unsigned int size) {
 void WavReader::writeSamples(ostream* out, char* data,
       uint32_t startingSample,
       uint32_t samplesToWrite,
-      uint32_t bytesPerSample) {
+      uint32_t bytesPerSample,
+      uint32_t channels) {
    rLog(channel, "writing %i samples", samplesToWrite);
 
-   for (auto sample = startingSample; 
-        sample < startingSample + samplesToWrite; 
+   for (auto sample = startingSample;
+        sample < startingSample + samplesToWrite;
         sample++) {
-      auto byteOffsetForSample = sample * bytesPerSample;
-      for (uint32_t byte{0}; byte < bytesPerSample; byte++) 
-         out->put(data[byteOffsetForSample + byte]);
+      auto byteOffsetForSample = sample * bytesPerSample * channels;
+
+      for (uint32_t channel{0}; channel < channels; channel++) {
+         auto byteOffsetForChannel =
+            byteOffsetForSample + (channel * bytesPerSample);
+         for (uint32_t byte{0}; byte < bytesPerSample; byte++)
+            out->put(data[byteOffsetForChannel + byte]);
+      }
    }
 }
 
@@ -123,7 +129,7 @@ void WavReader::open(const std::string& name, bool /*trace*/) {
    out.write(reinterpret_cast<char*>(&header), sizeof(RiffHeader));
 
    FormatSubchunkHeader formatSubchunkHeader;
-   file.read(reinterpret_cast<char*>(&formatSubchunkHeader), 
+   file.read(reinterpret_cast<char*>(&formatSubchunkHeader),
          sizeof(FormatSubchunkHeader));
 
    if (toString(formatSubchunkHeader.id, 4) != "fmt ") {
@@ -133,7 +139,7 @@ void WavReader::open(const std::string& name, bool /*trace*/) {
       return;
    }
 
-   out.write(reinterpret_cast<char*>(&formatSubchunkHeader), 
+   out.write(reinterpret_cast<char*>(&formatSubchunkHeader),
          sizeof(FormatSubchunkHeader));
 
    FormatSubchunk formatSubchunk;
@@ -151,7 +157,7 @@ void WavReader::open(const std::string& name, bool /*trace*/) {
    auto additionalBytes = new char[bytes];
    file.read(additionalBytes, bytes);
    out.write(additionalBytes, bytes);
-   
+
    FactOrData factOrData;
    file.read(reinterpret_cast<char*>(&factOrData), sizeof(FactOrData));
    out.write(reinterpret_cast<char*>(&factOrData), sizeof(FactOrData));
@@ -180,7 +186,7 @@ void WavReader::open(const std::string& name, bool /*trace*/) {
    rLog(channel, "subchunk header size = %u", sizeof(FormatSubchunkHeader));
    rLog(channel, "subchunk size = %u", formatSubchunkHeader.subchunkSize);
    rLog(channel, "data length = %u", dataChunk.length);
-   
+
    // TODO if odd there is a padding byte!
 
    auto data = new char[dataChunk.length];
@@ -214,9 +220,9 @@ void WavReader::open(const std::string& name, bool /*trace*/) {
 
    rLog(channel, "completed writing %s", name.c_str());
 
-   descriptor_->add(dest_, name, 
+   descriptor_->add(dest_, name,
          totalSeconds, formatSubchunk.samplesPerSecond, formatSubchunk.channels);
-   
+
    out.close();
 }
 

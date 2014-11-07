@@ -17,7 +17,7 @@ TEST(WavReader, HasExtension) {
    CHECK(!hasExtension(s, bigger));
 }
 
-TEST_GROUP(WavReader_WriteSamples) 
+TEST_GROUP(WavReader_WriteSamples)
 {
    WavReader reader{"",""};
    ostringstream out;
@@ -28,7 +28,9 @@ TEST(WavReader_WriteSamples, WritesSingleSample) {
    uint32_t bytesPerSample { 1 };
    uint32_t startingSample { 0 };
    uint32_t samplesToWrite { 1 };
+
    reader.writeSamples(&out, data, startingSample, samplesToWrite, bytesPerSample);
+
    CHECK_EQUAL(string{"a"}, out.str());
 }
 
@@ -39,6 +41,18 @@ TEST(WavReader_WriteSamples, WritesMultibyteSampleFromMiddle) {
    uint32_t samplesToWrite { 3 };
 
    reader.writeSamples(&out, data, startingSample, samplesToWrite, bytesPerSample);
+
    CHECK_EQUAL(string{"89ABCD"}, out.str());
+}
+
+TEST(WavReader_WriteSamples, IncorporatesChannelCount) {
+   char data[] { "0123456789ABCDEFG" };
+   uint32_t bytesPerSample { 2 };
+   uint32_t startingSample { 0 };
+   uint32_t samplesToWrite { 2 };
+   uint32_t channels { 2 };
+   reader.writeSamples(
+         &out, data, startingSample, samplesToWrite, bytesPerSample, channels);
+   CHECK_EQUAL(string{"01234567"}, out.str());
 }
 
