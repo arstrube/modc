@@ -3,3 +3,5 @@
 *.layout*
 *.o
 *.stackdump
+*.DS_Store*
+*_bin
