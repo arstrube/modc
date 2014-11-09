@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="c6.mac" />
+		<Option pch_mode="2" />
+		<Option compiler="cygwin" />
+		<Build>
+			<Target title="Debug">
+				<Option output=".\$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option object_output="out\Debug\" />
+				<Option type="1" />
+				<Option compiler="cygwin" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++0x" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add option="-Werror" />
+			<Add directory="e:\cpputest\include" />
+			<Add directory="e:\libcurl\include" />
+			<Add directory="e:\jsoncpp\include" />
+		</Compiler>
+		<Linker>
+			<Add library="CppUTest" />
+			<Add library="CppUTestExt" />
+			<Add library="jsoncpp" />
+			<Add library="curl" />
+			<Add library="z" />
+			<Add directory="e:\cpputest\lib" />
+			<Add directory="e:\jsoncpp\lib" />
+			<Add directory="e:\libcurl\lib" />
+		</Linker>
+		<ExtraCommands>
+			<Add after="./$(PROJECT_NAME).exe" />
+			<Mode after="always" />
+		</ExtraCommands>
+		<Unit filename="CppUTestMain.cpp" />
+		<Unit filename="c6\DateTestConstants.h" />
+		<Unit filename="c6\Holding.cpp" />
+		<Unit filename="c6\Holding.h" />
+		<Unit filename="c6\HoldingTest.cpp" />
+		<Unit filename="c6\Portfolio.cpp" />
+		<Unit filename="c6\Portfolio.h" />
+		<Unit filename="c6\PortfolioTest.cpp" />
+		<Unit filename="c6\PurchaseRecord.h" />
+		<Unit filename="c6\boost\date_time\gregorian\gregorian_types.hpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

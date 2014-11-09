@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="c2.mac.cbp" />
+		<Project filename="c3.mac.cbp" />
+		<Project filename="c5.mac.cbp" />
+		<Project filename="c6.mac.cbp" />
+		<Project filename="c7.mac.cbp" />
+		<Project filename="wav.mac.cbp" active="1" />
+	</Workspace>
+</CodeBlocks_workspace_file>
