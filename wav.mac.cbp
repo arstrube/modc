@@ -4,64 +4,64 @@
 	<Project>
 		<Option title="wav" />
 		<Option pch_mode="2" />
-		<Option compiler="cygwin" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output=".\$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
-				<Option object_output="out\Debug\" />
+				<Option output="./$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option object_output="out/Debug/" />
 				<Option type="1" />
-				<Option compiler="cygwin" />
+				<Option compiler="gcc" />
 				<ExtraCommands>
 					<Add after="./$(PROJECT_NAME).exe" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Release">
-				<Option output=".\$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
-				<Option object_output="out\Debug\" />
+				<Option output="./$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option object_output="out/Debug/" />
 				<Option type="1" />
-				<Option compiler="cygwin" />
+				<Option compiler="gcc" />
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-std=c++0x" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-g" />
 			<Add option="-Werror" />
-			<Add directory="e:\cpputest\include" />
+			<Add option="--std=c++11" />
 			<Add directory="wav" />
+			<Add directory="/usr/local/include" />
 		</Compiler>
 		<Linker>
 			<Add library="CppUTest" />
 			<Add library="CppUTestExt" />
-			<Add directory="e:\cpputest\lib" />
+			<Add directory="/usr/local/lib" />
 		</Linker>
 		<Unit filename="CppUTestMain.cpp">
 			<Option target="Debug" />
 		</Unit>
-		<Unit filename="wav\FileUtil.cpp" />
-		<Unit filename="wav\FileUtil.h" />
-		<Unit filename="wav\FileUtilTest.cpp">
+		<Unit filename="wav/FileUtil.cpp" />
+		<Unit filename="wav/FileUtil.h" />
+		<Unit filename="wav/FileUtilTest.cpp">
 			<Option target="Debug" />
 		</Unit>
-		<Unit filename="wav\StreamUtil.cpp" />
-		<Unit filename="wav\StreamUtilTest.cpp">
+		<Unit filename="wav/StreamUtil.cpp" />
+		<Unit filename="wav/StreamUtilTest.cpp">
 			<Option target="Debug" />
 		</Unit>
-		<Unit filename="wav\WavDescriptor.cpp" />
-		<Unit filename="wav\WavDescriptor.h" />
-		<Unit filename="wav\WavReader.cpp" />
-		<Unit filename="wav\WavReader.h" />
-		<Unit filename="wav\WavReaderTest.cpp">
+		<Unit filename="wav/WavDescriptor.cpp" />
+		<Unit filename="wav/WavDescriptor.h" />
+		<Unit filename="wav/WavReader.cpp" />
+		<Unit filename="wav/WavReader.h" />
+		<Unit filename="wav/WavReaderTest.cpp">
 			<Option target="Debug" />
 		</Unit>
-		<Unit filename="wav\boost\filesystem.hpp" />
-		<Unit filename="wav\main.cpp">
+		<Unit filename="wav/boost/filesystem.hpp" />
+		<Unit filename="wav/main.cpp">
 			<Option target="Release" />
 		</Unit>
-		<Unit filename="wav\rlog\RLogChannel.h" />
-		<Unit filename="wav\rlog\StdioNode.h" />
-		<Unit filename="wav\rlog\rlog.h" />
+		<Unit filename="wav/rlog/RLogChannel.h" />
+		<Unit filename="wav/rlog/StdioNode.h" />
+		<Unit filename="wav/rlog/rlog.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
