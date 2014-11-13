@@ -44,6 +44,7 @@
 		<Unit filename="wav\FileUtilTest.cpp">
 			<Option target="Debug" />
 		</Unit>
+		<Unit filename="wav\Snippet.h" />
 		<Unit filename="wav\StreamUtil.cpp" />
 		<Unit filename="wav\StreamUtilTest.cpp">
 			<Option target="Debug" />
