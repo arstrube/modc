@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Modern C++ Programming with Test-Driven Development",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/lotdd for more book information.
 ***/
 #ifndef WavReader_h
@@ -20,9 +20,20 @@
 
 bool hasExtension(const std::string& text, const std::string& substring);
 
-struct FormatSubchunk;
 struct FormatSubchunkHeader;
-struct DataChunk;
+
+struct FormatSubchunk {
+   uint16_t formatTag;
+   uint16_t channels;
+   uint32_t samplesPerSecond;
+   uint32_t averageBytesPerSecond;
+   uint16_t blockAlign;
+   uint16_t bitsPerSample;
+};
+
+struct DataChunk {
+   uint32_t length;
+};
 
 class WavReader {
 public:
@@ -30,15 +41,16 @@ public:
    virtual ~WavReader();
    void open(const std::string& name, bool trace);
    void list(
-         const boost::filesystem::path& dir,
-         const std::string &filename,
+         const boost::filesystem::path& dir, 
+         const std::string &filename, 
          std::vector<boost::filesystem::path>& found) const;
    void listAll() const;
    void publishSnippets();
 public:
-   void writeSamples(std::ostream* out, char* data,
-         uint32_t startingSample,
-         uint32_t samplesToWrite,
+   // ...
+   void writeSamples(std::ostream* out, char* data, 
+         uint32_t startingSample, 
+         uint32_t samplesToWrite, 
          uint32_t bytesPerSample,
          uint32_t channels=1);
 
@@ -52,6 +64,8 @@ public:
          FormatSubchunk& formatSubchunk,
          DataChunk& dataChunk,
          char* data);
+
+   uint32_t totalSeconds;
 
 private:
    rlog::StdioNode log{STDERR_FILENO};
@@ -77,4 +91,4 @@ private:
    std::string dest_;
 };
 
-#endif
+#endif  
