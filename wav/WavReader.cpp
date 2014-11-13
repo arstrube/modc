@@ -1,5 +1,7 @@
 #include "WavReader.h"
 #include "WavDescriptor.h"
+#include "Snippet.h"
+// ...
 
 #include <iostream>
 #include <cstring>
@@ -16,7 +18,8 @@ using namespace rlog;
 bool hasExtension(const string& filename, const string& s) {
    string ext{"." + s};
    if (ext.length() > filename.length()) return false;
-   return 0 == filename.compare(filename.length() - ext.length(), ext.length(), ext);
+   return 0 == 
+      filename.compare(filename.length() - ext.length(), ext.length(), ext);
 }
 
 struct RiffHeader {
@@ -103,8 +106,8 @@ void WavReader::open(const std::string& name, bool trace) {
    rLog(channel, "data length = %i", dataChunk.length);
    
    auto data = readData(file, dataChunk.length); // leak!
-
-   writeSnippet(name, file, out, formatSubchunk, dataChunk, data);
+   Snippet snippet;
+   snippet.writeSnippet(name, file, out, formatSubchunk, dataChunk, data);
 }
 
 void WavReader::read(istream& file, DataChunk& dataChunk) {
