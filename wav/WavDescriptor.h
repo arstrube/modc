@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Modern C++ Programming with Test-Driven Development",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material,
+ * Copyrights apply to this code. It may not be used to create training material, 
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose.
+ * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/lotdd for more book information.
 ***/
 #ifndef WavDescriptor_h
@@ -15,7 +15,7 @@
 #include <fstream>
 
 struct WavDescriptorRecord {
-   int8_t filename[64];
+   int8_t filename[64]; 
    uint32_t seconds;
    uint32_t samplesPerSecond;
    uint32_t channels;
@@ -29,10 +29,13 @@ public:
    }
 
    virtual void add(
-      const std::string& /*dir*/, const std::string& filename, 
+      const std::string& dir, const std::string& filename, 
       uint32_t totalSeconds, uint32_t samplesPerSecond, 
-      uint32_t channels, uint32_t /*fileSize*/) {
+      uint32_t channels, uint32_t fileSize) {
       // ...
+      (void)dir;
+      (void)filename;
+      (void)fileSize;
       WavDescriptorRecord rec;
       cpy(rec.filename, filename.c_str());
       rec.seconds = totalSeconds;
@@ -46,10 +49,7 @@ public:
       for (int i = 0; src[i] != 0; i++) dest[i] = src[i];
    }
 
-   void reset(void) {
-   }
-
-   virtual ~WavDescriptor() {
+   ~WavDescriptor() {
       outstr->close();
       delete outstr;
    }

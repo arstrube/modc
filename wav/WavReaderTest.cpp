@@ -20,7 +20,7 @@ TEST(WavReader, HasExtension) {
    CHECK(!hasExtension(s, bigger));
 }
 
-TEST_GROUP(WavReader_WriteSamples)
+TEST_GROUP(WavReader_WriteSamples) 
 {
    WavReader reader{"",""};
    ostringstream out;
@@ -91,7 +91,8 @@ public:
 
 class MockFileUtil: public FileUtil {
 public:
-   streamsize size(const string&) override {
+   streamsize size(const string& name) override {
+      (void)name;
       return mock().actualCall("size").returnValue().getIntValue();
    }
 };
@@ -126,12 +127,9 @@ TEST(WavReader_WriteSnippet, SendsFileLengthAndTotalSecondsToDescriptor) {
    dataChunk.length = 8;
    formatSubchunk.bitsPerSample = TwoBytesWorthOfBits;
    formatSubchunk.samplesPerSecond = 1;
-   
    mock().expectOneCall("size").andReturnValue(ArbitraryFileSize);
-
    mock().expectOneCall("add")
       .withParameter("totalSeconds", 8 / 2 / 1)
-	  
       .withParameter("fileSize", ArbitraryFileSize);
 
    reader.writeSnippet("any", input, output, formatSubchunk, dataChunk, data);
