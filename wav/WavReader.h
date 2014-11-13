@@ -15,7 +15,7 @@
 #include <memory>
 #include <boost/filesystem.hpp>
 
-#include "WavDescriptor.h" // reverted all
+#include "WavDescriptor.h"
 #include "FileUtil.h"
 #include "rlog/StdioNode.h"
 #include "rlog/RLogChannel.h"
