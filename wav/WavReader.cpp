@@ -69,7 +69,6 @@ void WavReader::publishSnippets() {
    directory_iterator itEnd; 
    for (directory_iterator it(source_); it != itEnd; ++it) 
       if (!is_directory(it->status()) && 
-//  it->path().filename().string()=="husten.wav" &&
           hasExtension(it->path().filename().string(), "wav"))
         open(it->path().filename().string(), false);
 }
@@ -79,7 +78,6 @@ string WavReader::toString(int8_t* bytes, unsigned int size) {
 }
 
 void WavReader::open(const std::string& name, bool trace) {
-   // ...
    rLog(channel, "opening %s", name.c_str());
 
    (void)trace;
@@ -106,7 +104,8 @@ void WavReader::open(const std::string& name, bool trace) {
    
    auto data = readData(file, dataChunk.length); // leak!
    
-   writeSnippet(name, file, out, formatSubchunk, dataChunk, data);
+   Snippet snippet(fileUtil_, descriptor_, dest_, channel);
+   snippet.writeSnippet(name, file, out, formatSubchunk, dataChunk, data);
 }
 
 void WavReader::read(istream& file, DataChunk& dataChunk) {
@@ -116,7 +115,6 @@ void WavReader::read(istream& file, DataChunk& dataChunk) {
 char* WavReader::readData(istream& file, int32_t length) {
    auto data = new char[length];
    file.read(data, length);
-   //file.close(); // istreams are RAII
    return data;
 }
 
@@ -128,7 +126,6 @@ void WavReader::readAndWriteHeaders(
       FormatSubchunkHeader& formatSubchunkHeader) {
    RiffHeader header;
    file.read(reinterpret_cast<char*>(&header), sizeof(RiffHeader));
-   // ...
 
    if (toString(header.id, 4) != "RIFF") {
       rLog(channel, "ERROR: %s is not a RIFF file",
@@ -190,77 +187,6 @@ void WavReader::readAndWriteHeaders(
       string tag{toString(factOrData.tag, 4)};
       rLog(channel, "%s ERROR: unknown tag>%s<", name.c_str(), tag.c_str());
       return;
-   }
-}
-
-void WavReader::writeSnippet(
-      const string& name, istream& file, ostream& out,
-      FormatSubchunk& formatSubchunk,
-      DataChunk& dataChunk,
-      char* data
-      ) {
-   (void)file;
-   // ...
-   uint32_t secondsDesired{10};
-   if (formatSubchunk.bitsPerSample == 0) formatSubchunk.bitsPerSample = 8;
-   uint32_t bytesPerSample{formatSubchunk.bitsPerSample / uint32_t{8}};
-
-   uint32_t samplesToWrite{secondsDesired * formatSubchunk.samplesPerSecond};
-   uint32_t totalSamples{dataChunk.length / bytesPerSample};
-
-   samplesToWrite = min(samplesToWrite, totalSamples);
-
-   uint32_t totalSeconds { totalSamples / formatSubchunk.samplesPerSecond };
-
-   rLog(channel, "total seconds %u ", totalSeconds);
-
-   dataChunk.length = dataLength(
-         samplesToWrite, 
-         bytesPerSample, 
-         formatSubchunk.channels);
-   out.write(reinterpret_cast<char*>(&dataChunk), sizeof(DataChunk));
-
-   uint32_t startingSample{
-      totalSeconds >= 10 ? 10 * formatSubchunk.samplesPerSecond : 0};
-
-   writeSamples(&out, data, startingSample, samplesToWrite, bytesPerSample);
-
-   rLog(channel, "completed writing %s", name.c_str());
-
-   auto fileSize = fileUtil_->size(name);
-
-   descriptor_->add(dest_, name, 
-         totalSeconds, formatSubchunk.samplesPerSecond, formatSubchunk.channels,
-         fileSize);
-   
-   //out.close(); // ostreams are RAII
-}
-
-uint32_t WavReader::dataLength(
-      uint32_t samples, 
-      uint32_t bytesPerSample,
-      uint32_t channels
-      ) const {
-   return samples * bytesPerSample * channels;
-}
-
-void WavReader::writeSamples(ostream* out, char* data, 
-      uint32_t startingSample, 
-      uint32_t samplesToWrite, 
-      uint32_t bytesPerSample,
-      uint32_t channels) {
-   rLog(channel, "writing %i samples", samplesToWrite);
-
-   for (auto sample = startingSample; 
-        sample < startingSample + samplesToWrite; 
-        sample++) {
-      auto byteOffsetForSample = sample * bytesPerSample * channels;
-      for (uint32_t channel{0}; channel < channels; channel++) {
-         auto byteOffsetForChannel =
-            byteOffsetForSample + (channel * bytesPerSample);
-         for (uint32_t byte{0}; byte < bytesPerSample; byte++) 
-            out->put(data[byteOffsetForChannel + byte]);
-      }
    }
 }
 
