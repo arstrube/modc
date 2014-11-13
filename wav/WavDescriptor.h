@@ -28,7 +28,11 @@ public:
       outstr = new std::ofstream(dir + "/WavSnippets.dat", std::ios::out | std::ios::binary);
    }
 
-   virtual void add(const std::string& /*dir*/, const std::string& filename, uint32_t totalSeconds, uint32_t samplesPerSecond, uint32_t channels) {
+   virtual void add(
+      const std::string& /*dir*/, const std::string& filename, 
+      uint32_t totalSeconds, uint32_t samplesPerSecond, 
+      uint32_t channels, uint32_t /*fileSize*/) {
+      // ...
       WavDescriptorRecord rec;
       cpy(rec.filename, filename.c_str());
       rec.seconds = totalSeconds;

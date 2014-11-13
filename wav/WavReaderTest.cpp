@@ -81,23 +81,39 @@ public:
    void add(
       const string&, const string&, 
       uint32_t totalSeconds, 
-      uint32_t, uint32_t) override {
+      uint32_t, uint32_t,
+      uint32_t fileSize) override {
       mock().actualCall("add")
-         .withParameter("totalSeconds", (int)totalSeconds);
+         .withParameter("totalSeconds", (int)totalSeconds)
+         .withParameter("fileSize", (int)fileSize);
    } 
+};
+
+class MockFileUtil: public FileUtil {
+public:
+   streamsize size(const string&) override {
+      return mock().actualCall("size").returnValue().getIntValue();
+   }
 };
 
 TEST_GROUP(WavReader_WriteSnippet) {
    shared_ptr<MockWavDescriptor> descriptor{new MockWavDescriptor};
    WavReader reader{"", "", descriptor};
+
+   shared_ptr<MockFileUtil> fileUtil{make_shared<MockFileUtil>()};
+
    istringstream input{""};
    FormatSubchunk formatSubchunk;
    ostringstream output;
    DataChunk dataChunk;
    char* data;
    uint32_t TwoBytesWorthOfBits{2 * 8};
+
+   const int ArbitraryFileSize{5};
+
    void setup() override {
       data = new char[4];
+      reader.useFileUtil(fileUtil);
    }
 
    void teardown() override {
@@ -106,11 +122,19 @@ TEST_GROUP(WavReader_WriteSnippet) {
    }
 };
 
-TEST(WavReader_WriteSnippet, UpdatesTotalSeconds) {
+TEST(WavReader_WriteSnippet, SendsFileLengthAndTotalSecondsToDescriptor) {
    dataChunk.length = 8;
    formatSubchunk.bitsPerSample = TwoBytesWorthOfBits;
    formatSubchunk.samplesPerSecond = 1;
-   mock().expectOneCall("add").withParameter("totalSeconds", 8 / 2 / 1);
+   
+   mock().expectOneCall("size").andReturnValue(ArbitraryFileSize);
+
+   mock().expectOneCall("add")
+      .withParameter("totalSeconds", 8 / 2 / 1)
+	  
+      .withParameter("fileSize", ArbitraryFileSize);
+
    reader.writeSnippet("any", input, output, formatSubchunk, dataChunk, data);
+
    mock().checkExpectations();
 }

@@ -16,7 +16,7 @@
 
 class FileUtil {
 public:
-   std::streamsize size(const std::string& name) {
+   virtual std::streamsize size(const std::string& name) {
       std::ifstream stream{name, std::ios::in | std::ios::binary};
       stream.seekg(0, std::ios::end);
       return stream.tellg();

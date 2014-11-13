@@ -59,6 +59,11 @@ WavReader::~WavReader() {
    descriptor_.reset();
    delete channel;
 }
+
+void WavReader::useFileUtil(shared_ptr<FileUtil> fileUtil) {
+   fileUtil_ = fileUtil;
+}
+
 #if 0
 void WavReader::publishSnippets() {
    directory_iterator itEnd;
@@ -69,6 +74,7 @@ void WavReader::publishSnippets() {
         open(it->path().filename().string(), false);
 }
 #endif
+
 string WavReader::toString(int8_t* bytes, unsigned int size) {
    return string{(char*)bytes, size};
 }
@@ -217,8 +223,11 @@ void WavReader::writeSnippet(
 
    rLog(channel, "completed writing %s", name.c_str());
 
+   auto fileSize = fileUtil_->size(name);
+
    descriptor_->add(dest_, name,
-         totalSeconds, formatSubchunk.samplesPerSecond, formatSubchunk.channels);
+         totalSeconds, formatSubchunk.samplesPerSecond, formatSubchunk.channels,
+         fileSize);
 
    //out.close(); // ostreams are RAII
 }
