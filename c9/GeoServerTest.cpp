@@ -122,16 +122,33 @@ TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
    CHECK_EQUAL(vector<string> { cUser }, UserNames(users));
 }
 
-TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
-   Location anotherLocation{aUserLocation.go(10, West)};
-   const unsigned int lots {500000};
-   for (unsigned int i{0}; i < lots; i++) {
-      string user{"user" + to_string(i)};
-      server.track(user);
-      server.updateLocation(user, anotherLocation);
-   }
+TEST_GROUP(AGeoServer_StressTest) {
+   GeoServer server;
+   TestTimer t0;
+   const unsigned int lots {5000000};
+   const string aUser { "auser" };
 
-   TestTimer timer;
+   const double TenMeters { 10 };
+   const double Width { 2000 + TenMeters };
+   const double Height { 4000 + TenMeters};
+
+   Location aUserLocation { 38, -103 };
+
+   void setup() override {
+      TestTimer t1{"    setup()"};
+      server.track(aUser);
+      server.updateLocation(aUser, aUserLocation);
+      for (unsigned int i{0}; i < lots; i++) {
+         string user{"user" + to_string(i)};
+         server.track(user);
+         server.updateLocation(user, aUserLocation);
+      }
+   }
+};
+
+TEST(AGeoServer_StressTest, HandlesLargeNumbersOfUsers) {
+
+   TestTimer t2("    usersInBox()");
    auto users = server.usersInBox(aUser, Width, Height);
 
    CHECK_EQUAL(lots, users.size());

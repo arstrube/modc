@@ -20,6 +20,8 @@
 			<Add option="-g" />
 			<Add option="-Werror" />
 			<Add option="-std=c++11" />
+			<Add option="-include CppuTest/MemoryLeakDetectorMallocMacros.h" />
+			<Add option="-include CppuTest/MemoryLeakDetectorNewMacros.h" />
 			<Add directory="e:\cpputest\include" />
 			<Add directory="c7\library\include" />
 			<Add directory="c7" />
