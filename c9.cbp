@@ -15,11 +15,11 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-std=c++0x" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-g" />
 			<Add option="-Werror" />
+			<Add option="-std=c++11" />
 			<Add directory="e:\cpputest\include" />
 			<Add directory="c7\library\include" />
 			<Add directory="c7" />
