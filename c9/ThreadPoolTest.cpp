@@ -12,6 +12,12 @@ using std::chrono::milliseconds;
 TEST_GROUP(AThreadPool) {
    mutex m;
    ThreadPool pool;
+   void setup() override {
+//       MemoryLeakWarningPlugin::turnOffNewDeleteOverloads();
+   }
+   void teardown() override {
+//       MemoryLeakWarningPlugin::turnOnNewDeleteOverloads();
+   }
 };
 
 TEST(AThreadPool, HasNoWorkOnCreation) {
