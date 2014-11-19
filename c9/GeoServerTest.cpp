@@ -122,7 +122,7 @@ TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
    CHECK_EQUAL(vector<string> { cUser }, UserNames(users));
 }
 
-TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
+IGNORE_TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
    Location anotherLocation{aUserLocation.go(10, West)};
    const unsigned int lots {500000};
    for (unsigned int i{0}; i < lots; i++) {
@@ -134,5 +134,6 @@ TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
    TestTimer timer;
    auto users = server.usersInBox(aUser, Width, Height);
 
-   CHECK_EQUAL(lots, users.size());
+   LONGS_EQUAL(lots, users.size());
 }
+
