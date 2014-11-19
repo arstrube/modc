@@ -3,7 +3,8 @@
 
 #include "GeoServer.h"
 #include "VectorUtil.h"
-
+#include "TestTimer.h"
+// ...
 using namespace std;
 
 /** to_string() is not defined in Cygwin GCC 4.8.3 */
@@ -130,6 +131,8 @@ TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
       server.updateLocation(user, anotherLocation);
    }
 
+   TestTimer timer;
    auto users = server.usersInBox(aUser, Width, Height);
+
    CHECK_EQUAL(lots, users.size());
 }

@@ -50,6 +50,8 @@
 		<Unit filename="c9\Location.cpp" />
 		<Unit filename="c9\Location.h" />
 		<Unit filename="c9\LocationTest.cpp" />
+		<Unit filename="c9\TestTimer.cpp" />
+		<Unit filename="c9\TestTimer.h" />
 		<Unit filename="c9\User.h" />
 		<Unit filename="c9\VectorUtil.h" />
 		<Extensions>
