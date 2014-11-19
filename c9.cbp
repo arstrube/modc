@@ -38,6 +38,9 @@
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
 		<Unit filename="assert_throw.h" />
+		<Unit filename="c9\Area.cpp" />
+		<Unit filename="c9\Area.h" />
+		<Unit filename="c9\AreaTest.cpp" />
 		<Unit filename="c9\CppUTestExtensions.cpp" />
 		<Unit filename="c9\CppUTestExtensions.h" />
 		<Unit filename="c9\CppUTestExtensionsTest.cpp" />
@@ -47,6 +50,8 @@
 		<Unit filename="c9\Location.cpp" />
 		<Unit filename="c9\Location.h" />
 		<Unit filename="c9\LocationTest.cpp" />
+		<Unit filename="c9\User.h" />
+		<Unit filename="c9\VectorUtil.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

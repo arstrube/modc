@@ -1,6 +1,8 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExtensions.h"
+
 #include "GeoServer.h"
+#include "VectorUtil.h"
 
 using namespace std;
 
@@ -10,6 +12,7 @@ TEST_GROUP(AGeoServer) {
    const string aUser{"auser"};
    const double LocationTolerance{0.005};
 };
+
 TEST(AGeoServer, TracksAUser) {
    server.track(aUser);
 
@@ -31,6 +34,7 @@ TEST(AGeoServer, TracksMultipleUsers) {
 
 TEST(AGeoServer, IsTrackingAnswersFalseWhenUserNoLongerTracked) {
    server.track(aUser);
+   
    server.stopTracking(aUser);
 
    CHECK_FALSE(server.isTracking(aUser));
@@ -38,6 +42,7 @@ TEST(AGeoServer, IsTrackingAnswersFalseWhenUserNoLongerTracked) {
 
 TEST(AGeoServer, UpdatesLocationOfUser) {
    server.track(aUser);
+
    server.updateLocation(aUser, Location{38, -104});
 
    auto location = server.locationOf(aUser);
@@ -51,13 +56,59 @@ TEST(AGeoServer, AnswersUnknownLocationForUserNotTracked) {
 
 TEST(AGeoServer, AnswersUnknownLocationForTrackedUserWithNoLocationUpdate) {
    server.track(aUser);
+
    CHECK_TRUE(server.locationOf(aUser).isUnknown());
 }
 
 TEST(AGeoServer, AnswersUnknownLocationForUserNoLongerTracked) {
    server.track(aUser);
    server.updateLocation(aUser, Location(40, 100));
+
    server.stopTracking(aUser);
+
    CHECK_TRUE(server.locationOf(aUser).isUnknown());
 }
 
+TEST_GROUP(AGeoServer_UsersInBox) {
+   GeoServer server;
+
+   const double TenMeters { 10 };
+   const double Width { 2000 + TenMeters };
+   const double Height { 4000 + TenMeters};
+   const string aUser { "auser" };
+   const string bUser { "buser" };
+   const string cUser { "cuser" };
+
+   Location aUserLocation { 38, -103 };
+
+   void setup() override {
+      server.track(aUser);
+      server.track(bUser);
+      server.track(cUser);
+      server.updateLocation(aUser, aUserLocation);
+   }
+   vector<string> UserNames(const vector<User>& users) {
+      return Collect<User,string>(users, [](User each) { return each.name(); });
+   }
+};
+
+TEST(AGeoServer_UsersInBox, AnswersUsersInSpecifiedRange) {
+   server.updateLocation(
+      bUser, Location{aUserLocation.go(Width / 2 - TenMeters, East)}); 
+
+   auto users = server.usersInBox(aUser, Width, Height);
+
+   CHECK_EQUAL(vector<string> { bUser }, UserNames(users));
+}
+
+TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
+   server.updateLocation(
+      bUser, Location{aUserLocation.go(Width / 2 + TenMeters, East)}); 
+	  
+   server.updateLocation(
+      cUser, Location{aUserLocation.go(Width / 2 - TenMeters, East)}); 
+
+   auto users = server.usersInBox(aUser, Width, Height);
+
+   CHECK_EQUAL(vector<string> { cUser }, UserNames(users));
+}
