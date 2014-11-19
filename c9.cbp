@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="c9" />
+		<Option pch_mode="2" />
+		<Option compiler="cygwin" />
+		<Build>
+			<Target title="Debug">
+				<Option output=".\$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option object_output="out\Debug\" />
+				<Option type="1" />
+				<Option compiler="cygwin" />
+				<Option parameters="-v" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++0x" />
+			<Add option="-Wextra" />
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add option="-Werror" />
+			<Add directory="e:\cpputest\include" />
+			<Add directory="c7\library\include" />
+			<Add directory="c7" />
+			<Add directory="." />
+		</Compiler>
+		<Linker>
+			<Add library="CppUTest" />
+			<Add library="CppUTestExt" />
+			<Add directory="e:\cpputest\lib" />
+			<Add directory="e:\jsoncpp\lib" />
+			<Add directory="e:\libcurl\lib" />
+		</Linker>
+		<ExtraCommands>
+			<Add after="echo ./$(PROJECT_NAME).exe" />
+			<Mode after="always" />
+		</ExtraCommands>
+		<Unit filename="CppUTestMain.cpp" />
+		<Unit filename="assert_throw.h" />
+		<Unit filename="c9\CppUTestExtensions.cpp" />
+		<Unit filename="c9\CppUTestExtensions.h" />
+		<Unit filename="c9\CppUTestExtensionsTest.cpp" />
+		<Unit filename="c9\GeoServer.cpp" />
+		<Unit filename="c9\GeoServer.h" />
+		<Unit filename="c9\GeoServerTest.cpp" />
+		<Unit filename="c9\Location.cpp" />
+		<Unit filename="c9\Location.h" />
+		<Unit filename="c9\LocationTest.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
