@@ -111,6 +111,6 @@ TEST(ALocation, ProvidesPrintableRepresentation) {
 
    s << location;
 
-   CHECK_EQUAL("(-32,-105)", s.str());
+   CHECK_EQUAL(string("(-32,-105)"), s.str());
 }
 
