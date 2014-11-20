@@ -14,6 +14,7 @@
 #include <thread>
 #include <memory>
 #include <atomic>
+
 #include "Work.h"
 
 class ThreadPool {
@@ -23,7 +24,6 @@ public:
       if (workThread_)
          workThread_->join();
    }
-
    void start() {
       workThread_ = std::make_shared<std::thread>(&ThreadPool::worker, this);
    }
@@ -45,11 +45,13 @@ public:
 private:
    void worker() {
       while (!done_) {
-         while (!hasWork())
+         while (!done_ && !hasWork()) 
             ;
+         if (done_) break;
          pullWork().execute();
       }
    }
+
    std::atomic<bool> done_{false};
    std::deque<Work> workQueue_;
    std::shared_ptr<std::thread> workThread_;

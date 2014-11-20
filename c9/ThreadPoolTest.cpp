@@ -90,8 +90,10 @@ TEST(AThreadPool, ExecutesAllWork) {
       ++count;
       wasExecuted.notify_all(); 
    }};
+
    for (unsigned int i{0}; i < NumberOfWorkItems; i++)
       pool.add(work);
+
    unique_lock<mutex> lock(m);
    CHECK_TRUE(wasExecuted.wait_for(lock, chrono::milliseconds(100), 
          [&] { return count == NumberOfWorkItems; }));
