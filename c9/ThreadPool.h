@@ -13,12 +13,13 @@
 #include <deque>
 #include <thread>
 #include <memory>
-
+#include <atomic>
 #include "Work.h"
 
 class ThreadPool {
 public:
    virtual ~ThreadPool() {
+      done_ = true;
       if (workThread_)
          workThread_->join();
    }
@@ -26,7 +27,7 @@ public:
    void start() {
       workThread_ = std::make_shared<std::thread>(&ThreadPool::worker, this);
    }
-   // ...
+
    bool hasWork() {
       return !workQueue_.empty();
    }
@@ -43,11 +44,13 @@ public:
 
 private:
    void worker() {
-      while (!hasWork())
-         ;
-      pullWork().execute();
+      while (!done_) {
+         while (!hasWork())
+            ;
+         pullWork().execute();
+      }
    }
-
+   std::atomic<bool> done_{false};
    std::deque<Work> workQueue_;
    std::shared_ptr<std::thread> workThread_;
 };
