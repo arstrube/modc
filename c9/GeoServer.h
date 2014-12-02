@@ -46,7 +46,10 @@ private:
    std::unordered_map<std::string, Location> locations_;
 
    std::unordered_map<std::string, Location>::const_iterator 
-      find(const std::string& user) const;
+      find(const std::string& user) 
+      const
+      __attribute__((noinline));
    std::shared_ptr<ThreadPool> pool_;
+   unsigned int i{0};
 };
 #endif
