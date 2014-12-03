@@ -123,9 +123,8 @@ TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
 }
 
 TEST_GROUP(AGeoServer_StressTest) {
-   GeoServer server;
-   TestTimer t0;
-   const unsigned int lots {5000000};
+   GeoServer* server = new GeoServer{};
+   const unsigned int lots {100000};
    const string aUser { "auser" };
 
    const double TenMeters { 10 };
@@ -135,21 +134,25 @@ TEST_GROUP(AGeoServer_StressTest) {
    Location aUserLocation { 38, -103 };
 
    void setup() override {
-      TestTimer t1{"    setup()"};
-      server.track(aUser);
-      server.updateLocation(aUser, aUserLocation);
+      TestTimer t1{"setup()"};
+      server->track(aUser);
+      server->updateLocation(aUser, aUserLocation);
       for (unsigned int i{0}; i < lots; i++) {
          string user{"user" + to_string(i)};
-         server.track(user);
-         server.updateLocation(user, aUserLocation);
+         server->track(user);
+         server->updateLocation(user, aUserLocation);
       }
+   }
+   
+   void teardown() override {
+       TestTimer t{"teardown()"};
+       delete server;
    }
 };
 
 TEST(AGeoServer_StressTest, HandlesLargeNumbersOfUsers) {
 
-   TestTimer t2("    usersInBox()");
-   auto users = server.usersInBox(aUser, Width, Height);
+   TestTimer t2("usersInBox()");
 
-   CHECK_EQUAL(lots, users.size());
+   CHECK_EQUAL(lots, server->usersInBox(aUser, Width, Height).size());
 }
