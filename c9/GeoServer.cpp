@@ -23,9 +23,10 @@ void GeoServer::updateLocation(const string& user, const Location& location) {
 }
 
 Location GeoServer::locationOf(const string& user) const {
-   if (!isTracking(user)) return Location{}; // TODO performance cost?
-
-   return find(user)->second;
+   // optimized
+   auto it = find(user);
+   if (it == locations_.end()) return Location{};
+   return it->second;
 }
 
 std::unordered_map<std::string, Location>::const_iterator 

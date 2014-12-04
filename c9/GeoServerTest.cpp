@@ -254,7 +254,7 @@ TEST(AGeoServer_ScaleTests, HandlesLargeNumbersOfUsers) {
 }
 
 TEST(AGeoServer_Performance, LocationOf) {
-   const unsigned int lots{5000};
+   const unsigned int lots{100000};
    f.addUsersAt(lots, Location{f.aUserLocation.go(f.TenMeters, West)});
 
    TestTimer t;

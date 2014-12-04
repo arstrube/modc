@@ -1,5 +1,4 @@
 #include "TestTimer.h"
-
 #include "CppUTest/Utest.h"
 #include <iostream>
 
@@ -12,7 +11,6 @@ TestTimer::TestTimer()
 TestTimer::TestTimer(const string& text) 
    : Start{chrono::system_clock::now()} 
    , Text{text} {}
-
 TestTimer::~TestTimer() {
    Stop = chrono::system_clock::now();
    Elapsed = chrono::duration_cast<chrono::milliseconds>(Stop - Start);
