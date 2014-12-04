@@ -122,18 +122,28 @@ TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
    CHECK_EQUAL(vector<string> { cUser }, UserNames(users));
 }
 
-IGNORE_TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
-   Location anotherLocation{aUserLocation.go(10, West)};
-   const unsigned int lots {500000};
-   for (unsigned int i{0}; i < lots; i++) {
-      string user{"user" + to_string(i)};
-      server.track(user);
-      server.updateLocation(user, anotherLocation);
+TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
+   GeoServer* bigServer = new GeoServer{};
+   const unsigned int lots {100000};
+   {
+      TestTimer timer0{"Setting up"};
+      Location anotherLocation{aUserLocation.go(10, West)};
+      bigServer->track(aUser);
+      bigServer->updateLocation(aUser, aUserLocation);
+      for (unsigned int i{0}; i < lots; i++) {
+         string user{"user" + to_string(i)};
+         bigServer->track(user);
+         bigServer->updateLocation(user, anotherLocation);
+      }
    }
-
-   TestTimer timer;
-   auto users = server.usersInBox(aUser, Width, Height);
-
-   LONGS_EQUAL(lots, users.size());
+   {
+      TestTimer timer1("usersInBox()");
+      auto users = bigServer->usersInBox(aUser, Width, Height);
+      LONGS_EQUAL(lots, users.size());
+   }
+   {
+       TestTimer timer2("tearing down");
+       delete bigServer;
+   }
 }
 
