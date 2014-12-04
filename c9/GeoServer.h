@@ -12,13 +12,20 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <functional>
 
 #include "Location.h"
 #include "Area.h"
 #include "User.h"
 
+class GeoServerListener {
+public:
+   virtual void updated(const User& user)=0;
+};
+
 class GeoServer {
 public:
+   // ...
    void track(const std::string& user);
    void stopTracking(const std::string& user);
    void updateLocation(const std::string& user, const Location& location);
@@ -29,7 +36,10 @@ public:
          const std::pair<std::string, Location>& each,
          const std::string& user,
          const Area& box) const;
-   std::vector<User> usersInBox(const std::string& user, double widthInMeters, double heightInMeters) const;
+   std::vector<User> usersInBox(
+         const std::string& user, double widthInMeters, double heightInMeters,
+         GeoServerListener* listener=nullptr) const;
+   // ...
 
 private:
    std::unordered_map<std::string, Location> locations_;

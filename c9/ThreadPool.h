@@ -15,6 +15,7 @@
 #include <memory>
 #include <atomic>
 #include <mutex>
+#include <vector>
 
 #include "Work.h"
 
@@ -23,12 +24,14 @@ public:
    // ...
    virtual ~ThreadPool() {
       done_ = true;
-      if (workThread_)
-         workThread_->join();
+      for (auto& thread: threads_) thread.join();
    }
-   void start() {
-      workThread_ = std::make_shared<std::thread>(&ThreadPool::worker, this);
+
+   void start(unsigned int numberOfThreads=1) {
+      for (unsigned int i{0u}; i < numberOfThreads; i++)
+         threads_.push_back(std::thread(&ThreadPool::worker, this));
    }
+   // ...
 
    bool hasWork() {
       std::lock_guard<std::mutex> block(mutex_);
@@ -42,14 +45,16 @@ public:
 
    Work pullWork() {
       std::lock_guard<std::mutex> block(mutex_);
+      
+      if (workQueue_.empty()) return Work{};
 
       auto work = workQueue_.back();
       workQueue_.pop_back();
       return work;
    }
-   // ...
 
 private:
+   // ...
    void worker() {
       while (!done_) {
          while (!done_ && !hasWork()) 
@@ -63,6 +68,7 @@ private:
    std::deque<Work> workQueue_;
    std::shared_ptr<std::thread> workThread_;
    std::mutex mutex_;
+   std::vector<std::thread> threads_;
 };
 
 #endif
