@@ -29,6 +29,13 @@ Location GeoServer::locationOf(const string& user) const {
    return it->second;
 }
 
+Location GeoServer::virtualLocationOf(const string& user) const {
+   // optimized
+   auto it = find(user);
+   if (it == locations_.end()) return Location{};
+   return it->second;
+}
+
 std::unordered_map<std::string, Location>::const_iterator 
    GeoServer::find(const std::string& user) const {
    return locations_.find(user);
