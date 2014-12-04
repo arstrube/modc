@@ -11,10 +11,22 @@
 
 #include <string>
 #include <deque>
+#include <thread>
+#include <memory>
+
 #include "Work.h"
 
 class ThreadPool {
 public:
+   virtual ~ThreadPool() {
+      if (workThread_)
+         workThread_->join();
+   }
+
+   void start() {
+      workThread_ = std::make_shared<std::thread>(&ThreadPool::worker, this);
+   }
+   // ...
    bool hasWork() {
       return !workQueue_.empty();
    }
@@ -30,6 +42,14 @@ public:
    }
 
 private:
+   void worker() {
+      while (!hasWork())
+         ;
+      pullWork().execute();
+   }
+
    std::deque<Work> workQueue_;
+   std::shared_ptr<std::thread> workThread_;
 };
+
 #endif
