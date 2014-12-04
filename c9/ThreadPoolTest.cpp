@@ -108,7 +108,6 @@ TEST(AThreadPool_AddRequest, PullsWorkInAThread) {
 }
 
 TEST(AThreadPool_AddRequest, ExecutesAllWork) {
-   Work work{[&] { incrementCountAndNotify(); }};
    unsigned int NumberOfWorkItems{3};
    condition_variable wasExecuted;
    Work work{[&] { 
