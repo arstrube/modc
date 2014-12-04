@@ -128,7 +128,7 @@ TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
    CHECK_EQUAL(vector<string> { cUser }, UserNames(users));
 }
 
-TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
+IGNORE_TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
    GeoServer* bigServer = new GeoServer{};
    const unsigned int lots {100000};
    {
