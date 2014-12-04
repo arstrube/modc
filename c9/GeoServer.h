@@ -27,7 +27,6 @@ public:
 
 class GeoServer {
 public:
-   // ...
    void track(const std::string& user);
    void stopTracking(const std::string& user);
    void updateLocation(const std::string& user, const Location& location);
@@ -42,7 +41,6 @@ public:
          const std::string& user, double widthInMeters, double heightInMeters,
          GeoServerListener* listener) const;
    void useThreadPool(std::shared_ptr<ThreadPool> pool);
-   // ...
 
 private:
    std::unordered_map<std::string, Location> locations_;

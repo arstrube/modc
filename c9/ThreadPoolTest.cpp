@@ -14,6 +14,12 @@ using std::chrono::milliseconds;
 TEST_GROUP(AThreadPool) {
    mutex m;
    ThreadPool pool;
+   void setup() override {
+//       MemoryLeakWarningPlugin::turnOffNewDeleteOverloads();
+   }
+   void teardown() override {
+//       MemoryLeakWarningPlugin::turnOnNewDeleteOverloads();
+   }
 };
 
 TEST(AThreadPool, HasNoWorkOnCreation) {
@@ -79,7 +85,7 @@ public:
 
    void waitForCountAndFailOnTimeout(
          unsigned int expectedCount, 
-         const milliseconds& time=milliseconds(800)) {
+         const milliseconds& time=milliseconds(5000)) {
       unique_lock<mutex> lock(m);
       CHECK_TRUE(wasExecuted.wait_for(lock, time, 
             [&] { return expectedCount == count; }));
@@ -102,13 +108,8 @@ TEST(AThreadPool_AddRequest, PullsWorkInAThread) {
 }
 
 TEST(AThreadPool_AddRequest, ExecutesAllWork) {
+   Work work{[&] { incrementCountAndNotify(); }};
    unsigned int NumberOfWorkItems{3};
-   condition_variable wasExecuted;
-   Work work{[&] { 
-      std::unique_lock<std::mutex> lock(m); 
-      ++count;
-      wasExecuted.notify_all(); 
-   }};
 
    for (unsigned int i{0}; i < NumberOfWorkItems; i++)
       pool.add(work);

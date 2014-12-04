@@ -46,6 +46,7 @@ void GeoServer::usersInBox(
       GeoServerListener* listener) const {
    auto location = locations_.find(user)->second;
    Area box { location, widthInMeters, heightInMeters };
+
    for (auto& each: locations_) {
       Work work{[&] {
          if (isDifferentUserInBounds(each, user, box)) 
