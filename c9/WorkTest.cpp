@@ -69,6 +69,6 @@ TEST(AWorkObject, CanExecuteOnDataCapturedWithFunction) {
    };
    Work work(executeFunction);
    work.execute();
-   CHECK_EQUAL("ab", result);
+   CHECK_EQUAL(string{"ab"}, result);
 }
 
