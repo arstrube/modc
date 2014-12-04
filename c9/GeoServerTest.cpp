@@ -132,7 +132,7 @@ TEST_GROUP(AGeoServer_UsersInBox) {
    public:
       virtual void add(Work work) override { work.execute(); }
    };
-   
+
    void setup() override {
       f.pool = make_shared<SingleThreadedPool>();
       f.server->useThreadPool(f.pool);
@@ -177,6 +177,7 @@ TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
 }
 
 TEST_GROUP(AGeoServer_ScaleTests) {
+
    GeoServerUsersInBoxTestFixture f;
    
    class GeoServerCountingListener: public GeoServerListener {
