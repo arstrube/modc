@@ -4,6 +4,7 @@
 #include "GeoServer.h"
 #include "VectorUtil.h"
 #include "TestTimer.h"
+#include "ThreadPool.h"
 // ...
 using namespace std;
 
@@ -79,6 +80,7 @@ TEST(AGeoServer, AnswersUnknownLocationForUserNoLongerTracked) {
 
 TEST_GROUP(AGeoServer_UsersInBox) {
    GeoServer server;
+   // ...
 
    const double TenMeters { 10 };
    const double Width { 2000 + TenMeters };
@@ -95,29 +97,37 @@ TEST_GROUP(AGeoServer_UsersInBox) {
       vector<User> Users;
    } trackingListener;
 
+   class SingleThreadedPool: public ThreadPool {
+   public:
+      virtual void add(Work work) override { work.execute(); }
+   };
+   shared_ptr<ThreadPool> pool;
    void setup() override {
+      pool = make_shared<SingleThreadedPool>();
+      server.useThreadPool(pool);
+      // ...
       server.track(aUser);
       server.track(bUser);
       server.track(cUser);
 
       server.updateLocation(aUser, aUserLocation);
    }
+   // ...
 
    vector<string> UserNames(const vector<User>& users) {
       return Collect<User,string>(users, [](User each) { return each.name(); });
    }
 };
-
 TEST(AGeoServer_UsersInBox, AnswersUsersInSpecifiedRange) {
+   pool->start(0);
    server.updateLocation(
       bUser, Location{aUserLocation.go(Width / 2 - TenMeters, East)}); 
-
    server.usersInBox(aUser, Width, Height, &trackingListener);
-
    CHECK_EQUAL(vector<string> { bUser }, UserNames(trackingListener.Users));
 }
 
 TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
+   pool->start(0);
    server.updateLocation(
       bUser, Location{aUserLocation.go(Width / 2 + TenMeters, East)}); 
    server.updateLocation(
@@ -131,6 +141,7 @@ TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
 IGNORE_TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
    GeoServer* bigServer = new GeoServer{};
    const unsigned int lots {100000};
+   pool->start(0);
    {
       TestTimer timer0{"Setting up"};
       Location anotherLocation{aUserLocation.go(10, West)};
@@ -145,6 +156,7 @@ IGNORE_TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
    {
       TestTimer timer1("usersInBox()");
       bigServer->usersInBox(aUser, Width, Height, &trackingListener);
+
       LONGS_EQUAL(lots, trackingListener.Users.size());
    }
    {
