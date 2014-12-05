@@ -1,9 +1,9 @@
 /***
  * Excerpted from "Modern C++ Programming with Test-Driven Development",
  * published by The Pragmatic Bookshelf.
- * Copyrights apply to this code. It may not be used to create training material, 
+ * Copyrights apply to this code. It may not be used to create training material,
  * courses, books, articles, and the like. Contact us if you are in doubt.
- * We make no guarantees that this code is fit for any purpose. 
+ * We make no guarantees that this code is fit for any purpose.
  * Visit http://www.pragmaticprogrammer.com/titles/lotdd for more book information.
 ***/
 #pragma once
@@ -18,39 +18,39 @@ template <class T>
 class KeyedFilePersistence: public Persistence<T>
 {
 public:
-    KeyedFilePersistence(const std::string& table) 
-        : Persistence<T>(table) 
+    KeyedFilePersistence(const std::string& table)
+        : Persistence<T>(table)
     {
     }
 
-    virtual ~KeyedFilePersistence(void) 
+    virtual ~KeyedFilePersistence(void)
     {
     }
 
-    unsigned int Size() const 
-    { 
-        return 0; 
+    unsigned int Size() const
+    {
+        return 0;
     }
 
     virtual void Clear()
     {
     }
 
-    void Add(T& object) 
-    { 
+    void Add(T& /*object*/)
+    {
     }
 
-    std::auto_ptr<T> Get(const std::string& id) const
+    std::auto_ptr<T> Get(const std::string& /*id)*/) const
     {
         return std::auto_ptr<T>(NULL);
     }
 
-    virtual bool Matches(MatcherFunction matches, const std::string& name) const
+    virtual bool Matches(MatcherFunction /*matches*/, const std::string& /*name*/) const
     {
         return false;
     }
 
-    virtual void FindAllMatching(MatcherFunction matches, const std::string& name, std::vector<Serializable*>& matchesToPopulate) const
+    virtual void FindAllMatching(MatcherFunction /*matches*/, const std::string& /*name*/, std::vector<Serializable*>& /*matchesToPopulate)*/) const
     {
     }
 
