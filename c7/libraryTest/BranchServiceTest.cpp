@@ -1,5 +1,4 @@
 #include "CppUTest.h"
-#include "assert_throw.h"
 
 #include "Branch.h"
 #include "BranchService.h"
@@ -53,7 +52,7 @@ TEST(BranchServiceTest, AddThrowsWhenNameNotUnique)
 {
     f.service.Add("samename", "address1");
 
-    ASSERT_THROW_E(f.service.Add("samename", "address2"), DuplicateBranchNameException);
+    CHECK_THROWS(DuplicateBranchNameException, f.service.Add("samename", "address2"));
 }
 
 TEST_GROUP(ABranchServiceWithOneBranchAdded)
@@ -69,7 +68,7 @@ public:
 
 TEST(ABranchServiceWithOneBranchAdded, ThrowsWhenDuplicateBranchAdded)
 {
-   ASSERT_THROW_E(f.service.Add(BranchAlreadyAdded->Name(), ""), DuplicateBranchNameException);
+   CHECK_THROWS(DuplicateBranchNameException, f.service.Add(BranchAlreadyAdded->Name(), ""));
 }
 
 TEST(BranchServiceTest, CountInitiallyZero)
