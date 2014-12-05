@@ -1,4 +1,5 @@
 *.depend
+*.app
 *.exe
 *.layout*
 *.o
