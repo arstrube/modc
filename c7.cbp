@@ -12,6 +12,9 @@
 				<Option type="1" />
 				<Option compiler="cygwin" />
 				<Option parameters="-v" />
+				<ExtraCommands>
+					<Add after="$(TARGET_OUTPUT_FILE) -v" />
+				</ExtraCommands>
 			</Target>
 			<Target title="MacDebug">
 				<Option output="./$(PROJECT_NAME).app" prefix_auto="1" extension_auto="0" />
@@ -19,6 +22,9 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="-v; exit" />
+				<ExtraCommands>
+					<Add after="$(TARGET_OUTPUT_FILE) -v; exit" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
@@ -41,15 +47,19 @@
 			<Add directory="e:/libcurl/lib" />
 			<Add directory="/usr/local/lib" />
 		</Linker>
-		<ExtraCommands>
-			<Add after="echo ./$(PROJECT_NAME).exe" />
-			<Mode after="always" />
-		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
 		<Unit filename="assert_throw.h" />
 		<Unit filename="c7/boost/algorithm/string.hpp" />
 		<Unit filename="c7/boost/assign/list_of.hpp" />
 		<Unit filename="c7/boost/date_time/gregorian/gregorian_types.hpp" />
+		<Unit filename="c7/libraryTest/ASSERT_CURRENT_STATE.h" />
+		<Unit filename="c7/libraryTest/BranchServiceTest.cpp" />
+		<Unit filename="c7/libraryTest/HoldingServiceTest.cpp" />
+		<Unit filename="c7/libraryTest/HoldingTest.cpp" />
+		<Unit filename="c7/libraryTest/PersistenceTest.cpp" />
+		<Unit filename="c7/libraryTest/PersistenceTest.h" />
+		<Unit filename="c7/libraryTest/RomanTest.cpp" />
+		<Unit filename="c7/libraryTest/TestSerializable.h" />
 		<Unit filename="c7/library/Book.cpp" />
 		<Unit filename="c7/library/Branch.cpp" />
 		<Unit filename="c7/library/BranchAccess.cpp" />
@@ -120,14 +130,6 @@
 		<Unit filename="c7/library/include/Transport.h" />
 		<Unit filename="c7/library/include/VectorReader.h" />
 		<Unit filename="c7/library/include/VectorWriter.h" />
-		<Unit filename="c7/libraryTest/ASSERT_CURRENT_STATE.h" />
-		<Unit filename="c7/libraryTest/BranchServiceTest.cpp" />
-		<Unit filename="c7/libraryTest/HoldingServiceTest.cpp" />
-		<Unit filename="c7/libraryTest/HoldingTest.cpp" />
-		<Unit filename="c7/libraryTest/PersistenceTest.cpp" />
-		<Unit filename="c7/libraryTest/PersistenceTest.h" />
-		<Unit filename="c7/libraryTest/RomanTest.cpp" />
-		<Unit filename="c7/libraryTest/TestSerializable.h" />
 		<Unit filename="c7/linereader/LineReader.h" />
 		<Unit filename="c7/linereader/LineReaderTest.cpp" />
 		<Unit filename="c7/linereader/sys_stubs.h" />
