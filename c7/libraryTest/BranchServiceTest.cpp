@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "CppUTest.h"
 #include "assert_throw.h"
 
 #include "Branch.h"

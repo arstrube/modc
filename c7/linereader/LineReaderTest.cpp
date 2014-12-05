@@ -128,12 +128,12 @@ TEST(LineReaderTest, TwoLinesTerminated) {
 
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
   ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
-  
-  reader.PopLine(f.len);  
+
+  reader.PopLine(f.len);
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
   ASSERT_EQ_WITH_LENGTH("b", f.line, f.len);
-  
-  reader.PopLine(f.len);  
+
+  reader.PopLine(f.len);
   CHECK_FALSE(reader.GetNextLine(&f.line, &f.len));
 
 }
@@ -143,19 +143,19 @@ TEST(LineReaderTest, TwoLines) {
 
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
   ASSERT_EQ_WITH_LENGTH("a", f.line, f.len);
-  reader.PopLine(f.len);  
-  
+  reader.PopLine(f.len);
+
   CHECK_TRUE(reader.GetNextLine(&f.line, &f.len));
   ASSERT_EQ_WITH_LENGTH("b", f.line, f.len);
   reader.PopLine(f.len);
-  
+
   CHECK_FALSE(reader.GetNextLine(&f.line, &f.len));
 }
 
 TEST(LineReaderTest, MaxLength) {
   char l[LineReader::kMaxLineLen];
   memset(l, 'a', sizeof(l)-1);
-  l[sizeof(l)] = '\0';
+  l[sizeof(l)-1] = '\0';
   LineReader reader(f.WriteTemporaryFile(l));
 
   const char *line; // TODO: If I refactor these by removing them and using
@@ -169,7 +169,7 @@ TEST(LineReaderTest, MaxLength) {
 TEST(LineReaderTest, TooLong) {
   char l[LineReader::kMaxLineLen+1];
   memset(l, 'a', sizeof(l)-1);
-  l[sizeof(l)] = '\0';
+  l[sizeof(l)-1] = '\0';
   LineReader reader(f.WriteTemporaryFile(l));
 
   CHECK_FALSE(reader.GetNextLine(&f.line, &f.len));

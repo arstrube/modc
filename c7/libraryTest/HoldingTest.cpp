@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "CppUTest.h"
 #include "Holding.h"
 #include "Book.h"
 #include "ClassificationData.h"
@@ -340,7 +340,7 @@ TEST(HoldingTest, CheckinMakesBookAvailableAtAnotherBranch)
    CHECK_TRUE(f.IsAvailableAt(f.holding, WEST_BRANCH));
 }
 
-TEST_GROUP(AMovieHolding) 
+TEST_GROUP(AMovieHolding)
 {
 public:
    HoldingTestFixture f;
@@ -351,7 +351,7 @@ public:
       movie = make_shared<Holding>(SEVEN_CLASSIFICATION, 1);
       movie->Transfer(EAST_BRANCH);
    }
-   
+
    virtual void teardown() override {
        f.teardown();
    }

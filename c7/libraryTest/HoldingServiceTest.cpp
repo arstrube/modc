@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "CppUTest.h"
 
 #include "HoldingService.h"
 #include "Branch.h"
