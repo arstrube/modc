@@ -14,11 +14,11 @@
 				<Option parameters="-v" />
 			</Target>
 			<Target title="MacDebug">
-				<Option output="./$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option output="./$(PROJECT_NAME).app" prefix_auto="1" extension_auto="0" />
 				<Option object_output="out/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-v" />
+				<Option parameters="-v; exit" />
 			</Target>
 		</Build>
 		<Compiler>
@@ -31,6 +31,7 @@
 			<Add directory="c7/library/include" />
 			<Add directory="c7" />
 			<Add directory="." />
+			<Add directory="/usr/local/include" />
 		</Compiler>
 		<Linker>
 			<Add library="CppUTest" />
@@ -38,6 +39,7 @@
 			<Add directory="e:/cpputest/lib" />
 			<Add directory="e:/jsoncpp/lib" />
 			<Add directory="e:/libcurl/lib" />
+			<Add directory="/usr/local/lib" />
 		</Linker>
 		<ExtraCommands>
 			<Add after="echo ./$(PROJECT_NAME).exe" />
