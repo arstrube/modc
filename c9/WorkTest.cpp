@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "CppUTest.h"
 
 #include "Work.h"
 
@@ -59,7 +59,7 @@ TEST(AWorkObject, ExecutesFunctionStored) {
    bool wasExecuted{false};
    auto executeFunction = [&] () { wasExecuted = true; };
    Work work(executeFunction);
-   
+
    work.execute();
 
    CHECK_TRUE(wasExecuted);

@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "CppUTest.h"
 #include "CppUTestExtensions.h"
 
 TEST_GROUP(StringFrom_ForAVector) {
@@ -24,9 +24,9 @@ struct TestItem {
 TEST(StringFrom_ForAVector, AcceptsTransformLambdaSoYouCanBuildYourOwnEasily) {
    std::vector<TestItem> items { TestItem(1), TestItem(2), TestItem(3) };
 
-   auto testString = StringFrom<TestItem>(items, 
+   auto testString = StringFrom<TestItem>(items,
                 [](TestItem item) { return std::string(StringFrom(item.Number).asCharString()); });
-   
+
    CHECK_EQUAL(SimpleString("1,2,3"), testString);
 }
 

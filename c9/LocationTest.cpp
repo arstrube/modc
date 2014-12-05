@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "CppUTest.h"
 
 #include <sstream>
 
@@ -8,7 +8,7 @@ using namespace std;
 
 SimpleString StringFrom(const Location& location) {
    return SimpleString(
-         StringFromFormat("(%d, %d)", 
+         StringFromFormat("(%f, %f)",
                           location.latitude(), location.longitude()));
 }
 
@@ -67,7 +67,7 @@ TEST(ALocation, IsNotEqualToAnotherWhenLatAndLongMatch) {
 
 TEST(ALocation, AnswersNewLocationGivenDistanceAndBearing) {
    Location start{0, 0};
-   
+
    auto newLocation = start.go(MetersPerDegreeAtEquator, East);
 
    Location expectedEnd{0, 1};
@@ -86,7 +86,7 @@ TEST(ALocation, AnswersNewLocationGivenDistanceAndBearingVerifiedByHaversine) {
 
 TEST(ALocation, CanBeAPole) {
    Location start{ 90, 0 };
-   
+
    auto end = start.go(MetersPerDegreeAtEquator, South);
 
    DOUBLES_EQUAL(0, end.longitude(), Tolerance);

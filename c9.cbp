@@ -7,53 +7,62 @@
 		<Option compiler="cygwin" />
 		<Build>
 			<Target title="Debug">
-				<Option output=".\$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
-				<Option object_output="out\Debug\" />
+				<Option output="./$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option object_output="out/Debug/" />
 				<Option type="1" />
 				<Option compiler="cygwin" />
 				<Option parameters="-v" />
 			</Target>
+			<Target title="MacDebug">
+				<Option output="./$(PROJECT_NAME).app" prefix_auto="1" extension_auto="0" />
+				<Option object_output="out/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-v" />
+			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++11" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-g" />
 			<Add option="-Werror" />
-			<Add option="-std=c++11" />
-			<Add directory="e:\cpputest\include" />
+			<Add directory="e:/cpputest/include" />
 			<Add directory="." />
+			<Add directory="/usr/local/include" />
 		</Compiler>
 		<Linker>
 			<Add library="CppUTest" />
 			<Add library="CppUTestExt" />
-			<Add directory="e:\cpputest\lib" />
+			<Add directory="e:/cpputest/lib" />
+			<Add directory="/usr/local/lib" />
 		</Linker>
 		<ExtraCommands>
-			<Add after="echo ./$(PROJECT_NAME).exe" />
+			<Add after="$(TARGET_OUTPUT_FILE)" />
 			<Mode after="always" />
 		</ExtraCommands>
 		<Unit filename="CppUTestMain.cpp" />
 		<Unit filename="assert_throw.h" />
-		<Unit filename="c9\Area.cpp" />
-		<Unit filename="c9\Area.h" />
-		<Unit filename="c9\AreaTest.cpp" />
-		<Unit filename="c9\CppUTestExtensions.cpp" />
-		<Unit filename="c9\CppUTestExtensions.h" />
-		<Unit filename="c9\CppUTestExtensionsTest.cpp" />
-		<Unit filename="c9\GeoServer.cpp" />
-		<Unit filename="c9\GeoServer.h" />
-		<Unit filename="c9\GeoServerTest.cpp" />
-		<Unit filename="c9\Location.cpp" />
-		<Unit filename="c9\Location.h" />
-		<Unit filename="c9\LocationTest.cpp" />
-		<Unit filename="c9\TestTimer.cpp" />
-		<Unit filename="c9\TestTimer.h" />
-		<Unit filename="c9\ThreadPool.h" />
-		<Unit filename="c9\ThreadPoolTest.cpp" />
-		<Unit filename="c9\User.h" />
-		<Unit filename="c9\VectorUtil.h" />
-		<Unit filename="c9\Work.h" />
-		<Unit filename="c9\WorkTest.cpp" />
+		<Unit filename="c9/Area.cpp" />
+		<Unit filename="c9/Area.h" />
+		<Unit filename="c9/AreaTest.cpp" />
+		<Unit filename="c9/CppUTestExtensions.cpp" />
+		<Unit filename="c9/CppUTestExtensions.h" />
+		<Unit filename="c9/CppUTestExtensionsTest.cpp" />
+		<Unit filename="c9/GeoServer.cpp" />
+		<Unit filename="c9/GeoServer.h" />
+		<Unit filename="c9/GeoServerTest.cpp" />
+		<Unit filename="c9/Location.cpp" />
+		<Unit filename="c9/Location.h" />
+		<Unit filename="c9/LocationTest.cpp" />
+		<Unit filename="c9/TestTimer.cpp" />
+		<Unit filename="c9/TestTimer.h" />
+		<Unit filename="c9/ThreadPool.h" />
+		<Unit filename="c9/ThreadPoolTest.cpp" />
+		<Unit filename="c9/User.h" />
+		<Unit filename="c9/VectorUtil.h" />
+		<Unit filename="c9/Work.h" />
+		<Unit filename="c9/WorkTest.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

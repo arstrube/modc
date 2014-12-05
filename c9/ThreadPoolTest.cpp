@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "CppUTest.h"
 
 #include "ThreadPool.h"
 
@@ -70,18 +70,18 @@ public:
    void teardown() override {
       for (auto& t: threads) t->join();
    }
-   
+
    void incrementCountAndNotify() {
-      std::unique_lock<std::mutex> lock(m); 
+      std::unique_lock<std::mutex> lock(m);
       ++count;
-      wasExecuted.notify_all(); 
+      wasExecuted.notify_all();
    }
 
    void waitForCountAndFailOnTimeout(
-         unsigned int expectedCount, 
+         unsigned int expectedCount,
          const milliseconds& time=milliseconds(5000)) {
       unique_lock<mutex> lock(m);
-      CHECK_TRUE(wasExecuted.wait_for(lock, time, 
+      CHECK_TRUE(wasExecuted.wait_for(lock, time,
             [&] { return expectedCount == count; }));
    }
 };
@@ -118,9 +118,9 @@ TEST(AThreadPool_AddRequest, HoldsUpUnderClientStress) {
 
    for (unsigned int i{0}; i < NumberOfThreads; i++)
       threads.push_back(
-          make_shared<thread>([&] { 
+          make_shared<thread>([&] {
              for (unsigned int j{0}; j < NumberOfWorkItems; j++)
-               pool.add(work); 
+               pool.add(work);
           }));
 
    waitForCountAndFailOnTimeout(
@@ -131,7 +131,7 @@ TEST_GROUP_BASE(AThreadPoolWithMultipleThreads, ThreadPoolThreadTests) {
    set<thread::id> threads;
 
    void addThreadIfUnique(const thread::id& id) {
-      std::unique_lock<std::mutex> lock(m); 
+      std::unique_lock<std::mutex> lock(m);
       threads.insert(id);
    }
 
@@ -143,7 +143,7 @@ TEST_GROUP_BASE(AThreadPoolWithMultipleThreads, ThreadPoolThreadTests) {
 TEST(AThreadPoolWithMultipleThreads, DispatchesWorkToMultipleThreads) {
    unsigned int numberOfThreads{2};
    pool.start(numberOfThreads);
-   Work work{[&] { 
+   Work work{[&] {
       addThreadIfUnique(this_thread::get_id());
       incrementCountAndNotify();
    }};

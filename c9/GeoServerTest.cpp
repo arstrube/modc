@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "CppUTest.h"
 #include "CppUTestExtensions.h"
 
 #include <condition_variable>
@@ -59,7 +59,7 @@ TEST(AGeoServer, TracksMultipleUsers) {
 
 TEST(AGeoServer, IsTrackingAnswersFalseWhenUserNoLongerTracked) {
    server.track(aUser);
-   
+
    server.stopTracking(aUser);
 
    CHECK_FALSE(server.isTracking(aUser));
@@ -98,7 +98,7 @@ class GeoServerUsersInBoxTestFixture {
 public:
    GeoServer* server;
    shared_ptr<ThreadPool> pool;
-   
+
    GeoServerUsersInBoxTestFixture() {
       server = new GeoServer{};
       server->track(aUser);
@@ -106,7 +106,7 @@ public:
       server->track(cUser);
       server->updateLocation(aUser, aUserLocation);
    }
-   
+
    ~GeoServerUsersInBoxTestFixture() {
       delete server;
    }
@@ -134,9 +134,9 @@ public:
 };
 
 TEST_GROUP(AGeoServer_UsersInBox) {
-    
+
    GeoServerUsersInBoxTestFixture f;
-   
+
    class GeoServerUserTrackingListener: public GeoServerListener {
    public:
       void updated(const User& user) { Users.push_back(user); }
@@ -161,7 +161,7 @@ TEST_GROUP(AGeoServer_UsersInBox) {
 TEST(AGeoServer_UsersInBox, AnswersUsersInSpecifiedRange) {
    f.pool->start(0);
    f.server->updateLocation(
-      f.bUser, Location{f.aUserLocation.go(f.Width / 2 - f.TenMeters, East)}); 
+      f.bUser, Location{f.aUserLocation.go(f.Width / 2 - f.TenMeters, East)});
 
    f.server->usersInBox(f.aUser, f.Width, f.Height, &trackingListener);
 
@@ -171,9 +171,9 @@ TEST(AGeoServer_UsersInBox, AnswersUsersInSpecifiedRange) {
 TEST(AGeoServer_UsersInBox, AnswersOnlyUsersWithinSpecifiedRange) {
    f.pool->start(0);
    f.server->updateLocation(
-      f.bUser, Location{f.aUserLocation.go(f.Width / 2 + f.TenMeters, East)}); 
+      f.bUser, Location{f.aUserLocation.go(f.Width / 2 + f.TenMeters, East)});
    f.server->updateLocation(
-      f.cUser, Location{f.aUserLocation.go(f.Width / 2 - f.TenMeters, East)}); 
+      f.cUser, Location{f.aUserLocation.go(f.Width / 2 - f.TenMeters, East)});
 
    f.server->usersInBox(f.aUser, f.Width, f.Height, &trackingListener);
 
@@ -194,7 +194,7 @@ TEST(AGeoServer_UsersInBox, HandlesLargeNumbersOfUsers) {
 TEST_GROUP(AGeoServer_ScaleTests) {
 
    GeoServerUsersInBoxTestFixture f;
-   
+
    class GeoServerCountingListener: public GeoServerListener {
    public:
       void updated(const User& user) override {
@@ -204,13 +204,13 @@ TEST_GROUP(AGeoServer_ScaleTests) {
          wasExecuted_.notify_all();
       }
 
-      void waitForCountAndFailOnTimeout(unsigned int expectedCount, 
+      void waitForCountAndFailOnTimeout(unsigned int expectedCount,
             const milliseconds& time=milliseconds(10000)) {
          unique_lock<mutex> lock(mutex_);
-         CHECK_TRUE(wasExecuted_.wait_for(lock, time,  
-                 [&]{ 
+         CHECK_TRUE(wasExecuted_.wait_for(lock, time,
+                 [&]{
                       LONGS_EQUAL(expectedCount, Count);
-                      return (expectedCount == Count); 
+                      return (expectedCount == Count);
                   }));
       }
 
@@ -233,9 +233,9 @@ TEST_GROUP(AGeoServer_ScaleTests) {
 };
 
 TEST_GROUP(AGeoServer_Performance) {
-    
+
    GeoServerUsersInBoxTestFixture f;
-   
+
    void setup() override {
       f.pool = make_shared<ThreadPool>();
       f.server->useThreadPool(f.pool);
@@ -254,9 +254,9 @@ TEST(AGeoServer_ScaleTests, HandlesLargeNumbersOfUsers) {
 }
 
 TEST_GROUP(AGeoServer_VirtualPerformance) {
-    
+
    GeoServerUsersInBoxTestFixture f;
-   
+
    void setup() override {
       f.pool = make_shared<ThreadPool>();
       f.server->useThreadPool(f.pool);
@@ -269,7 +269,7 @@ TEST(AGeoServer_VirtualPerformance, VirtualLocationOf) {
    f.addUsersAt(lots, Location{f.aUserLocation.go(f.TenMeters, West)});
 
    TestTimer t;
-   for (unsigned int i{0}; i < lots; i++) 
+   for (unsigned int i{0}; i < lots; i++)
       f.server->virtualLocationOf(f.userName(i));
 }
 
@@ -278,6 +278,6 @@ TEST(AGeoServer_Performance, LocationOf) {
    f.addUsersAt(lots, Location{f.aUserLocation.go(f.TenMeters, West)});
 
    TestTimer t;
-   for (unsigned int i{0}; i < lots; i++) 
+   for (unsigned int i{0}; i < lots; i++)
       f.server->locationOf(f.userName(i));
 }
