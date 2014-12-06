@@ -43,8 +43,6 @@
 			<Add library="CppUTest" />
 			<Add library="CppUTestExt" />
 			<Add directory="e:/cpputest/lib" />
-			<Add directory="e:/jsoncpp/lib" />
-			<Add directory="e:/libcurl/lib" />
 			<Add directory="/usr/local/lib" />
 		</Linker>
 		<Unit filename="CppUTestMain.cpp" />
