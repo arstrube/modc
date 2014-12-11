@@ -12,8 +12,17 @@
 class Soundex {
 public:
    Soundex() {
-      codes_['b'] = "1";
-      codes_['c'] = "2";
+      initializeCodeMap();
+   }
+
+   void initializeCodeMap() {
+      codes_['b'] = codes_['f'] = codes_['p'] = codes_ ['v'] = "1";
+      codes_['c'] = codes_['g'] = codes_['j'] = codes_ ['k'] = 
+         codes_['q'] = codes_['s'] = codes_['x'] = codes_['z'] = "2";
+      codes_['d'] = codes_['t'] = "3";
+      codes_['l'] = "4";
+      codes_['m'] = codes_['n'] = "5";
+      codes_['r'] = "6";
    }
 
    std::string encode(const std::string& word) const {
@@ -28,7 +37,11 @@ public:
 
    std::string encodeTail(const std::string& word) const {
       if (word[1] == 0) return "";
-     return codes_[static_cast<size_t>(word[1])];
+      return codeFor(word[1]);
+   }
+
+   std::string codeFor(char c) const {
+      return codes_[static_cast<size_t>(c)];
    }
 
    std::string zeroPad(const std::string& code) const {
