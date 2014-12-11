@@ -26,9 +26,8 @@ public:
    }
 
    std::string encode(const std::string& word) const {
-      std::string code("");
-      code += head(word);
-      encodeTail(word, code);
+      std::string code(1, head(word));
+      encode(tail(word), code);
       return zeroPad(code);
    }
 
@@ -36,10 +35,10 @@ public:
       return word[0];
    }
 
-   void encodeTail(const std::string& word, std::string& code) const {
-      if (word[1] == 0) return;
-      code += codeFor(word[1]);
-      encodeTail(tail(word), code);
+   void encode(const std::string& word, std::string& code) const {
+      if (word.empty()) return;
+      code += codeFor(head(word));
+      encode(tail(word), code);
    }
 
    std::string tail(const std::string& word) const {
@@ -53,10 +52,6 @@ public:
    const static size_t MaxCodeLength{4};
    std::string zeroPad(const std::string& code) const {
       return code + std::string(MaxCodeLength - code.length(), '0');
-   }
-
-   bool hasEncodedCharacters(const std::string& code) const {
-      return code[1] != 0;
    }
 
 private:
