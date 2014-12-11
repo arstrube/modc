@@ -28,7 +28,7 @@ public:
    }
 
    std::string encode(const std::string& word) const {
-      std::string code(1, head(word));
+      std::string code(1, toupper(head(word)));
       encode(word, code);
       return zeroPad(code);
    }
@@ -67,6 +67,10 @@ public:
 
    std::string zeroPad(const std::string& code) const {
       return code + std::string(MaxCodeLength - code.length(), '0');
+   }
+
+   char upper(char c) const {
+      return std::toupper(static_cast<unsigned char>(c));
    }
 
 private:
