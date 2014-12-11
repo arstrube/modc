@@ -26,3 +26,13 @@ TEST(SoundexEncoding, IgnoresVowelLikeLetters) {
    CHECK_EQUAL(string("B234"), soundex.encode("BAaEeIiOoUuHhYycdl"));
 }
 
+TEST(SoundexEncoding, IgnoresNonAlphabetics) {
+   CHECK_EQUAL(string("F234"), soundex.encode("F987654321%#.=+cdl"));
+}
+
+TEST(SoundexEncoding, CombinesDuplicateEncodings) {
+   CHECK_EQUAL(soundex.codeFor('f'), soundex.codeFor('b'));
+   CHECK_EQUAL(soundex.codeFor('g'), soundex.codeFor('c'));
+   CHECK_EQUAL(soundex.codeFor('t'), soundex.codeFor('d'));
+   CHECK_EQUAL(string("A123"), soundex.encode("Abfcgdt"));
+}
