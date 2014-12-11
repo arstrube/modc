@@ -213,7 +213,7 @@ TEST_GROUP(AGeoServer_ScaleTests) {
                       return (expectedCount == Count);
                   }));
       }
-
+   private:
       condition_variable wasExecuted_;
       unsigned int Count{0};
       mutex mutex_;
@@ -244,8 +244,8 @@ TEST_GROUP(AGeoServer_Performance) {
 
 TEST(AGeoServer_ScaleTests, HandlesLargeNumbersOfUsers) {
    f.pool->start(4);
-   const unsigned int lots{5000};
-   f.addUsersAt(lots, Location{f.aUserLocation.go(f.TenMeters, West)});
+   const unsigned int lots{1000};
+   f.addUsersAt(lots, Location{f.aUserLocation.latitude(), f.aUserLocation.longitude()});
 
    t = make_shared<thread>(
          [&] { f.server->usersInBox(f.aUser, f.Width, f.Height, &countingListener); });
@@ -274,7 +274,7 @@ TEST(AGeoServer_VirtualPerformance, VirtualLocationOf) {
 }
 
 TEST(AGeoServer_Performance, LocationOf) {
-   const unsigned int lots{100000};
+   const unsigned int lots{50000};
    f.addUsersAt(lots, Location{f.aUserLocation.go(f.TenMeters, West)});
 
    TestTimer t;
