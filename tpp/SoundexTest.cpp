@@ -17,3 +17,8 @@ TEST(SoundexEncoding, ReplacesConsonantsWithAppropriateDigits) {
    CHECK_EQUAL(string("A100"), soundex.encode("Ab"));
    CHECK_EQUAL(string("A200"), soundex.encode("Ac"));
 }
+
+TEST(SoundexEncoding, ReplacesMultipleConsonantsWithDigits) {
+   CHECK_EQUAL(string("A234"), soundex.encode("Acdl"));
+}
+

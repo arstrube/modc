@@ -27,7 +27,8 @@ public:
 
    std::string encode(const std::string& word) const {
       std::string code("");
-      code += head(word) + encodeTail(word);
+      code += head(word);
+      encodeTail(word, code);
       return zeroPad(code);
    }
 
@@ -35,9 +36,14 @@ public:
       return word[0];
    }
 
-   std::string encodeTail(const std::string& word) const {
-      if (word[1] == 0) return "";
-      return codeFor(word[1]);
+   void encodeTail(const std::string& word, std::string& code) const {
+      if (word[1] == 0) return;
+      code += codeFor(word[1]);
+      encodeTail(tail(word), code);
+   }
+
+   std::string tail(const std::string& word) const {
+      return word.substr(1);
    }
 
    std::string codeFor(char c) const {
