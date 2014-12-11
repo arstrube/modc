@@ -22,3 +22,7 @@ TEST(SoundexEncoding, ReplacesMultipleConsonantsWithDigits) {
    CHECK_EQUAL(string("A234"), soundex.encode("Acdl"));
 }
 
+TEST(SoundexEncoding, IgnoresVowelLikeLetters) {
+   CHECK_EQUAL(string("B234"), soundex.encode("BAaEeIiOoUuHhYycdl"));
+}
+
