@@ -40,6 +40,7 @@ public:
       auto digit = codeFor(head(tailToEncode));
       if (isSameEncodingAsLast(digit, word))
          code += digit;
+		 
       encode(tailToEncode, code);
    }
    

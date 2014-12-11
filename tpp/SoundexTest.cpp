@@ -61,3 +61,7 @@ TEST(SoundexEncoding, DoesNotCombineDuplicateEncodingsSeparatedByVowels) {
 TEST(SoundexEncoding, LimitsLengthToFourCharacters) {
    CHECK_EQUAL(4u, soundex.encode("Dcdlb").length());
 }
+
+TEST(SoundexEncoding, PadsWithZerosToEnsureThreeDigits) {
+   CHECK_EQUAL(string("I000"), soundex.encode("I"));
+}
