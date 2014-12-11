@@ -29,14 +29,17 @@ public:
 
    std::string encode(const std::string& word) const {
       std::string code(1, head(word));
-      encode(tail(word), code);
+      encode(tail(word), code, head(word));
       return zeroPad(code);
    }
 
-   void encode(const std::string& word, std::string& code) const {
+   void encode(const std::string& word, std::string& code, 
+         char H) const {
       if (word.empty() || isFull(code)) return;
-      code += codeFor(head(word));
-      encode(tail(word), code);
+      std::string digit = codeFor(head(word));
+      if (digit != codeFor(H))
+         code += codeFor(head(word));
+      encode(tail(word), code, head(word));
    }
 
    bool isFull(std::string& code) const {
