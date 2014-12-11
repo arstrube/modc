@@ -38,8 +38,16 @@ TEST(SoundexEncoding, CombinesDuplicateEncodings) {
    CHECK_EQUAL(string("A123"), soundex.encode("Abfcgdt"));
 }
 
+TEST(SoundexEncoding, CombinesMultipleDuplicateEncodings) {
+   CHECK_EQUAL(string("J100"), soundex.encode("Jbbb"));
+}
+
 TEST(SoundexEncoding, CombinesDuplicateCodesWhen2ndLetterDuplicates1st) {
    CHECK_EQUAL(string("b230"), soundex.encode("bbcd"));
+}
+
+TEST(SoundexEncoding, DoesNotCombineDuplicateEncodingsSeparatedByVowels) {
+   CHECK_EQUAL(string("J110"), soundex.encode("Jbob")); 
 }
 
 TEST(SoundexEncoding, LimitsLengthToFourCharacters) {
