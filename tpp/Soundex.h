@@ -50,8 +50,9 @@ public:
       return codes_[static_cast<size_t>(c)];
    }
 
+   const static size_t MaxCodeLength{4};
    std::string zeroPad(const std::string& code) const {
-      return code + (hasEncodedCharacters(code) ? "00" : "000");
+      return code + std::string(MaxCodeLength - code.length(), '0');
    }
 
    bool hasEncodedCharacters(const std::string& code) const {
