@@ -38,6 +38,10 @@ TEST(SoundexEncoding, CombinesDuplicateEncodings) {
    CHECK_EQUAL(string("A123"), soundex.encode("Abfcgdt"));
 }
 
+TEST(SoundexEncoding, CombinesDuplicateCodesWhen2ndLetterDuplicates1st) {
+   CHECK_EQUAL(string("b230"), soundex.encode("bbcd"));
+}
+
 TEST(SoundexEncoding, LimitsLengthToFourCharacters) {
    CHECK_EQUAL(4u, soundex.encode("Dcdlb").length());
 }
