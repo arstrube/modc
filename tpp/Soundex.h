@@ -62,7 +62,7 @@ public:
    }
 
    std::string codeFor(char c) const {
-      return codes_[static_cast<size_t>(c)];
+      return codes_[static_cast<size_t>(lower(c))];
    }
 
    std::string zeroPad(const std::string& code) const {
@@ -71,6 +71,10 @@ public:
 
    char upper(char c) const {
       return std::toupper(static_cast<unsigned char>(c));
+   }
+
+   char lower(char c) const {
+      return std::tolower(static_cast<unsigned char>(c));
    }
 
 private:
