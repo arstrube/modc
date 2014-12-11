@@ -4,11 +4,11 @@
 
 using namespace std;
 
-TEST_GROUP(SoundexEncoding) {};
+TEST_GROUP(SoundexEncoding) {
+   Soundex soundex;
+};
 
 TEST(SoundexEncoding, AppendsZerosToWordForOneLetterWord) {
-   Soundex soundex;
-   auto encoded = soundex.encode("A");
-
-   CHECK_EQUAL(string("A000"), encoded);
+   CHECK_EQUAL(string("A000"), soundex.encode("A"));
+   CHECK_EQUAL(string("B000"), soundex.encode("B"));
 }

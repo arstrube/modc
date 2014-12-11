@@ -11,8 +11,8 @@
 
 class Soundex {
 public:
-   std::string encode(const std::string& /*word*/) const {
-      return "A000";
+   std::string encode(const std::string& word) const {
+      return word + "000";
    }
 };
 #endif
