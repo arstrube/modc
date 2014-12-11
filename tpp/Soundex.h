@@ -31,14 +31,14 @@ public:
       return zeroPad(code);
    }
 
-   char head(const std::string& word) const {
-      return word[0];
-   }
-
    void encode(const std::string& word, std::string& code) const {
       if (word.empty()) return;
       code += codeFor(head(word));
       encode(tail(word), code);
+   }
+
+   char head(const std::string& word) const {
+      return word[0];
    }
 
    std::string tail(const std::string& word) const {
