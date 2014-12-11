@@ -11,6 +11,11 @@
 
 class Soundex {
 public:
+   Soundex() {
+      codes_['b'] = "1";
+      codes_['c'] = "2";
+   }
+
    std::string encode(const std::string& word) const {
       std::string code("");
       code += head(word) + encodeTail(word);
@@ -23,7 +28,7 @@ public:
 
    std::string encodeTail(const std::string& word) const {
       if (word[1] == 0) return "";
-      return "1";
+     return codes_[static_cast<size_t>(word[1])];
    }
 
    std::string zeroPad(const std::string& code) const {
@@ -33,5 +38,9 @@ public:
    bool hasEncodedCharacters(const std::string& code) const {
       return code[1] != 0;
    }
+
+private:
+   std::string codes_[128];
 };
+
 #endif

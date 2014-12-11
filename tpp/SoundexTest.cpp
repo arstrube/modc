@@ -15,4 +15,5 @@ TEST(SoundexEncoding, AppendsZerosToWordForOneLetterWord) {
 
 TEST(SoundexEncoding, ReplacesConsonantsWithAppropriateDigits) {
    CHECK_EQUAL(string("A100"), soundex.encode("Ab"));
+   CHECK_EQUAL(string("A200"), soundex.encode("Ac"));
 }
