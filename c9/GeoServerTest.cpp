@@ -120,9 +120,13 @@ public:
 
    Location aUserLocation { 38, -103 };
 
+   string userName(unsigned int i) {
+      return string{"user" + to_string(i)};
+   }
+
    void addUsersAt(unsigned int number, const Location& location) {
       for (unsigned int i{0}; i < number; i++) {
-         string user{"user" + to_string(i)};
+         string user = userName(i);
          server->track(user);
          server->updateLocation(user, location);
       }
@@ -228,6 +232,16 @@ TEST_GROUP(AGeoServer_ScaleTests) {
    }
 };
 
+TEST_GROUP(AGeoServer_Performance) {
+    
+   GeoServerUsersInBoxTestFixture f;
+   
+   void setup() override {
+      f.pool = make_shared<ThreadPool>();
+      f.server->useThreadPool(f.pool);
+   }
+};
+
 TEST(AGeoServer_ScaleTests, HandlesLargeNumbersOfUsers) {
    f.pool->start(4);
    const unsigned int lots{5000};
@@ -237,4 +251,13 @@ TEST(AGeoServer_ScaleTests, HandlesLargeNumbersOfUsers) {
          [&] { f.server->usersInBox(f.aUser, f.Width, f.Height, &countingListener); });
 
    countingListener.waitForCountAndFailOnTimeout(lots);
+}
+
+TEST(AGeoServer_Performance, LocationOf) {
+   const unsigned int lots{5000};
+   f.addUsersAt(lots, Location{f.aUserLocation.go(f.TenMeters, West)});
+
+   TestTimer t;
+   for (unsigned int i{0}; i < lots; i++) 
+      f.server->locationOf(f.userName(i));
 }
