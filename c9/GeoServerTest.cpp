@@ -29,8 +29,7 @@ TEST_GROUP(AGeoServer) {
    const double LocationTolerance{0.005};
 
    bool locationIsUnknown(const string& user) {
-      auto location = server.locationOf(user);
-      return location.latitude() == numeric_limits<double>::infinity();
+      return server.locationOf(user).isUnknown();
    }
 };
 
