@@ -9,9 +9,10 @@
 #include "VectorUtil.h"
 #include "TestTimer.h"
 #include "ThreadPool.h"
-// ...
+#include "Work.h"
+
 using namespace std;
-using namespace std::chrono;
+using std::chrono::milliseconds;
 
 /** to_string() is not defined in Cygwin GCC 4.8.3 */
 inline string to_string(int i) {
@@ -21,11 +22,21 @@ inline string to_string(int i) {
 }
 
 TEST_GROUP(AGeoServer) {
+   // ...
    GeoServer server;
 
    const string aUser{"auser"};
    const double LocationTolerance{0.005};
+
+   bool locationIsUnknown(const string& user) {
+      (void)user; // unused
+      return false;
+   }
 };
+
+TEST(AGeoServer, AnswersUnknownLocationWhenUserNoLongerTracked) {
+   CHECK_TRUE(locationIsUnknown(aUser));
+}
 
 TEST(AGeoServer, TracksAUser) {
    server.track(aUser);
