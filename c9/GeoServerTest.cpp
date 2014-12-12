@@ -22,19 +22,22 @@ inline string to_string(int i) {
 }
 
 TEST_GROUP(AGeoServer) {
-   // ...
+   
    GeoServer server;
 
    const string aUser{"auser"};
    const double LocationTolerance{0.005};
 
    bool locationIsUnknown(const string& user) {
-      (void)user; // unused
-      return false;
+      auto location = server.locationOf(user);
+      return location.latitude() == numeric_limits<double>::infinity();
    }
 };
 
 TEST(AGeoServer, AnswersUnknownLocationWhenUserNoLongerTracked) {
+   server.track(aUser);
+   server.stopTracking(aUser);
+
    CHECK_TRUE(locationIsUnknown(aUser));
 }
 
