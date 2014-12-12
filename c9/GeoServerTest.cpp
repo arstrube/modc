@@ -8,6 +8,7 @@
 #include "GeoServer.h"
 #include "VectorUtil.h"
 #include "TestTimer.h"
+#include "TestTimeout.h"
 #include "ThreadPool.h"
 #include "Work.h"
 
@@ -235,6 +236,7 @@ TEST_GROUP(AGeoServer_ScaleTests) {
 TEST_GROUP(AGeoServer_Performance) {
 
    GeoServerUsersInBoxTestFixture f;
+   TestTimeout t{300};
 
    void setup() override {
       f.pool = make_shared<ThreadPool>();
@@ -256,6 +258,7 @@ TEST(AGeoServer_ScaleTests, HandlesLargeNumbersOfUsers) {
 TEST_GROUP(AGeoServer_VirtualPerformance) {
 
    GeoServerUsersInBoxTestFixture f;
+   TestTimeout t{300};
 
    void setup() override {
       f.pool = make_shared<ThreadPool>();
@@ -263,7 +266,7 @@ TEST_GROUP(AGeoServer_VirtualPerformance) {
    }
 };
 
-TEST(AGeoServer_VirtualPerformance, VirtualLocationOf) {
+TEST(AGeoServer_VirtualPerformance, TestVirtualLocationOf) {
    shared_ptr<GeoServerBase> server = make_shared<GeoServer>();
    const unsigned int lots{50000};
    f.addUsersAt(lots, Location{f.aUserLocation.go(f.TenMeters, West)});
@@ -273,11 +276,11 @@ TEST(AGeoServer_VirtualPerformance, VirtualLocationOf) {
       f.server->virtualLocationOf(f.userName(i));
 }
 
-TEST(AGeoServer_Performance, LocationOf) {
+TEST(AGeoServer_Performance, TestLocationOf) {
    const unsigned int lots{50000};
    f.addUsersAt(lots, Location{f.aUserLocation.go(f.TenMeters, West)});
 
-   TestTimer t;
+   TestTimer t{"LocationOf"};
    for (unsigned int i{0}; i < lots; i++)
       f.server->locationOf(f.userName(i));
 }

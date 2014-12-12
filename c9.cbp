@@ -55,6 +55,8 @@
 		<Unit filename="c9/Location.cpp" />
 		<Unit filename="c9/Location.h" />
 		<Unit filename="c9/LocationTest.cpp" />
+		<Unit filename="c9/TestTimeout.cpp" />
+		<Unit filename="c9/TestTimeout.h" />
 		<Unit filename="c9/TestTimer.cpp" />
 		<Unit filename="c9/TestTimer.h" />
 		<Unit filename="c9/ThreadPool.h" />
